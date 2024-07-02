@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .buttonHeader {
+    background: transparent;
+    border: 1px solid black;
+    padding: 0;
+    cursor: pointer;
+    cursor: pointer;
+    text-align: left;
+  }
+  input[type='checkbox'] {
+    border-radius: 4px;
+    height: 20px;
+    width: 20px;
+    background: #0e0d0d;
+    border: 1px dashed #ea546c;
+  }
+  input[type='checkbox']:checked {
+    background: yellow;
+    margin: 0px;
+    position: relative;
+    border-radius: 4px;
+  }
+}
