@@ -1,62 +1,121 @@
+//
+import { FormEvent, useState } from 'react';
+import { useAuth } from '../AuthProvider';
 import Header from '../Header';
-
 const Register = () => {
+  const [userName, setUserName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const auth = useAuth();
+  // const [error, setError] = useState<string>('');
+  // const [success, setSuccess] = useState<string>('');
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (userName !== '' && password !== '' && email !== '') {
+      console.log('tout est Bon');
+      console.log(userName, email, password);
+      auth?.RegisterAction(email, password);
+      // try {
+      //   const response = await axios.post(
+      //     'https://reqres.in/api/register',
+      //     {
+      //       email,
+      //       password,
+      //     },
+      //     {
+      //       headers: {
+      //         'Content-Type': 'application/json',
+      //       },
+      //     }
+      //   );
+      //   navigate('/accueil');
+
+      //   setSuccess(`Login successful: ${response.data.token}`);
+      //   console.log(success);
+      //   setError('');
+      // } catch (err: any) {
+      //   // Typage de l'erreur comme 'any' pour accéder aux propriétés
+      //   setError(err.response?.data?.error || 'Login failed');
+      //   setSuccess('');
+      // }
+    } else {
+      console.log('Rentrez vos id');
+    }
+  };
+
   return (
-    <div className="flex gap-8 ">
+    <div className="flex gap-8">
       <div className="w-[30rem] bg-bgColors py-6 px-10 rounded-md shadow-md">
         <Header />
         <div>
-          <form action="" className="max-w-lg mx-auto flex flex-col gap-4">
+          <form
+            className="max-w-lg mx-auto flex flex-col gap-4"
+            onSubmit={handleSubmit}
+          >
             <div className="relative z-0 w-full mb-5 group">
               <input
                 type="text"
+                value={userName}
                 name="name"
                 id="name"
                 className="block py-2.5 px-0 w-full text-md text-gray-900 bg-transparent border-0 border-b-[0.8px] border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-firstBlue peer"
+                onChange={e => {
+                  setUserName(e.target.value);
+                }}
                 placeholder=" "
                 required
               />
-              <label
-                // for="floating_email"
-                className="peer-focus:font-medium absolute text-md text-gray-500  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-firstBlue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >
+              <label className="peer-focus:font-medium absolute text-md text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-firstBlue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                 Nom & Prenom
               </label>
             </div>
             <div className="relative z-0 w-full mb-5 group">
               <input
                 type="email"
+                value={email}
                 name="email"
                 id="email"
                 className="block py-2.5 px-0 w-full text-md text-gray-900 bg-transparent border-0 border-b-[0.8px] border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-firstBlue peer"
+                onChange={e => {
+                  setEmail(e.target.value);
+                }}
                 placeholder=" "
                 required
               />
-              <label className="peer-focus:font-medium absolute text-md text-gray-500  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-firstBlue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+              <label className="peer-focus:font-medium absolute text-md text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-firstBlue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                 Email
               </label>
             </div>
             <div className="relative z-0 w-full mb-5 group">
               <input
                 type="password"
+                value={password}
                 name="password"
                 id="password"
                 className="block py-2.5 px-0 w-full text-md text-gray-900 bg-transparent border-0 border-b-[0.8px] border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-firstBlue peer"
+                onChange={e => {
+                  setPassword(e.target.value);
+                }}
                 placeholder=" "
                 required
               />
-              <label className="peer-focus:font-medium absolute text-md text-gray-500  duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-firstBlue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+              <label className="peer-focus:font-medium absolute text-md text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-firstBlue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                 Password
               </label>
             </div>
 
-            <div className="flex justify-center relative z-0 w-full mb-5 pt-9 group ">
-              <button className="text-xl text-firstColors rounded-md bg-firstBlue py-2 px-4">
-                {' '}
+            <div className="flex justify-center relative z-0 w-full mb-5 pt-9 group">
+              <button
+                type="submit"
+                className="text-xl text-firstColors rounded-md bg-firstBlue py-2 px-4"
+              >
                 Inscrivez Vous
               </button>
             </div>
           </form>
+          {/* {error && <p style={{ color: 'red' }}>{error}</p>}
+          {success && <p style={{ color: 'green' }}>{success}</p>} */}
         </div>
       </div>
     </div>

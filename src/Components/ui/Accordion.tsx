@@ -13,7 +13,7 @@ const Accordion: FC<AccorProps> = ({ year, months, isOpen, onClick }) => {
     <div>
       <button
         onClick={onClick}
-        className=" flex justify-between border-b border-borderColors w-full font-light text-grayBlack text-start py-4 text-3xl"
+        className=" flex justify-between border-b border-borderColors w-full font-medium text-grayBlack text-start py-4 text-3xl"
       >
         {year}
         <Icon icon="zondicons:cheveron-down" />
@@ -29,7 +29,7 @@ const Accordion: FC<AccorProps> = ({ year, months, isOpen, onClick }) => {
       >
         {months.map((month, index) => (
           <div key={index} className="py-6 block mx-auto">
-            <button className="text-lg w-28 h-16 transition duration-100 ease hover:bg-firstBlue hover:text-firstColors hover:font-medium text-grayBlack font-light text-center firstColors rounded-md shadow-sm shadow-shadowColors ">
+            <button className="text-lg w-28 h-16 transition duration-100 ease hover:bg-firstBlue hover:text-firstColors hover:font-medium text-grayBlack font-normal text-center firstColors rounded-md shadow-sm shadow-shadowColors ">
               {month}
             </button>
           </div>

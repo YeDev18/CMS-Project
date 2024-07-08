@@ -52,13 +52,10 @@ type Compo2 = {
 };
 
 export const Component2: FC<Compo2> = ({ lib }) => {
-  // const [fileDtci, setFileDtci] = useState<string>('');
-  // const [fileTM, setFileTM] = useState<string>('');
   const laRef = useRef<HTMLDivElement>(null);
 
   const handleClick = () => {
     const nom = laRef.current;
-    // laRef.current;
     console.log(nom);
   };
 

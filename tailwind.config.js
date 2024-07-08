@@ -1,28 +1,28 @@
 /** @type {import('tailwindcss').Config} */
-export default {
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+module.exports = {
+  darkMode: ['class'],
+  content: [
+    './pages/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './app/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
+  ],
+  prefix: '',
   theme: {
+    container: {
+      center: true,
+      padding: '2rem',
+      screens: {
+        '2xl': '1400px',
+      },
+    },
     extend: {
-      transitionProperty: {
-        width: 'width',
-      },
-      fontFamily: {
-        outfit: ['Outfit', 'sans-serif'],
-      },
       colors: {
-        bgColors: '#EEEEEE',
-        firstColors: '#EEEEEC',
-        testColors: '#ea546c',
-        testColors1: '#B4B4B4',
-        shadowColors: '#B5B3AD',
-        borderColor: '#313131',
-        grayBlack: '#0A0A0A',
-
+        shadowColors: 'rgba(0, 0, 0, 0.2)',
+        firstColors: 'rgb(255, 255, 255)',
         firstBlue: '#009FE3',
-        checkColors: '#008000',
-        testBoder: '#ededec',
+        grayBlack: '#000000',
       },
     },
   },
-  plugins: [],
 };

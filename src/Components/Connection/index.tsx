@@ -1,18 +1,39 @@
+import { FormEvent, useState } from 'react';
+import { useAuth } from '../AuthProvider';
 import Header from '../Header';
 
 const Connection = () => {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const auth = useAuth();
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (email !== '' && password !== '') {
+      console.log('Tout Est Bon');
+      console.log(email, password);
+      auth?.LoginAction(email, password);
+    }
+  };
+
   return (
     <div>
       <div className="w-[30rem] bg-bgColors py-6 px-10 rounded-md shadow-md">
         <Header />
         <div>
-          <form action="" className="max-w-lg mx-auto flex flex-col gap-4">
+          <form
+            onSubmit={handleSubmit}
+            action=""
+            className="max-w-lg mx-auto flex flex-col gap-4"
+          >
             <div className="relative z-0 w-full mb-5 group">
               <input
                 type="email"
                 name="email"
                 id="email"
                 className="block py-2.5 px-0 w-full text-md text-gray-900 bg-transparent border-0 border-b-[0.8px] border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-firstBlue peer"
+                onChange={e => {
+                  setEmail(e.target.value);
+                }}
                 placeholder=" "
                 required
               />
@@ -29,6 +50,9 @@ const Connection = () => {
                 name="password"
                 id="password"
                 className="block py-2.5 px-0 w-full text-md text-gray-900 bg-transparent border-0 border-b-[0.8px] border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-firstBlue peer"
+                onChange={e => {
+                  setPassword(e.target.value);
+                }}
                 placeholder=" "
                 required
               />
@@ -41,7 +65,7 @@ const Connection = () => {
                 {' '}
                 Connection
               </button>
-              <button>Mot de passe oublie</button>
+              <button type="submit">Mot de passe oublie</button>
             </div>
           </form>
         </div>

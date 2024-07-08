@@ -77,7 +77,136 @@ export const Libs = [
 ];
 export const headersNavire = ['#', 'IMO', 'DTCI', 'TRAFIC MARITIME'];
 export const headersConsignataires = ['#', 'DTCI'];
+export const headerTable = ['#', 'Nom', 'Type', 'Mouvement', 'Date'];
 
+export const TableConforme = [
+  {
+    id: '001',
+    libDTCI: 'MSCI-CI',
+    type: 'Container ship',
+    mouvement: 'ETD',
+    date: '24/25/2400',
+  },
+  {
+    id: '001',
+    libDTCI: 'MSCI-CI',
+    type: 'Container ship',
+    mouvement: 'ETA',
+    date: '24/25/2400',
+  },
+  {
+    id: '001',
+    libDTCI: 'MSCI-CI',
+    type: 'Container ship',
+    mouvement: 'ETD',
+    date: '24/25/2400',
+  },
+  {
+    id: '001',
+    libDTCI: 'MSCI-CI',
+    type: 'Container ship',
+    mouvement: 'ETD',
+    date: '24/25/2400',
+  },
+  {
+    id: '001',
+    libDTCI: 'MSCI-CI',
+    type: 'Container ship',
+    mouvement: 'ETD',
+    date: '24/25/2400',
+  },
+  {
+    id: '001',
+    libDTCI: 'MSCI-CI',
+    type: 'Container ship',
+    mouvement: 'ETD',
+    date: '24/25/2400',
+  },
+  {
+    id: '001',
+    libDTCI: 'MSCI-CI',
+    type: 'Container ship',
+    mouvement: 'ETD',
+    date: '24/25/2400',
+  },
+  {
+    id: '001',
+    libDTCI: 'MSCI-CI',
+    type: 'Container ship',
+    mouvement: 'ETA',
+    date: '24/25/2400',
+  },
+  {
+    id: '001',
+    libDTCI: 'MSCI-CI',
+    type: 'Container ship',
+    mouvement: 'ETD',
+    date: '24/25/2400',
+  },
+  {
+    id: '001',
+    libDTCI: 'MSCI-CI',
+    type: 'Container ship',
+    mouvement: 'ETD',
+    date: '24/25/2400',
+  },
+  {
+    id: '001',
+    libDTCI: 'MSCI-CI',
+    type: 'Container ship',
+    mouvement: 'ETD',
+    date: '24/25/2400',
+  },
+  {
+    id: '001',
+    libDTCI: 'MSCI-CI',
+    type: 'Container ship',
+    mouvement: 'ETD',
+    date: '24/25/2400',
+  },
+  {
+    id: '001',
+    libDTCI: 'MSCI-CI',
+    type: 'Container ship',
+    mouvement: 'ETD',
+    date: '24/25/2400',
+  },
+  {
+    id: '001',
+    libDTCI: 'MSCI-CI',
+    type: 'Container ship',
+    mouvement: 'ETA',
+    date: '24/25/2400',
+  },
+  {
+    id: '001',
+    libDTCI: 'MSCI-CI',
+    type: 'Container ship',
+    mouvement: 'ETD',
+    date: '24/25/2400',
+  },
+  {
+    id: '001',
+    libDTCI: 'MSCI-CI',
+    type: 'Container ship',
+    mouvement: 'ETD',
+    date: '24/25/2400',
+  },
+  {
+    id: '001',
+    libDTCI: 'MSCI-CI',
+    type: 'Container ship',
+    mouvement: 'ETD',
+    date: '24/25/2400',
+  },
+  {
+    id: '001',
+    libDTCI: 'MSCI-CI',
+    type: 'Container ship',
+    mouvement: 'ETD',
+    date: '24/25/2400',
+  },
+];
 export const TableNavire = [
   { id: '001', libDTCI: 'MSCI-CI', imo: 2156552, libTM: 'MSCI' },
   { id: '002', libDTCI: 'MSCI-CI', imo: 2156552, libTM: 'MSCI' },
