@@ -84,10 +84,12 @@ const SubMenu: FC<SubMenuProps> = ({ item, activeItem, handleClick }) => {
       <div ref={navRef} className={`sub-nav-inner  py-3 gap-4 flex  flex-col`}>
         {item?.items.map((subItem, index) => (
           <NavButton
+            key={index}
             index={index}
             onClick={handleClick}
             lib={subItem}
             isActive={activeItem === subItem}
+            // route={route}
           />
         ))}
       </div>
@@ -119,6 +121,21 @@ const Sidebar = () => {
                 route={item.route}
               />
             )}
+
+            {/* {item.items &&
+            <NavButton
+            index={index}
+            onClick={handleClick}
+            lib={item.lib}
+            icon={item.icon}
+            isActive={activeItem === item.lib}
+            hasSubNav={!!item.items}
+          />
+              item.items.map((good, index) => (
+                <div key={index}>
+                  <h1>{good.lib}</h1>
+                </div>
+              ))} */}
             {item.items && (
               <>
                 <NavButton

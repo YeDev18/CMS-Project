@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react';
 import { useRef, useState } from 'react';
 import { Libs } from '../Data';
+import Sideba2 from '../Sideba2.tsx';
 import { Component1 } from './Component';
 
 interface Lib {
@@ -159,6 +160,7 @@ const Accueil = () => {
           </div>
         </div>
       </div>
+      <Sideba2 />
     </div>
   );
 };

@@ -43,9 +43,26 @@ export const MenuItems = [
     icon: 'mdi:file-check-outline',
     route: '',
     items: ['Declares-Conformes', 'DeclaresXConformes', 'Non-Declare'],
+    ite: [
+      {
+        lib: 'Tonnes',
+        icon: 'lucide:anvil',
+        route: '/tonnes',
+      },
+      {
+        lib: 'Tonnes',
+        icon: 'lucide:anvil',
+        route: '/tonnes',
+      },
+      {
+        lib: 'Tonnes',
+        icon: 'lucide:anvil',
+        route: '/tonnes',
+      },
+    ],
   },
   {
-    lib: 'Tonnes',
+    lib: 'Viva',
     icon: 'lucide:anvil',
     route: '/tonnes',
   },
