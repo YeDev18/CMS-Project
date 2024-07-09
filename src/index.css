@@ -19,10 +19,13 @@
 }
 
 @layer components {
-  body {
-    appearance: none; /* Supprime le style par défaut */
-    -webkit-appearance: none; /* Supprime le style par défaut sur Chrome/Safari */
-    -moz-appearance: none;
+  ::-webkit-scrollbar {
+    width: 5px;
+    background: #009fe3;
+  }
+  ::-webkit-scrollbar-thumb {
+    border: solid 0 transparent;
+    background-color: #009fe3;
   }
   .buttonHeader {
     background: transparent;
@@ -48,7 +51,7 @@
 
   select {
     padding: 0.2em 4em 0.2em 0.7em;
-    background-color: #aa1b1b;
+    /* background-color: #aa1b1b; */
     border-radius: 0.25rem;
     border: 1px solid #caced1;
     outline: none;
@@ -61,5 +64,11 @@
     background-color: #eeeeee;
     color: #000000;
     padding: 10px;
+  }
+  .dropdown {
+    /* color: #ea546c; */
+  }
+  .dropdown:first-child {
+    margin-top: 1rem;
   }
 }

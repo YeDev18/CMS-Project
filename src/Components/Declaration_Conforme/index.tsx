@@ -3,7 +3,7 @@ import SecondTables from '../ui/SecondTables';
 
 const DeclarationConforme = () => {
   return (
-    <div>
+    <div className="w-screen ">
       <SecondTables
         liv={'lucide:circle-check-big'}
         color={'#008000'}

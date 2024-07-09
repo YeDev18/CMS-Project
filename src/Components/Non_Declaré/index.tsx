@@ -2,7 +2,7 @@ import { headerTable, TableConforme } from '../Data';
 import SecondTables from '../ui/SecondTables';
 const NonDeclaration = () => {
   return (
-    <div>
+    <div className="w-screen ">
       {' '}
       <SecondTables
         liv={'ph:x-circle'}

@@ -2,7 +2,7 @@ import { headerTable, TableConforme } from '../Data';
 import SecondTables from '../ui/SecondTables';
 const DeclaratioNConforme = () => {
   return (
-    <div>
+    <div className="w-screen ">
       {' '}
       <SecondTables
         liv={'charm:notes-cross'}

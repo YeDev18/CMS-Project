@@ -45,24 +45,24 @@ export const MenuItems = [
     items: ['Declares-Conformes', 'DeclaresXConformes', 'Non-Declare'],
     ite: [
       {
-        lib: 'Tonnes',
-        icon: 'lucide:anvil',
-        route: '/tonnes',
+        lib: 'Conformes',
+        icon: 'lucide:circle-check-big',
+        route: '/declaration_conforme',
       },
       {
-        lib: 'Tonnes',
-        icon: 'lucide:anvil',
-        route: '/tonnes',
+        lib: 'Non Conformes',
+        icon: 'charm:notes-cross',
+        route: '/nom_conforme',
       },
       {
-        lib: 'Tonnes',
-        icon: 'lucide:anvil',
-        route: '/tonnes',
+        lib: 'Non declares',
+        icon: 'ph:x-circle',
+        route: '/nom_declaration',
       },
     ],
   },
   {
-    lib: 'Viva',
+    lib: 'Tonnes',
     icon: 'lucide:anvil',
     route: '/tonnes',
   },
@@ -94,7 +94,7 @@ export const Libs = [
 ];
 export const headersNavire = ['#', 'IMO', 'DTCI', 'TRAFIC MARITIME'];
 export const headersConsignataires = ['#', 'DTCI'];
-export const headerTable = ['#', 'Nom', 'Type', 'Mouvement', 'Date'];
+export const headerTable = ['#', 'Nom', 'Mouvement', 'Date'];
 
 export const TableConforme = [
   {

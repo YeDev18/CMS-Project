@@ -27,11 +27,10 @@ const SecondTables: FC<Lib> = ({
   nonDeclare,
 }) => {
   const [current, setCurrent] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(9);
   const startIndex = (current - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = Table.slice(startIndex, endIndex);
-  console.log(setItemsPerPage);
 
   const goToNextPage = () => {
     setCurrent(prevPage => prevPage + 1);
@@ -92,7 +91,11 @@ const SecondTables: FC<Lib> = ({
                   className="mr-2"
                 />
               </label>
-              <select name="" id="" className="bg-none outline-4 bg-bgColors">
+              <select
+                name=""
+                id=""
+                className="bg-none outline-4 bg-firstColors"
+              >
                 <option value="">Month</option>
                 <option datatype="" value="July">
                   Dog
@@ -105,7 +108,7 @@ const SecondTables: FC<Lib> = ({
               <select
                 name=""
                 id=""
-                className="bg-none outline-none bg-bgColors"
+                className="bg-none outline-none bg-firstColors"
               >
                 <option value="">Year</option>
                 <option value="July">2024</option>
@@ -127,11 +130,11 @@ const SecondTables: FC<Lib> = ({
           Export en csv
         </button>
       </div>
-      <div className=" w-full flex flex-col gap-6 ">
+      <div className=" w-full  flex flex-col gap-6 ">
         <table className="w-full">
-          <tr className="flex justify-start gap  p-4  w-full rounded-md shadow-sm shadow-testColors1 ">
+          <tr className="flex justify-start  py-4 px-2  w-full rounded-md shadow-sm shadow-testColors1 bg-red-500 ">
             {nonDeclare ? (
-              <th className="font-normal text-start w-24">
+              <th className="font-normal text-start w-12">
                 <input type="checkbox" name="" id="" />
               </th>
             ) : (
@@ -140,7 +143,10 @@ const SecondTables: FC<Lib> = ({
 
             {HeaderTable.map((item, index) => {
               return (
-                <th className="font-normal text-start w-60" key={index}>
+                <th
+                  className="font-normal text-start lg:w-25 xl:w-48 text-sm"
+                  key={index}
+                >
                   {item}
                 </th>
               );
@@ -150,29 +156,40 @@ const SecondTables: FC<Lib> = ({
             return (
               <tr
                 key={id}
-                className="flex justify-start p-4  w-full border-b-2 "
+                className="flex justify-start p-4  w-full border-b-2 border-slate-50 "
               >
                 {nonDeclare ? (
-                  <td className="text-start w-24">
+                  <td className="text-start w-12  ">
                     <input type="checkbox" name="" id="" />
                   </td>
                 ) : (
                   ``
                 )}
 
-                <td className="text-start w-60">{val.id}</td>
-                <td className="text-start w-60">{val.libDTCI}</td>
+                <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base">
+                  {val.id}
+                </td>
+                <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base">
+                  {val.libDTCI}
+                </td>
+                <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base">
+                  {val.mouvement}
+                </td>
 
-                <td className="text-start w-60">{val.type}</td>
-                <td className="text-start w-60">{val.mouvement}</td>
-                <td className="text-start w-60 ">{val.date}</td>
+                {/* <td className="text-start lg:w-32 xl:w-52 text-sm xl:text-base">
+                  {val.type}
+                </td> */}
+
+                <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
+                  {val.date}
+                </td>
                 {nonDeclare ? (
-                  <td className="text-end w-60 ">
+                  <td className="text-end lg:w-28 xl:w-48 ">
                     <button>
                       <Icon
                         icon="mingcute:more-2-fill"
-                        width="24"
-                        height="24"
+                        width="20"
+                        height="20"
                       />
                     </button>
                   </td>
