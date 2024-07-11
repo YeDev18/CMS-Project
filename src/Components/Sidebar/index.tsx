@@ -17,7 +17,7 @@ const NavHeader = () => (
 
 const Sidebar = () => {
   return (
-    <aside className="  w-full h-full flex-col items-center py-5 gap-12 bg-firstColors rounded-md shadow-sm shadow-shadowColors flex">
+    <aside className="  w-full h-[98vh] flex-col items-center py-5 gap-12 bg-firstColors rounded-md shadow-sm shadow-shadowColors flex">
       <NavHeader />
       <Sideba2 />
     </aside>

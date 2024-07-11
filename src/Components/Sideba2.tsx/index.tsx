@@ -5,9 +5,8 @@ import { MenuItems } from '../Data';
 
 const Sideba2 = () => {
   const [dropdown, setDropdown] = useState<boolean>(false);
-  const handleClick = (key: number) => {
+  const handleClick = () => {
     setDropdown(!dropdown);
-    console.log(key);
   };
   return (
     <div className="w-full flex flex-col gap-4 p-3 whitespace-nowrap ">
@@ -16,7 +15,7 @@ const Sideba2 = () => {
           {!item.ite && (
             <button
               onClick={() => setDropdown(false)}
-              className="flex justify-start gap-2 items-center h-12 w-full border rounded-lg px-3 "
+              className="flex justify-center xl:justify-start gap-2 items-center h-12 w-full border transition-all ease delay-150  hover:bg-firstBlue hover:text-firstColors rounded-lg px-3 word active"
             >
               <Icon icon={item.icon} width="1.8em" height="1.8em" />
               <Link
@@ -30,11 +29,14 @@ const Sideba2 = () => {
           {item.ite && (
             <>
               <button
-                onClick={() => handleClick(index)}
-                className="flex justify-start gap-2 items-center h-12 w-full border rounded-md px-3 "
+                onClick={() => handleClick()}
+                className="flex justify-center xl:justify-between gap-2 items-center border h-12 w-full transition-all ease delay-150 hover:bg-firstBlue hover:text-firstColors rounded-md px-3 "
               >
-                <Icon icon={item.icon} width="1.8em" height="1.8em" />
-                <button className="hidden xl:flex">{item.lib}</button>
+                <div className="flex items-center justify-center gap-3  ">
+                  <Icon icon={item.icon} width="1.8em" height="1.8em" />
+                  <button className="hidden xl:flex">{item.lib}</button>
+                </div>
+                <Icon icon="gridicons:dropdown" width="1.3em" height="1.3em" />
               </button>
               {item.ite && (
                 <ul className="flex flex-col pl-2 gap-2 ">
@@ -43,10 +45,10 @@ const Sideba2 = () => {
                       <button
                         key={index}
                         onClick={() => setDropdown(true)}
-                        className="dropdown flex justify-start gap-2 items-center h-12 w-full border  rounded-md px-3"
+                        className="dropdown flex justify-start gap-2 border items-center h-12 w-full hover:bg-firstBlue hover:text-firstColors rounded-md px-3"
                       >
                         <Icon icon={good.icon} />
-                        <Link to={good.route} className="hidden xl:flex">
+                        <Link to={good.route} className="hidden w-full xl:flex">
                           {good.lib}
                         </Link>
                       </button>

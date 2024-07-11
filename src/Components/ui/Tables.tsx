@@ -1,5 +1,6 @@
 import { Icon } from '@iconify/react';
 import { FC, useState } from 'react';
+import * as XLSX from 'xlsx';
 
 type Lib = {
   lib: string;
@@ -12,12 +13,23 @@ interface Current {
   libDTCI: string;
   libTM: string;
 }
+
 const Tables: FC<Lib> = ({ lib, HeaderTable, Table }) => {
   const [current, setCurrent] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const startIndex = (current - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = Table.slice(startIndex, endIndex);
+  const exportToExcel = () => {
+    // Créer une nouvelle feuille de calcul
+    const ws = XLSX.utils.json_to_sheet(Table);
+    // Créer un nouveau classeur
+    const wb = XLSX.utils.book_new();
+    // Ajouter la feuille de calcul au classeur
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    // Générer et télécharger le fichier Excel
+    XLSX.writeFile(wb, `${lib}.xlsx`);
+  };
   console.log(setItemsPerPage);
 
   const goToNextPage = () => {
@@ -67,7 +79,10 @@ const Tables: FC<Lib> = ({ lib, HeaderTable, Table }) => {
           />
           {lib} : <span className="font-semibold">{Table.length}</span>
         </button>
-        <button className="rounded-md shadow-sm p-2 inline-flex items-center bg-firstBlue text-firstColors">
+        <button
+          className="rounded-md shadow-sm p-2 inline-flex items-center bg-firstBlue text-firstColors"
+          onClick={e => (e.preventDefault(), exportToExcel())}
+        >
           <Icon
             icon="material-symbols:download"
             width="1em"
@@ -83,7 +98,7 @@ const Tables: FC<Lib> = ({ lib, HeaderTable, Table }) => {
           <tr className="flex justify-start gap  p-4  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50">
             {HeaderTable.map((item, index) => {
               return (
-                <th className="font-normal text-start w-72 " key={index}>
+                <th className="font-semibold text-start w-72 " key={index}>
                   {item}
                 </th>
               );

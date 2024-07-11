@@ -71,4 +71,7 @@
   .dropdown:first-child {
     margin-top: 1rem;
   }
+  .word:not(.active) {
+    color: #d45e77;
+  }
 }

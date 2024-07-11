@@ -1,34 +1,58 @@
 import { Icon } from '@iconify/react';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
+import * as XLSX from 'xlsx';
 import { Libs } from '../Data';
 import { Component1 } from './Component';
 
-interface Lib {
-  id: number;
-  lib: string;
-}
+// interface Lib {
+//   id: number;
+//   lib: string;
+// }
 
 const Accueil = () => {
-  const [selectedFile, setSelectedFile] = useState<File[]>([]);
-  const dataDtci = useRef<string[]>([]);
-  const dataTM = useRef<string[]>([]);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [data, setData] = useState<any[]>([]);
+  const excelDateToJSDate = (serial: number) => {
+    const excelEpoch = new Date(Date.UTC(1900, 0, 0)); // 1 Janvier 1900
+    const jsDate = new Date(
+      excelEpoch.getTime() + (serial - 1) * 24 * 60 * 60 * 1000
+    ); // Ajustement pour le nombre de jours
+    const day = jsDate.getUTCDate().toString().padStart(2, '0');
+    const month = (jsDate.getUTCMonth() + 1).toString().padStart(2, '0');
+    const year = jsDate.getUTCFullYear();
 
-  const handleFileChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    lib: Lib
-  ) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedFile(prevFiles => [...prevFiles, file]);
-      console.log(`Selected file for ${lib.lib}:`, file.name);
-      if (lib.lib === 'DTCI') {
-        dataDtci.current.push(file.name);
-      } else {
-        dataTM.current.push(file.name);
-      }
-    }
+    return `${day}/${month}/${year}`;
   };
-  console.log(selectedFile);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      const arrayBuffer = e.target?.result as ArrayBuffer;
+      const data = new Uint8Array(arrayBuffer);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const parsedData = XLSX.utils.sheet_to_json(sheet);
+      // const convertedData = parsedData.map(row => {
+      //   const newRow = { ...row };
+      //   for (const key in newRow) {
+      //     if (typeof newRow[key] === 'number') {
+      //       newRow[key] = formatExcelDate(newRow[key]);
+      //     }
+      //   }
+      //   return newRow;
+      // });
+      setData(parsedData);
+    };
+
+    reader.readAsArrayBuffer(file);
+  };
+  console.log(data);
+  // console.log(excelDateToJSDate(45418));
 
   // const handleDeleteFile = (lib: Lib) => {
   //   if (lib.lib === File.name) {
@@ -38,8 +62,8 @@ const Accueil = () => {
   //   }
   // };
 
-  const fleDT: string[] = dataDtci.current;
-  const flaTM: string[] = dataTM.current;
+  // const fleDT: string[] = dataDtci.current;
+  // const flaTM: string[] = dataTM.current;
 
   function Days(date: Date, day: number) {
     const newDate = new Date(date);
@@ -110,7 +134,7 @@ const Accueil = () => {
                 </p>
               </label>
               <input
-                onChange={e => handleFileChange(e, lib)}
+                onChange={handleFileChange}
                 className="hidden"
                 accept=".xlsx, .xls"
                 type="file"
@@ -118,7 +142,7 @@ const Accueil = () => {
               />
             </div>
           ))}
-          <div className="flex flex-col gap-4 rounded-md h-40 mt-2 items-center justify-center border-2 px-1">
+          {/* <div className="flex flex-col gap-4 rounded-md h-40 mt-2 items-center justify-center border-2 px-1">
             <div className="flex items-center justify-center">
               {fleDT.length > 0 && (
                 <div className=" flex flex-col items-center justify-center px-2">
@@ -156,7 +180,7 @@ const Accueil = () => {
                 </button>
               </div>
             )}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
