@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { FC, useState } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 
 type Lib = {
   lib: string;
@@ -27,17 +27,25 @@ const SecondTables: FC<Lib> = ({
 }) => {
   const [current, setCurrent] = useState(1);
   const [selectValue, setSelectValue] = useState('');
+  const [selectValue2, setSelectValue2] = useState('');
   const [filteredData, setFilteredData] = useState(Table);
+  // const [filteredData1, setFilteredData1] = useState(filteredData);
   const [form, setForm] = useState<boolean>(false);
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
-    setSelectValue(value);
+  const MonthsYears = selectValue + '/' + selectValue2;
+  const Filt = useMemo(() => {
+    return Table.filter(item => item.date);
+  }, []);
+  const Filt2 = useMemo(() => {
+    return Table.filter(item => item.date.slice(3, 10) === MonthsYears);
+  }, [MonthsYears]);
 
-    const newFilteredData = Table.filter(
-      item => item.date.slice(3, 5) === value
-    );
-    const newFilteredDataAll = Table.filter(item => item.date);
-    value === 'All'
+  const handleClick2 = (e: React.ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    console.log(selectValue + '/' + selectValue2);
+    const newFilteredData = Filt2;
+    const newFilteredDataAll = Filt;
+    MonthsYears === 'All/'
       ? setFilteredData(newFilteredDataAll)
       : setFilteredData(newFilteredData);
   };
@@ -46,7 +54,6 @@ const SecondTables: FC<Lib> = ({
   const startIndex = (current - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = filteredData.slice(startIndex, endIndex);
-  console.log(setItemsPerPage);
 
   const goToNextPage = () => {
     setCurrent(prevPage => prevPage + 1);
@@ -96,8 +103,6 @@ const SecondTables: FC<Lib> = ({
           </button>
           <div className="flex flex-col">
             <h1>Bon voila</h1>
-            {/* <h1>{items.date}</h1>
-            <h1>{items.mouvement}</h1> */}
           </div>
         </div>
       </div>
@@ -125,6 +130,7 @@ const SecondTables: FC<Lib> = ({
               <form
                 action=""
                 className="flex gap-3  items-center justify-center"
+                onSubmit={handleClick2}
               >
                 <label htmlFor="">
                   <Icon
@@ -138,9 +144,11 @@ const SecondTables: FC<Lib> = ({
                 <select
                   name=""
                   id=""
-                  value={selectValue}
+                  // value={selectValue}
                   className="bg-none outline-4 bg-firstColors"
-                  onChange={handleSelectChange}
+                  onChange={e => {
+                    setSelectValue(e.target.value);
+                  }}
                 >
                   <option value="All">Month</option>
                   <option value="01">Janvier</option>
@@ -161,6 +169,10 @@ const SecondTables: FC<Lib> = ({
                   name=""
                   id=""
                   className="bg-none outline-none bg-firstColors"
+                  // value={selectValue2}
+                  onChange={e => {
+                    setSelectValue2(e.target.value);
+                  }}
                 >
                   <option value="">Year</option>
                   <option value="2024">2024</option>
@@ -169,6 +181,10 @@ const SecondTables: FC<Lib> = ({
                   <option value="2027">2027</option>
                   <option value="2028">2028</option>
                 </select>
+                <button>
+                  {' '}
+                  <Icon icon="mdi:filter" width="1.5em" height="1.5em" />
+                </button>
               </form>
             </div>
           </div>

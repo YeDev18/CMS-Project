@@ -51,14 +51,10 @@
 
   select {
     padding: 0.2em 4em 0.2em 0.7em;
-    /* background-color: #aa1b1b; */
     border-radius: 0.25rem;
     border: 1px solid #caced1;
     outline: none;
     cursor: pointer;
-    /* appearance: none; */
-    /* -webkit-appearance: none;
-    -moz-appearance: none; */
   }
   option {
     background-color: #eeeeee;
@@ -66,7 +62,6 @@
     padding: 10px;
   }
   .dropdown {
-    /* color: #ea546c; */
   }
   .dropdown:first-child {
     margin-top: 1rem;
