@@ -13,7 +13,7 @@ const Accordion: FC<AccorProps> = ({ year, months, isOpen, onClick }) => {
     <div>
       <button
         onClick={onClick}
-        className=" flex justify-between border-b border-borderColors w-full font-medium text-grayBlack text-start py-4 text-3xl"
+        className="flex justify-between border-b border-borderColors w-full font-medium text-grayBlack text-start py-4 text-3xl"
       >
         {year}
         <Icon icon="zondicons:cheveron-down" />

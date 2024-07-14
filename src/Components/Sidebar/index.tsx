@@ -1,12 +1,12 @@
 import logo from '../../assets/images/logo.png';
 import Sideba2 from '../Sideba2.tsx';
 
-type Item = {
-  lib: string;
-  icon: string;
-  route: string;
-  items: string[];
-};
+// type Item = {
+//   lib: string;
+//   icon: string;
+//   route: string;
+//   items: string[];
+// };
 const NavHeader = () => (
   <header>
     <div className="lg:w-24 xl:w-48">

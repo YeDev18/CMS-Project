@@ -1,5 +1,6 @@
 import { Icon } from '@iconify/react';
 import React, { FC, useMemo, useState } from 'react';
+import * as XLSX from 'xlsx';
 
 type Lib = {
   lib: string;
@@ -29,9 +30,18 @@ const SecondTables: FC<Lib> = ({
   const [selectValue, setSelectValue] = useState('');
   const [selectValue2, setSelectValue2] = useState('');
   const [filteredData, setFilteredData] = useState(Table);
-  // const [filteredData1, setFilteredData1] = useState(filteredData);
   const [form, setForm] = useState<boolean>(false);
   const MonthsYears = selectValue + '/' + selectValue2;
+  const exportToExcel = () => {
+    // Créer une nouvelle feuille de calcul
+    const ws = XLSX.utils.json_to_sheet(filteredData);
+    // Créer un nouveau classeur
+    const wb = XLSX.utils.book_new();
+    // Ajouter la feuille de calcul au classeur
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    // Générer et télécharger le fichier Excel
+    XLSX.writeFile(wb, `${lib}.xlsx`);
+  };
   const Filt = useMemo(() => {
     return Table.filter(item => item.date);
   }, []);
@@ -42,12 +52,14 @@ const SecondTables: FC<Lib> = ({
   const handleClick2 = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log(selectValue + '/' + selectValue2);
+    // console.log(selectValue + '/' + selectValue2);
     const newFilteredData = Filt2;
     const newFilteredDataAll = Filt;
-    MonthsYears === 'All/'
+    MonthsYears === 'All/All'
       ? setFilteredData(newFilteredDataAll)
       : setFilteredData(newFilteredData);
+
+    MonthsYears === '/' && setFilteredData(newFilteredDataAll);
   };
 
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -125,8 +137,7 @@ const SecondTables: FC<Lib> = ({
               />
               {lib} : <span className="font-semibold">{Table.length}</span>
             </button>
-            <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex items-center">
-              {' '}
+            <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
               <form
                 action=""
                 className="flex gap-3  items-center justify-center"
@@ -174,14 +185,14 @@ const SecondTables: FC<Lib> = ({
                     setSelectValue2(e.target.value);
                   }}
                 >
-                  <option value="">Year</option>
+                  <option value="All">Year</option>
                   <option value="2024">2024</option>
                   <option value="2025">2025</option>
                   <option value="2026">2026</option>
                   <option value="2027">2027</option>
                   <option value="2028">2028</option>
                 </select>
-                <button>
+                <button type="submit">
                   {' '}
                   <Icon icon="mdi:filter" width="1.5em" height="1.5em" />
                 </button>
@@ -189,7 +200,10 @@ const SecondTables: FC<Lib> = ({
             </div>
           </div>
 
-          <button className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex items-center">
+          <button
+            className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex items-center"
+            onClick={() => exportToExcel()}
+          >
             <Icon
               icon="material-symbols:download"
               width="1em"

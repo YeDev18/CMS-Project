@@ -81,7 +81,8 @@ const Tables: FC<Lib> = ({ lib, HeaderTable, Table }) => {
         </button>
         <button
           className="rounded-md shadow-sm p-2 inline-flex items-center bg-firstBlue text-firstColors"
-          onClick={e => (e.preventDefault(), exportToExcel())}
+          type="button"
+          onClick={() => exportToExcel()}
         >
           <Icon
             icon="material-symbols:download"
