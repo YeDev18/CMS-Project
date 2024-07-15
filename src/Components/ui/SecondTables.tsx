@@ -9,6 +9,7 @@ type Lib = {
   Table: Array<{
     id: string;
     libDTCI: string;
+    imo: number;
     type: string;
     date: string;
     mouvement: string;
@@ -66,6 +67,10 @@ const SecondTables: FC<Lib> = ({
   const startIndex = (current - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = filteredData.slice(startIndex, endIndex);
+  const [searchValue, setSearchValue] = useState(0);
+  const DataFinal = searchValue
+    ? currentItems.filter(val => val.imo.toString().includes(searchValue))
+    : currentItems;
 
   const goToNextPage = () => {
     setCurrent(prevPage => prevPage + 1);
@@ -123,10 +128,10 @@ const SecondTables: FC<Lib> = ({
 
   return (
     <>
-      <div className=" flex flex-col gap-6 text-grayBlack">
-        <div className="flex justify-between">
-          <div className="flex gap-8">
-            <button className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex items-center">
+      <div className=" flex flex-col gap-6 text-grayBlack w-full ">
+        <div className="flex justify-between w-full">
+          <div className="flex gap-4">
+            <button className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex items-center whitespace-nowrap">
               {' '}
               <Icon
                 icon={liv}
@@ -155,7 +160,6 @@ const SecondTables: FC<Lib> = ({
                 <select
                   name=""
                   id=""
-                  // value={selectValue}
                   className="bg-none outline-4 bg-firstColors"
                   onChange={e => {
                     setSelectValue(e.target.value);
@@ -197,6 +201,21 @@ const SecondTables: FC<Lib> = ({
                 </button>
               </form>
             </div>
+            <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
+              <label htmlFor="">
+                <Icon icon="mdi:search" width="1.5em" height="1.5em" />
+              </label>
+              <input
+                type="number"
+                placeholder="IMO"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setSearchValue(e.target.value);
+                  console.log(searchValue);
+                }}
+                // onChange={() => handleChange}
+                className="border w-32 outline-none p-1 rounded-sm text-sm font-medium"
+              />
+            </div>
           </div>
 
           <button
@@ -216,18 +235,10 @@ const SecondTables: FC<Lib> = ({
         <div className=" w-full  flex flex-col gap-6 ">
           <table className="w-full">
             <tr className="flex justify-start  py-4 px-2  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
-              {nonDeclare ? (
-                <th className="font-normal text-start w-12">
-                  <input type="checkbox" name="" id="" />
-                </th>
-              ) : (
-                ``
-              )}
-
               {HeaderTable.map((item, index) => {
                 return (
                   <th
-                    className=" text-start font-semibold lg:w-28 xl:w-52"
+                    className=" text-start font-semibold lg:w-28 xl:w-52 headerSecond"
                     key={index}
                   >
                     {item}
@@ -235,34 +246,25 @@ const SecondTables: FC<Lib> = ({
                 );
               })}
             </tr>
-            {currentItems.map(val => {
+            {DataFinal.map(val => {
               return (
                 <>
                   <tr
                     key={val.id}
-                    className="flex justify-start py-4 px-2   w-full border-b-2 border-slate-50 "
+                    className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
                   >
-                    {nonDeclare ? (
-                      <td className="text-start w-12">
-                        <input type="checkbox" name="" id="" />
-                      </td>
-                    ) : (
-                      ``
-                    )}
-
-                    <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-base">
+                    <td className="text-start lg:w-32 text-sm xl:text-base">
                       {val.id}
+                    </td>
+                    <td className="text-start lg:w-32 text-sm xl:text-base">
+                      {val.imo}
                     </td>
                     <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
                       {val.libDTCI}
                     </td>
-                    <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-base">
+                    <td className="text-start lg:w-40 text-sm xl:text-base">
                       {val.mouvement}
                     </td>
-
-                    {/* <td className="text-start lg:w-32 xl:w-52 text-sm xl:text-base">
-                  {val.type}
-                </td> */}
 
                     <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
                       {val.date}
@@ -276,6 +278,13 @@ const SecondTables: FC<Lib> = ({
                             height="20"
                           />
                         </button>
+                        {/* <button onClick={() => handleClick()}>
+                          <Icon
+                            icon="mingcute:more-2-fill"
+                            width="20"
+                            height="20"
+                          />
+                        </button> */}
                       </td>
                     ) : (
                       ''

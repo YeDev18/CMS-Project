@@ -71,14 +71,7 @@ const Sideba2 = () => {
                         onClick={() => setDropdown(true)}
                         className="dropdown flex justify-start gap-2 border items-center h-12 w-full hover:bg-firstBlue hover:text-firstColors rounded-md px-3"
                       >
-                        <Icon
-                          icon={good.icon}
-                          // className={`${
-                          //   activeIndex === index
-                          //     ? 'bg-red-500'
-                          //     : 'bg-slate-600'
-                          // }`}
-                        />
+                        <Icon icon={good.icon} />
                         <Link to={good.route} className="hidden w-full xl:flex">
                           {good.lib}
                         </Link>

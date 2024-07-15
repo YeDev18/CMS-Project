@@ -66,8 +66,8 @@ const Tables: FC<Lib> = ({ lib, HeaderTable, Table }) => {
   };
 
   return (
-    <div className=" flex flex-col gap-6 text-grayBlack">
-      <div className="flex justify-between">
+    <div className=" flex flex-col gap-6 text-grayBlack w-full ">
+      <div className="flex justify-between w-full">
         <button className="rounded-md shadow-sm  p-2 inline-flex items-center bg-firstBlue text-firstColors">
           {' '}
           <Icon
@@ -99,7 +99,10 @@ const Tables: FC<Lib> = ({ lib, HeaderTable, Table }) => {
           <tr className="flex justify-start gap  p-4  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50">
             {HeaderTable.map((item, index) => {
               return (
-                <th className="font-semibold text-start w-72 " key={index}>
+                <th
+                  className="font-semibold text-start w-72 headerFirst  "
+                  key={index}
+                >
                   {item}
                 </th>
               );
@@ -111,7 +114,7 @@ const Tables: FC<Lib> = ({ lib, HeaderTable, Table }) => {
                 key={id}
                 className="flex justify-start p-4  w-full border-b-2 border-slate-50 "
               >
-                <td className="text-start w-72">{val.id}</td>
+                <td className="text-start w-40">{val.id}</td>
                 {val.imo ? <td className="text-start w-72">{val.imo}</td> : ''}
                 <td className="text-start w-72">{val.libDTCI}</td>
                 {val.libTM ? (

@@ -94,11 +94,12 @@ export const Libs = [
 ];
 export const headersNavire = ['#', 'IMO', 'DTCI', 'TRAFIC MARITIME'];
 export const headersConsignataires = ['#', 'DTCI'];
-export const headerTable = ['#', 'Nom', 'Mouvement', 'Date'];
+export const headerTable = ['#', 'IMO', 'Nom', 'Mouvement', 'Date'];
 
 export const TableConforme = [
   {
     id: '001',
+    imo: 452452,
     libDTCI: 'MSCI-CI',
     type: 'Container ship',
     mouvement: 'ETD',
@@ -106,6 +107,7 @@ export const TableConforme = [
   },
   {
     id: '002',
+    imo: 452452,
     libDTCI: 'MSCI-CI',
     type: 'Container ship',
     mouvement: 'ETA',
@@ -113,6 +115,7 @@ export const TableConforme = [
   },
   {
     id: '003',
+    imo: 452452,
     libDTCI: 'MSCI-CI',
     type: 'Container ship',
     mouvement: 'ETD',
@@ -120,6 +123,7 @@ export const TableConforme = [
   },
   {
     id: '004',
+    imo: 452452,
     libDTCI: 'MSCI-CI',
     type: 'Container ship',
     mouvement: 'ETD',
@@ -127,6 +131,7 @@ export const TableConforme = [
   },
   {
     id: '005',
+    imo: 455252,
     libDTCI: 'MSCI-CI',
     type: 'Container ship',
     mouvement: 'ETD',
@@ -134,6 +139,7 @@ export const TableConforme = [
   },
   {
     id: '006',
+    imo: 852452,
     libDTCI: 'MSCI-CI',
     type: 'Container ship',
     mouvement: 'ETD',
@@ -141,6 +147,7 @@ export const TableConforme = [
   },
   {
     id: '007',
+    imo: 4552252,
     libDTCI: 'MSCI-CI',
     type: 'Container ship',
     mouvement: 'ETD',
@@ -148,6 +155,7 @@ export const TableConforme = [
   },
   {
     id: '008',
+    imo: 5252352,
     libDTCI: 'MSCI-CI',
     type: 'Container ship',
     mouvement: 'ETA',
@@ -155,6 +163,7 @@ export const TableConforme = [
   },
   {
     id: '009',
+    imo: 463552,
     libDTCI: 'MSCI-CI',
     type: 'Container ship',
     mouvement: 'ETD',
@@ -162,6 +171,7 @@ export const TableConforme = [
   },
   {
     id: '010',
+    imo: 4527852,
     libDTCI: 'MSCI-CI',
     type: 'Container ship',
     mouvement: 'ETD',
@@ -169,6 +179,7 @@ export const TableConforme = [
   },
   {
     id: '011',
+    imo: 4595122,
     libDTCI: 'MSCI-CI',
     type: 'Container ship',
     mouvement: 'ETD',
@@ -176,6 +187,7 @@ export const TableConforme = [
   },
   {
     id: '012',
+    imo: 4595122,
     libDTCI: 'MSCI-CI',
     type: 'Container ship',
     mouvement: 'ETD',
@@ -183,6 +195,7 @@ export const TableConforme = [
   },
   {
     id: '013',
+    imo: 4595122,
     libDTCI: 'MSCI-CI',
     type: 'Container ship',
     mouvement: 'ETD',
@@ -190,6 +203,7 @@ export const TableConforme = [
   },
   {
     id: '014',
+    imo: 212455,
     libDTCI: 'MSCI-CI',
     type: 'Container ship',
     mouvement: 'ETA',
@@ -197,6 +211,7 @@ export const TableConforme = [
   },
   {
     id: '015',
+    imo: 789522,
     libDTCI: 'MSCI-CI',
     type: 'Container ship',
     mouvement: 'ETD',
@@ -204,6 +219,7 @@ export const TableConforme = [
   },
   {
     id: '016',
+    imo: 256922,
     libDTCI: 'MSCI-CI',
     type: 'Container ship',
     mouvement: 'ETD',
@@ -211,6 +227,7 @@ export const TableConforme = [
   },
   {
     id: '017',
+    imo: 78512,
     libDTCI: 'MSCI-CI',
     type: 'Container ship',
     mouvement: 'ETD',
@@ -218,6 +235,7 @@ export const TableConforme = [
   },
   {
     id: '018',
+    imo: 69324,
     libDTCI: 'MSCI-CI',
     type: 'Container ship',
     mouvement: 'ETD',

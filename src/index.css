@@ -120,3 +120,59 @@
     @apply bg-background text-foreground;
   }
 }
+@layer components {
+  ::-webkit-scrollbar {
+    width: 5px;
+    background: #009fe3;
+  }
+  ::-webkit-scrollbar-thumb {
+    border: solid 0 transparent;
+    background-color: #009fe3;
+  }
+  .buttonHeader {
+    background: transparent;
+    border: 1px solid black;
+    padding: 0;
+    cursor: pointer;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  select {
+    padding: 0.2em 4em 0.2em 0.7em;
+    border-radius: 0.25rem;
+    border: 1px solid #caced1;
+    outline: none;
+    cursor: pointer;
+  }
+  option {
+    background-color: #eeeeee;
+    color: #000000;
+    padding: 10px;
+  }
+  .dropdown {
+  }
+  .dropdown:first-child {
+    margin-top: 1rem;
+  }
+  .word:not(.active) {
+    color: #d45e77;
+  }
+  .headerFirst:first-child {
+    /* background-color: #009fe3; */
+    width: 8rem;
+  }
+
+  .headerSecond:first-child {
+    /* background-color: #009fe3; */
+    width: 8rem;
+  }
+  .headerSecond:nth-child(2) {
+    /* background-color: #009fe3; */
+    width: 8rem;
+  }
+  .headerSecond:nth-child(4) {
+    /* background-color: #009fe3; */
+    width: 10rem;
+  }
+}
