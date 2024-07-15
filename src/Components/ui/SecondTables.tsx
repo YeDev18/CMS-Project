@@ -180,7 +180,6 @@ const SecondTables: FC<Lib> = ({
                   name=""
                   id=""
                   className="bg-none outline-none bg-firstColors"
-                  // value={selectValue2}
                   onChange={e => {
                     setSelectValue2(e.target.value);
                   }}

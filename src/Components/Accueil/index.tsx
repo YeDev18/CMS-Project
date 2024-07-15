@@ -2,6 +2,7 @@ import { Icon } from '@iconify/react';
 import { useState } from 'react';
 import * as XLSX from 'xlsx';
 import { Libs } from '../Data';
+import { Chart } from './Chart';
 import { Component1 } from './Component';
 
 // interface Lib {
@@ -89,60 +90,60 @@ const Accueil = () => {
           <p className="text-borderColor">Abidjan</p>
         </div>
       </div>
-
-      <div className="flex gap-12">
-        <div className="w-fit mt-2 flex gap-8 ">
-          <Component1
-            index={1}
-            icon1="lucide:ship"
-            icon2="mingcute:arrow-up-fill"
-            name="Navire"
-            number={285}
-          />
-          <Component1
-            index={2}
-            icon1="lucide:contact"
-            icon2="mingcute:arrow-up-fill"
-            name="Consignataire"
-            number={85}
-          />
-        </div>
-        <div className="flex gap-4 items-center justify-center">
-          {Libs.map(lib => (
-            <div
-              key={lib.id}
-              className="border-dashed w-48 h-40 mt-2 rounded-md border-2 p-2 border-firstBlue flex flex-col gap-2 justify-around items-center"
-            >
-              <label
-                htmlFor={`fileId-${lib.id}`}
-                className="flex flex-col gap-2 justify-between items-center cursor-pointer"
+      <div className="flex flex-col gap-6">
+        <div className="flex  gap-12">
+          <div className="w-fit mt-2 flex gap-8 ">
+            <Component1
+              index={1}
+              icon1="lucide:ship"
+              icon2="mingcute:arrow-up-fill"
+              name="Navire"
+              number={285}
+            />
+            <Component1
+              index={2}
+              icon1="lucide:contact"
+              icon2="mingcute:arrow-up-fill"
+              name="Consignataire"
+              number={85}
+            />
+          </div>
+          <div className="flex gap-4 items-center justify-center">
+            {Libs.map(lib => (
+              <div
+                key={lib.id}
+                className="border-dashed w-48 h-40 mt-2 rounded-md border-2 p-2 border-firstBlue flex flex-col gap-2 justify-around items-center"
               >
-                <h2 className="font-medium text-[1.2rem] text-grayBlack">
-                  File {lib.lib}
-                </h2>
-                <div className="block bg-firstBlue rounded-full p-2 ">
-                  <Icon
-                    icon="mdi:cloud-upload-outline"
-                    width="2rem"
-                    height="2rem"
-                    color="#EEEEEC"
-                  />
-                </div>
+                <label
+                  htmlFor={`fileId-${lib.id}`}
+                  className="flex flex-col gap-2 justify-between items-center cursor-pointer"
+                >
+                  <h2 className="font-medium text-[1.2rem] text-grayBlack">
+                    File {lib.lib}
+                  </h2>
+                  <div className="block bg-firstBlue rounded-full p-2 ">
+                    <Icon
+                      icon="mdi:cloud-upload-outline"
+                      width="2rem"
+                      height="2rem"
+                      color="#EEEEEC"
+                    />
+                  </div>
 
-                <p className="text-[0.6rem] text-testColors1 text-center">
-                  Import file from your computer(*.xls)
-                </p>
-              </label>
-              <input
-                onChange={handleFileChange}
-                className="hidden"
-                accept=".xlsx, .xls"
-                type="file"
-                id={`fileId-${lib.id}`}
-              />
-            </div>
-          ))}
-          {/* <div className="flex flex-col gap-4 rounded-md h-40 mt-2 items-center justify-center border-2 px-1">
+                  <p className="text-[0.6rem] text-testColors1 text-center">
+                    Import file from your computer(*.xls)
+                  </p>
+                </label>
+                <input
+                  onChange={handleFileChange}
+                  className="hidden"
+                  accept=".xlsx, .xls"
+                  type="file"
+                  id={`fileId-${lib.id}`}
+                />
+              </div>
+            ))}
+            {/* <div className="flex flex-col gap-4 rounded-md h-40 mt-2 items-center justify-center border-2 px-1">
             <div className="flex items-center justify-center">
               {fleDT.length > 0 && (
                 <div className=" flex flex-col items-center justify-center px-2">
@@ -181,6 +182,10 @@ const Accueil = () => {
               </div>
             )}
           </div> */}
+          </div>
+        </div>
+        <div className="w-[50%] h-40">
+          <Chart />
         </div>
       </div>
     </div>
