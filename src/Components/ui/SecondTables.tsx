@@ -32,6 +32,11 @@ const SecondTables: FC<Lib> = ({
   const [selectValue2, setSelectValue2] = useState('');
   const [filteredData, setFilteredData] = useState(Table);
   const [form, setForm] = useState<boolean>(false);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const startIndex = (current - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = filteredData.slice(startIndex, endIndex);
+  const [searchValue, setSearchValue] = useState();
   const MonthsYears = selectValue + '/' + selectValue2;
   const exportToExcel = () => {
     // Créer une nouvelle feuille de calcul
@@ -52,8 +57,6 @@ const SecondTables: FC<Lib> = ({
 
   const handleClick2 = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // console.log(selectValue + '/' + selectValue2);
     const newFilteredData = Filt2;
     const newFilteredDataAll = Filt;
     MonthsYears === 'All/All'
@@ -63,11 +66,6 @@ const SecondTables: FC<Lib> = ({
     MonthsYears === '/' && setFilteredData(newFilteredDataAll);
   };
 
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const startIndex = (current - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = filteredData.slice(startIndex, endIndex);
-  const [searchValue, setSearchValue] = useState(0);
   const DataFinal = searchValue
     ? currentItems.filter(val => val.imo.toString().includes(searchValue))
     : currentItems;

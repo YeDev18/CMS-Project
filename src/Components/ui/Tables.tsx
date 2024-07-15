@@ -114,7 +114,7 @@ const Tables: FC<Lib> = ({ lib, HeaderTable, Table }) => {
                 key={id}
                 className="flex justify-start p-4  w-full border-b-2 border-slate-50 "
               >
-                <td className="text-start w-40">{val.id}</td>
+                <td className="text-start w-32">{val.id}</td>
                 {val.imo ? <td className="text-start w-72">{val.imo}</td> : ''}
                 <td className="text-start w-72">{val.libDTCI}</td>
                 {val.libTM ? (

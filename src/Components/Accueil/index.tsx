@@ -1,18 +1,24 @@
 import { Icon } from '@iconify/react';
-import { useState } from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
 import { Libs } from '../Data';
 import { Chart } from './Chart';
 import { Component1 } from './Component';
 
-// interface Lib {
-//   id: number;
-//   lib: string;
-// }
-
 const Accueil = () => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [data, setData] = useState<any[]>([]);
+  const [selectedFile1, setSelectedFile1] = useState<File | null>(null);
+  const [selectedFile2, setSelectedFile2] = useState<File | null>(null);
+  const [dataDtci, setDataDtci] = useState<any[]>(['']);
+  const [dataTM, setDataTM] = useState<any[]>(['']);
+
+  useEffect(() => {
+    fetchDataDtci();
+  }, [selectedFile1]);
+  useEffect(() => {
+    fetchDataTM();
+  }, [selectedFile2]); // Remplacez par les valeurs que vous voulez exclure
+
   const excelDateToJSDate = (serial: number) => {
     const excelEpoch = new Date(Date.UTC(1900, 0, 0)); // 1 Janvier 1900
     const jsDate = new Date(
@@ -25,12 +31,12 @@ const Accueil = () => {
     return `${day}/${month}/${year}`;
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
+    setSelectedFile1(file);
+    console.log(file.name);
     const reader = new FileReader();
-
     reader.onload = (e: ProgressEvent<FileReader>) => {
       const arrayBuffer = e.target?.result as ArrayBuffer;
       const data = new Uint8Array(arrayBuffer);
@@ -38,33 +44,88 @@ const Accueil = () => {
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
       const parsedData = XLSX.utils.sheet_to_json(sheet);
-      // const convertedData = parsedData.map(row => {
-      //   const newRow = { ...row };
-      //   for (const key in newRow) {
-      //     if (typeof newRow[key] === 'number') {
-      //       newRow[key] = formatExcelDate(newRow[key]);
-      //     }
-      //   }
-      //   return newRow;
-      // });
-      setData(parsedData);
+      setDataDtci(parsedData);
     };
 
     reader.readAsArrayBuffer(file);
   };
-  console.log(data);
-  // console.log(excelDateToJSDate(45418));
+  const fetchDataDtci = async () => {
+    if (!selectedFile1) {
+      return console.log(1 + 2);
+    }
 
-  // const handleDeleteFile = (lib: Lib) => {
-  //   if (lib.lib === File.name) {
-  //     console.log(dataDtci);
-  //   } else {
-  //     console.log(dataTM);
-  //   }
-  // };
+    const formData = new FormData();
+    formData.append('file', selectedFile1);
 
-  // const fleDT: string[] = dataDtci.current;
-  // const flaTM: string[] = dataTM.current;
+    try {
+      console.log('Sending DTCI data:', formData);
+      const response = await axios.post(
+        'https://dj-declaration.onrender.com/api/upload_dtci_file',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      console.log('Success:', response.data);
+    } catch (error: any) {
+      if (error.response) {
+        console.log('Error response:', error.response.data);
+      } else {
+        console.log('Error:', error.message);
+      }
+    }
+  };
+
+  const handleFileChange2 = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setSelectedFile2(file);
+    console.log(file.name);
+    const reader = new FileReader();
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      const arrayBuffer = e.target?.result as ArrayBuffer;
+      const data = new Uint8Array(arrayBuffer);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const parsedData = XLSX.utils.sheet_to_json(sheet);
+      setDataTM(parsedData);
+    };
+
+    reader.readAsArrayBuffer(file);
+    fetchDataTM();
+  };
+
+  const fetchDataTM = async () => {
+    if (!selectedFile2) {
+      return console.log(1 + 1);
+    }
+
+    const formData = new FormData();
+    formData.append('file', selectedFile2);
+
+    try {
+      console.log('Sending TM data:', formData);
+      const response = await axios.post(
+        'https://dj-declaration.onrender.com/api/upload_trafic_file/',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      console.log('Success:', response.data);
+    } catch (error: any) {
+      if (error.response) {
+        console.log('Error response:', error.response.data);
+      } else {
+        console.log('Error:', error.message);
+      }
+    }
+  };
 
   function Days(date: Date, day: number) {
     const newDate = new Date(date);
@@ -135,7 +196,9 @@ const Accueil = () => {
                   </p>
                 </label>
                 <input
-                  onChange={handleFileChange}
+                  onChange={
+                    lib.lib === 'DTCI' ? handleFileChange1 : handleFileChange2
+                  }
                   className="hidden"
                   accept=".xlsx, .xls"
                   type="file"
@@ -143,45 +206,6 @@ const Accueil = () => {
                 />
               </div>
             ))}
-            {/* <div className="flex flex-col gap-4 rounded-md h-40 mt-2 items-center justify-center border-2 px-1">
-            <div className="flex items-center justify-center">
-              {fleDT.length > 0 && (
-                <div className=" flex flex-col items-center justify-center px-2">
-                  <Icon
-                    icon="vscode-icons:file-type-excel"
-                    width="40"
-                    height="40"
-                  />
-                  <p className="text-[12px] font-medium ">{fleDT[0]}</p>
-                </div>
-              )}
-              {flaTM.length > 0 && (
-                <div className=" flex flex-col items-center justify-start px-2">
-                  <Icon
-                    icon="vscode-icons:file-type-excel"
-                    width="40"
-                    height="40"
-                  />
-                  <p className="text-[12px] font-medium ">{flaTM[0]}</p>
-                </div>
-              )}
-            </div>
-
-            {flaTM.length > 0 && fleDT.length > 0 && (
-              <div className="flex gap-4">
-                <input
-                  type="date"
-                  name=""
-                  id=""
-                  className="p-2 border-2 rounded-md bg-bgColors"
-                />
-                <button className="text-lg text-firstColors rounded-md bg-firstBlue  py-1 px-4 w-fit">
-                  {' '}
-                  Vérification
-                </button>
-              </div>
-            )}
-          </div> */}
           </div>
         </div>
         <div className="w-[50%] h-40">
