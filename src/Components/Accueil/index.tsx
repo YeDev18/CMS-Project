@@ -11,6 +11,9 @@ const Accueil = () => {
   const [selectedFile2, setSelectedFile2] = useState<File | null>(null);
   const [dataDtci, setDataDtci] = useState<any[]>(['']);
   const [dataTM, setDataTM] = useState<any[]>(['']);
+  const [dat, setDat] = useState<any[]>(['']);
+  const selected = selectedFile1 && selectedFile2 ? true : false;
+  console.log(selected);
 
   useEffect(() => {
     fetchDataDtci();
@@ -18,17 +21,33 @@ const Accueil = () => {
   useEffect(() => {
     fetchDataTM();
   }, [selectedFile2]); // Remplacez par les valeurs que vous voulez exclure
+  useEffect(() => {
+    handleCompare();
+    console.log(`C'est fait`);
+  }, [selected === true]);
 
-  const excelDateToJSDate = (serial: number) => {
-    const excelEpoch = new Date(Date.UTC(1900, 0, 0)); // 1 Janvier 1900
-    const jsDate = new Date(
-      excelEpoch.getTime() + (serial - 1) * 24 * 60 * 60 * 1000
-    ); // Ajustement pour le nombre de jours
-    const day = jsDate.getUTCDate().toString().padStart(2, '0');
-    const month = (jsDate.getUTCMonth() + 1).toString().padStart(2, '0');
-    const year = jsDate.getUTCFullYear();
+  // const excelDateToJSDate = (serial: number) => {
+  //   const excelEpoch = new Date(Date.UTC(1900, 0, 0)); // 1 Janvier 1900
+  //   const jsDate = new Date(
+  //     excelEpoch.getTime() + (serial - 1) * 24 * 60 * 60 * 1000
+  //   ); // Ajustement pour le nombre de jours
+  //   const day = jsDate.getUTCDate().toString().padStart(2, '0');
+  //   const month = (jsDate.getUTCMonth() + 1).toString().padStart(2, '0');
+  //   const year = jsDate.getUTCFullYear();
 
-    return `${day}/${month}/${year}`;
+  //   return `${day}/${month}/${year}`;
+  // };
+
+  const handleCompare = () => {
+    console.log(10 + 1);
+    axios
+      .get('https://dj-declaration.onrender.com/api/compare-declaration-status')
+      .then(res => res.data)
+      .then(data => {
+        setDat(data);
+        console.log(dat);
+      })
+      .catch(error => console.log(error));
   };
 
   const handleFileChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,7 +171,7 @@ const Accueil = () => {
         </div>
       </div>
       <div className="flex flex-col gap-6">
-        <div className="flex  gap-12">
+        <div className="flex items-center  gap-12">
           <div className="w-fit mt-2 flex gap-8 ">
             <Component1
               index={1}
@@ -207,6 +226,12 @@ const Accueil = () => {
               </div>
             ))}
           </div>
+          <button
+            className="bg-firstBlue p-2 w-40 rounded-md text-[#EEEEEC] h-12"
+            onClick={handleCompare}
+          >
+            Comparez
+          </button>
         </div>
         <div className="w-[50%] h-40">
           <Chart />
