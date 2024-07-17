@@ -1,8 +1,3 @@
-'use client';
-
-import { TrendingUp } from 'lucide-react';
-import { Bar, BarChart, CartesianGrid, XAxis } from 'recharts';
-
 import {
   Card,
   CardContent,
@@ -14,69 +9,81 @@ import {
 import {
   ChartConfig,
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
+import { TrendingUp } from 'lucide-react';
+import { Pie, PieChart } from 'recharts';
 const chartData = [
-  { month: 'Janvier', Conformes: 186, Non_Conformes: 80, Non_Declaration: 90 },
+  { browser: 'Conformes', visitors: 275, fill: 'var(--color-Conformes)' },
   {
-    month: 'Fevrier',
-    Conformes: 305,
-    Non_Conformes: 200,
-    Non_Declaration: 90,
+    browser: 'Non_conformes',
+    visitors: 200,
+    fill: 'var(--color-Non_conformes)',
   },
-  { month: 'Mars', Conformes: 237, Non_Conformes: 120, Non_Declaration: 20 },
-  { month: 'Avril', Conformes: 73, Non_Conformes: 190, Non_Declaration: 90 },
-  { month: 'Mai', Conformes: 209, Non_Conformes: 130, Non_Declaration: 40 },
-  { month: 'Juin', Conformes: 214, Non_Conformes: 140, Non_Declaration: 90 },
+  { browser: 'Non_declares', visitors: 187, fill: 'var(--color-Non_declares)' },
+  // { browser: 'edge', visitors: 173, fill: 'var(--color-edge)' },
+  // { browser: 'other', visitors: 90, fill: 'var(--color-other)' },
 ];
-
 const chartConfig = {
-  desktop: {
-    label: 'Desktop',
+  visitors: {
+    label: 'Visitors',
+  },
+  Conformes: {
+    label: 'Conformes',
     color: 'hsl(var(--chart-1))',
   },
-  mobile: {
-    label: 'Mobile',
+  Non_conformes: {
+    label: 'Non_Conformes',
     color: 'hsl(var(--chart-2))',
   },
+  Non_declares: {
+    label: 'Non_Declare',
+    color: 'hsl(var(--chart-3))',
+  },
+  edge: {
+    label: 'Edge',
+    color: 'hsl(var(--chart-4))',
+  },
+  other: {
+    label: 'Other',
+    color: 'hsl(var(--chart-5))',
+  },
 } satisfies ChartConfig;
-
 export function Chart() {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Statistiques des declarations</CardTitle>
-        <CardDescription>Janvier - Juin 2024</CardDescription>
+    <Card className="flex flex-col">
+      <CardHeader className="items-center pb-0">
+        <CardTitle>Statistiques des differents navires </CardTitle>
+        <CardDescription>
+          Conformes - Non Comformes - Non-Declares
+        </CardDescription>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={value => value.slice(0, 3)}
-            />
+      <CardContent className="flex-1 pb-0">
+        <ChartContainer
+          config={chartConfig}
+          className="mx-auto aspect-square max-h-[250px]"
+        >
+          <PieChart>
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent indicator="dashed" />}
+              content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="Conformes" fill="var(--color-desktop)" radius={4} />
-            <Bar
-              dataKey="Non_Conformes"
-              fill="var(--color-mobile)"
-              radius={4}
+            <Pie
+              data={chartData}
+              dataKey="visitors"
+              nameKey="browser"
+              stroke="0"
             />
-            <Bar dataKey="Non_Declaration" fill="#0D2847" radius={4} />
-          </BarChart>
+            <ChartLegend content={<ChartLegendContent />} />
+          </PieChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Augmentation de 5.2% par mois <TrendingUp className="h-4 w-4" />
+      <CardFooter className="flex-col gap-2 text-sm">
+        <div className="flex items-center gap-2 font-medium leading-none">
+          Tendance Haute de mois en mois <TrendingUp className="h-4 w-4" />
         </div>
       </CardFooter>
     </Card>

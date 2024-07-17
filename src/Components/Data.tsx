@@ -242,6 +242,35 @@ export const TableConforme = [
     date: '24/08/2026',
   },
 ];
+
+export const TableConform555 = [
+  {
+    id: 1,
+    imo: 9539212,
+    libDTCI: 'ONYX ACE',
+    type: 'viav',
+    mouvement: 'Arrivée',
+    date: '24-08-2026',
+  },
+
+  {
+    id: 2,
+    imo: 7715434,
+    libDTCI: 'OCEAN LINK',
+    type: 'viav',
+    mouvement: 'ETD',
+    date: '24/08/2026',
+  },
+
+  {
+    id: 3,
+    imo: 9954979,
+    libDTCI: 'NS NINGBO',
+    type: 'viav',
+    mouvement: 'Arrivée',
+    date: '24/08/2026',
+  },
+];
 export const TableNavire = [
   { id: '001', libDTCI: 'MSCI-CI', imo: 2156552, libTM: 'MSCI' },
   { id: '002', libDTCI: 'MSCI-CI', imo: 2156552, libTM: 'MSCI' },
@@ -396,5 +425,87 @@ export const ItemsPeriode = [
       'Novembre',
       'Decembre',
     ],
+  },
+];
+
+export const AllMonths = [
+  {
+    value: 'All',
+    name: 'Tous les mois',
+  },
+  {
+    value: '01',
+    name: 'Janvier',
+  },
+  {
+    value: '02',
+    name: 'Fevrier',
+  },
+  {
+    value: '03',
+    name: 'Mars',
+  },
+  {
+    value: '04',
+    name: 'Avril',
+  },
+  {
+    value: '05',
+    name: 'Mai',
+  },
+  {
+    value: '06',
+    name: 'Juin',
+  },
+  {
+    value: '07',
+    name: 'Juillet',
+  },
+  {
+    value: '08',
+    name: 'Aout',
+  },
+  {
+    value: '09',
+    name: 'Septembre',
+  },
+  {
+    value: '10',
+    name: 'Octobre',
+  },
+  {
+    value: '11',
+    name: 'Novembre',
+  },
+  {
+    value: '12',
+    name: 'Decembre',
+  },
+];
+
+export const Year = [
+  {
+    value: 'All',
+    year: 'Annee',
+  },
+  {
+    value: '2024',
+    year: '2024',
+  },
+  {
+    value: '2025',
+    year: '2025',
+  },
+  {
+    value: '2026',
+    year: '2026',
+  },
+  {
+    value: '2027',
+    year: '2027',
+  },
+  {
+    value: '2028',
+    year: '2028',
   },
 ];

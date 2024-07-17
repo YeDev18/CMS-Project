@@ -1,5 +1,5 @@
+import api from '@/api';
 import { Icon } from '@iconify/react';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
 import { Libs } from '../Data';
@@ -40,8 +40,8 @@ const Accueil = () => {
 
   const handleCompare = () => {
     console.log(10 + 1);
-    axios
-      .get('https://dj-declaration.onrender.com/api/compare-declaration-status')
+    api
+      .get('/api/compare-declaration-status')
       .then(res => res.data)
       .then(data => {
         setDat(data);
@@ -78,15 +78,11 @@ const Accueil = () => {
 
     try {
       console.log('Sending DTCI data:', formData);
-      const response = await axios.post(
-        'https://dj-declaration.onrender.com/api/upload_dtci_file',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
+      const response = await api.post('/api/upload_dtci_file', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       console.log('Success:', response.data);
     } catch (error: any) {
       if (error.response) {
@@ -127,15 +123,11 @@ const Accueil = () => {
 
     try {
       console.log('Sending TM data:', formData);
-      const response = await axios.post(
-        'https://dj-declaration.onrender.com/api/upload_trafic_file/',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
+      const response = await api.post('/api/upload_trafic_file/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       console.log('Success:', response.data);
     } catch (error: any) {
       if (error.response) {

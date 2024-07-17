@@ -13,7 +13,7 @@ type Lib = {
     type: string;
     date: string;
     mouvement: string;
-    [key: string]: any;
+    // [key: string]: any;
   }>;
   nonDeclare?: boolean;
   color?: string;
@@ -244,15 +244,15 @@ const SecondTables: FC<Lib> = ({
                 );
               })}
             </tr>
-            {DataFinal.map(val => {
+            {DataFinal.map((val, index) => {
               return (
                 <>
                   <tr
-                    key={val.id}
+                    key={index}
                     className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
                   >
                     <td className="text-start lg:w-32 text-sm xl:text-base">
-                      {val.id}
+                      {index}
                     </td>
                     <td className="text-start lg:w-32 text-sm xl:text-base">
                       {val.imo}
