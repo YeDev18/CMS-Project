@@ -7,6 +7,7 @@ import Navire from './Components/Navire';
 import NonDeclaration from './Components/Non_Declaré';
 import Periode from './Components/Periode';
 import Register from './Components/Register';
+import Update from './Components/Update';
 import Home from './Routes/Home';
 import NotFound from './Routes/NotFound';
 import RCLayout from './Routes/RCLayout';
@@ -24,4 +25,5 @@ export {
   Periode,
   RCLayout,
   Register,
+  Update,
 };

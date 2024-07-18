@@ -15,6 +15,7 @@ import {
   Periode,
   RCLayout,
   Register,
+  Update,
 } from './Pages';
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
               />
               <Route path="/nom_declaration" element={<NonDeclaration />} />
               <Route path="/nom_conforme" element={<DeclaratioNConforme />} />
+              <Route path="/update/:id" element={<Update />} />
             </Route>
           </Route>
           {/* <Route path="/" element={<Home />}>

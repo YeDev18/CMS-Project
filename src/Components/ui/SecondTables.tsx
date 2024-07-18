@@ -206,12 +206,11 @@ const SecondTables: FC<Lib> = ({
               <input
                 type="number"
                 placeholder="IMO"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setSearchValue(e.target.value);
-                  console.log(searchValue);
-                }}
                 // onChange={() => handleChange}
                 className="border w-32 outline-none p-1 rounded-sm text-sm font-medium"
+                onChange={e => {
+                  setSelectValue(e.target.value);
+                }}
               />
             </div>
           </div>

@@ -10,7 +10,7 @@ const DeclarationConforme = () => {
   const [selectValue, setSelectValue] = useState('');
   const [selectValue2, setSelectValue2] = useState('');
   const [current, setCurrent] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const itemsPerPage = 10;
   const startIndex = (current - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const MonthsYears = selectValue2 + '-' + selectValue;
@@ -35,6 +35,7 @@ const DeclarationConforme = () => {
     mouvement: item.mouvement_dtci === 'Arrivée' ? 'ETA' : 'ETD',
     date: item.mouvement_dtci === 'Arrivée' ? item.eta_dtci : item.etd_dtci,
   }));
+  // console.log(modifiedData);
   for (let index = 1; index < modifiedData.length; index++) {
     Data3.push(modifiedData[index]);
   }
@@ -61,9 +62,19 @@ const DeclarationConforme = () => {
         date: item.date,
       })
     );
-  }, []);
+  }, [MonthsYears]);
+  console.log(filteredData);
 
-  console.log(Filt, Filt2);
+  const handleClick2 = (e: React.ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const newFilteredData = Filt2;
+    const newFilteredDataAll = Filt;
+    console.log(MonthsYears);
+    console.log(newFilteredData);
+    console.log(newFilteredDataAll);
+  };
+
+  // console.log(Filt, Filt2);
 
   const goToNextPage = () => {
     setCurrent(prevPage => prevPage + 1);
@@ -74,7 +85,7 @@ const DeclarationConforme = () => {
   const renderPaginationControls = () => {
     const totalPages = Math.ceil(Data3.length / itemsPerPage);
     return (
-      <div className="flex justify-end">
+      <div className="flex justify-end pb-5">
         <button
           onClick={goToPrevPage}
           disabled={current === 1}
@@ -98,8 +109,7 @@ const DeclarationConforme = () => {
   };
   return (
     <>
-      <div className="w-screen ">
-        <p>Nom Conformes</p>
+      <div className="w-screen flex flex-col gap-6 ">
         <div className="flex justify-between w-full pb-6">
           <div className="flex gap-4">
             <button className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex items-center whitespace-nowrap">
@@ -110,14 +120,14 @@ const DeclarationConforme = () => {
                 height="1em"
                 className="mr-2 text-lime-800"
               />
-              Nom Conformes :{' '}
+              Conformes :{' '}
               <span className="font-semibold pl-1"> {Data3.length}</span>
             </button>
             <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
               <form
                 action=""
                 className="flex gap-3  items-center justify-center"
-                // onSubmit={handleClick2}
+                onSubmit={handleClick2}
               >
                 <label htmlFor="">
                   <Icon
@@ -166,7 +176,7 @@ const DeclarationConforme = () => {
           </div>
         </div>
 
-        <table className="w-full">
+        <table className="w-full pb-6">
           <tr className="flex justify-start  py-4 px-2  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
             {headerTable.map((item, index) => {
               return (
