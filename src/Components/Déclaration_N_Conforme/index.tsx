@@ -1,11 +1,13 @@
 import url from '@/api';
 import { Icon } from '@iconify/react';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { headerTable } from '../Data';
 const DeclaratioNConforme = () => {
   const [data1, setData1] = useState<any>([]);
   const [data2, setData2] = useState<any>(['']);
   const [data3, setDate3] = useState({
+    idInstance: '',
     nonDTCI: '',
     imoDTCI: '',
     consignataireDTCI: '',
@@ -34,6 +36,7 @@ const DeclaratioNConforme = () => {
     setForm(true);
     setDate3({
       ...data3,
+      idInstance: val.id,
       nonDTCI: val.soumission_dtci.nom_navire_dtci,
       imoDTCI: val.soumission_dtci.imo_dtci,
       mouvementDTCI:
@@ -115,132 +118,147 @@ const DeclaratioNConforme = () => {
       {form ? (
         <div className=" absolute w-full h-full  justify-center items-center  ">
           <div className=" absolute bg-black opacity-15 rounded-md w-full h-full z-[1]"></div>
-          <div className="w-[40rem] h-[30rem] bg-red-600 absolute z-[2] top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 rounded">
-            <div className="flex gap-4 justify-center bg-firstColors rounded-sm items-center h-full">
-              <form action="" className="flex flex-col gap-3">
-                <div className="flex flex-col gap-1">
-                  <label htmlFor="" className="text-gray-500 font-semibold">
-                    Imo DTCI
-                  </label>
-                  <input
-                    disabled
-                    type="text"
-                    className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
-                    value={data3.imoDTCI}
-                  />
-                </div>
+          <div className="w-[40rem] h-[36rem] bg-red-600 absolute z-[2] top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 rounded">
+            <div className="flex gap-2 justify-between py-6 flex-col bg-firstColors rounded-sm items-center h-full">
+              <div className="flex justify-center items-center gap-4 w-full px-12">
+                <h3 className="w-[16rem] p-2 rounded-sm bg-cyan-200 text-lg text-gray-800 font-semibold">
+                  Declaration DTCI
+                </h3>
+                <h3 className="w-[16rem] p-2 rounded-sm bg-red-200 text-lg text-gray-800 font-semibold">
+                  Declaration TM
+                </h3>
+              </div>
+              <div className="flex gap-4 justify-center">
+                <form action="" className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="" className="text-gray-500 font-semibold">
+                      Imo DTCI
+                    </label>
+                    <input
+                      disabled
+                      type="text"
+                      className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                      value={data3.imoDTCI}
+                    />
+                  </div>
 
-                <div className="flex flex-col gap-1">
-                  <label htmlFor="" className="text-gray-500 font-semibold">
-                    Nom DTCI
-                  </label>
-                  <input
-                    disabled
-                    type="text"
-                    className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
-                    value={data3.nonDTCI}
-                  />
-                </div>
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="" className="text-gray-500 font-semibold">
+                      Nom DTCI
+                    </label>
+                    <input
+                      disabled
+                      type="text"
+                      className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                      value={data3.nonDTCI}
+                    />
+                  </div>
 
-                <div className="flex flex-col gap-1">
-                  <label htmlFor="" className="text-gray-500 font-semibold">
-                    Date DTCI
-                  </label>
-                  <input
-                    disabled
-                    type="text"
-                    className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
-                    value={data3.mouvementDTCI}
-                  />
-                </div>
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="" className="text-gray-500 font-semibold">
+                      Date DTCI
+                    </label>
+                    <input
+                      disabled
+                      type="text"
+                      className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                      value={data3.mouvementDTCI}
+                    />
+                  </div>
 
-                <div className="flex flex-col gap-1">
-                  <label htmlFor="" className="text-gray-500 font-semibold">
-                    Consignataire DTCI
-                  </label>
-                  <input
-                    disabled
-                    type="text"
-                    className=" border p-2 rounded-sm border-shadowColors bg-firstColors w-[16rem] text-sm"
-                    value={data3.consignataireDTCI}
-                  />
-                </div>
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="" className="text-gray-500 font-semibold">
+                      Consignataire DTCI
+                    </label>
+                    <input
+                      disabled
+                      type="text"
+                      className=" border p-2 rounded-sm border-shadowColors bg-firstColors w-[16rem] text-sm"
+                      value={data3.consignataireDTCI}
+                    />
+                  </div>
 
-                <div className="flex flex-col gap-1">
-                  <label htmlFor="" className="text-gray-500 font-semibold">
-                    Date DTCI
-                  </label>
-                  <input
-                    disabled
-                    type="text"
-                    className=" border p-2 rounded-sm border-red-500 bg-firstColors text-sm"
-                    value={data3.dateDTCI}
-                  />
-                </div>
-              </form>
-              <form action="" className="flex flex-col gap-3">
-                <div className="flex flex-col gap-1">
-                  <label htmlFor="" className="text-gray-500 font-semibold">
-                    Date DTCI
-                  </label>
-                  <input
-                    disabled
-                    type="text"
-                    className=" border p-2 rounded-sm border-shadowColors w-[16rem] bg-firstColors text-sm "
-                    value={data3.imoTM}
-                  />
-                </div>
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="" className="text-gray-500 font-semibold">
+                      Date DTCI
+                    </label>
+                    <input
+                      disabled
+                      type="text"
+                      className=" border p-2 rounded-sm border-red-500 bg-firstColors text-sm"
+                      value={data3.dateDTCI}
+                    />
+                  </div>
+                </form>
+                <form action="" className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="" className="text-gray-500 font-semibold">
+                      Date DTCI
+                    </label>
+                    <input
+                      disabled
+                      type="text"
+                      className=" border p-2 rounded-sm border-shadowColors w-[16rem] bg-firstColors text-sm "
+                      value={data3.imoTM}
+                    />
+                  </div>
 
-                <div className="flex flex-col gap-1">
-                  <label htmlFor="" className="text-gray-500 font-semibold">
-                    Date DTCI
-                  </label>
-                  <input
-                    disabled
-                    type="text"
-                    className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
-                    value={data3.nonTM}
-                  />
-                </div>
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="" className="text-gray-500 font-semibold">
+                      Date DTCI
+                    </label>
+                    <input
+                      disabled
+                      type="text"
+                      className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                      value={data3.nonTM}
+                    />
+                  </div>
 
-                <div className="flex flex-col gap-1">
-                  <label htmlFor="" className="text-gray-500 font-semibold">
-                    Date DTCI
-                  </label>
-                  <input
-                    disabled
-                    type="text"
-                    className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
-                    value={data3.mouvementTM}
-                  />
-                </div>
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="" className="text-gray-500 font-semibold">
+                      Date DTCI
+                    </label>
+                    <input
+                      disabled
+                      type="text"
+                      className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                      value={data3.mouvementTM}
+                    />
+                  </div>
 
-                <div className="flex flex-col gap-1">
-                  <label htmlFor="" className="text-gray-500 font-semibold">
-                    Date DTCI
-                  </label>
-                  <input
-                    disabled
-                    type="text"
-                    className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
-                    value={data3.consignataireTM}
-                  />
-                </div>
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="" className="text-gray-500 font-semibold">
+                      Date DTCI
+                    </label>
+                    <input
+                      disabled
+                      type="text"
+                      className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                      value={data3.consignataireTM}
+                    />
+                  </div>
 
-                <div className="flex flex-col gap-1">
-                  <label htmlFor="" className="text-gray-500 font-semibold">
-                    Date DTCI
-                  </label>
-                  <input
-                    disabled
-                    type="text"
-                    className=" border p-2 rounded-sm border-red-500 bg-firstColors text-sm"
-                    value={data3.dateTM}
-                  />
-                </div>
-              </form>
+                  <div className="flex flex-col gap-1">
+                    <label htmlFor="" className="text-gray-500 font-semibold">
+                      Date DTCI
+                    </label>
+                    <input
+                      disabled
+                      type="text"
+                      className=" border p-2 rounded-sm border-red-500 bg-firstColors text-sm"
+                      value={data3.dateTM}
+                    />
+                  </div>
+                </form>
+              </div>
+              <Link
+                to={`/update/${data3.idInstance}`}
+                className="bg-firstBlue  w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold flex items-center justify-center"
+              >
+                UPDATE
+              </Link>
             </div>
-            <button>UPDATE</button>
 
             <button className="absolute right-4 top-2">
               <Icon
