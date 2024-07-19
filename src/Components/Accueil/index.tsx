@@ -1,4 +1,4 @@
-import api from '@/api';
+import { default as api, default as url } from '@/api';
 import { Icon } from '@iconify/react';
 import { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
@@ -12,6 +12,8 @@ const Accueil = () => {
   const [dataDtci, setDataDtci] = useState<any[]>(['']);
   const [dataTM, setDataTM] = useState<any[]>(['']);
   const [dat, setDat] = useState<any[]>(['']);
+  const [countNavire, setCountNavire] = useState<number>(0);
+  const [countConsignataire, setCountConsignataire] = useState<number>(0);
   const selected = selectedFile1 && selectedFile2 ? true : false;
   console.log(selected);
 
@@ -25,6 +27,22 @@ const Accueil = () => {
     handleCompare();
     console.log(`C'est fait`);
   }, [selected === true]);
+
+  useEffect(() => {
+    url
+      .get('api/navire-soumission-dtci')
+      .then(res => res.data)
+      .then(data => setCountNavire(data.length))
+      .catch(error => console.log(error));
+
+    url
+      .get('api/consignataire-dtci')
+      .then(res => res.data)
+      .then(data => setCountConsignataire(data.length))
+      .catch(error => console.log(error));
+  }, []);
+  console.log(countNavire);
+  console.log(countConsignataire);
 
   // const excelDateToJSDate = (serial: number) => {
   //   const excelEpoch = new Date(Date.UTC(1900, 0, 0)); // 1 Janvier 1900
@@ -78,7 +96,7 @@ const Accueil = () => {
 
     try {
       console.log('Sending DTCI data:', formData);
-      const response = await api.post('/api/upload_dtci_file', formData, {
+      const response = await url.post('/api/upload_dtci_file', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -123,7 +141,7 @@ const Accueil = () => {
 
     try {
       console.log('Sending TM data:', formData);
-      const response = await api.post('/api/upload_trafic_file/', formData, {
+      const response = await url.post('/api/upload_trafic_file/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -170,14 +188,14 @@ const Accueil = () => {
               icon1="lucide:ship"
               icon2="mingcute:arrow-up-fill"
               name="Navire"
-              number={285}
+              number={countNavire}
             />
             <Component1
               index={2}
               icon1="lucide:contact"
               icon2="mingcute:arrow-up-fill"
               name="Consignataire"
-              number={85}
+              number={countConsignataire}
             />
           </div>
           <div className="flex gap-4 items-center justify-center">

@@ -92,8 +92,8 @@ export const Libs = [
     lib: 'TM',
   },
 ];
-export const headersNavire = ['#', 'IMO', 'DTCI', 'TRAFIC MARITIME'];
-export const headersConsignataires = ['#', 'DTCI'];
+export const headersNavire = ['#', 'IMO', 'Navires DTCI'];
+export const headersConsignataires = ['#', 'Consignataires DTCI'];
 export const headerTable = ['#', 'IMO', 'Nom', 'Mouvement', 'Date'];
 
 export const TableConforme = [

@@ -1,3 +1,4 @@
+import url from '@/api';
 import {
   Card,
   CardContent,
@@ -15,44 +16,69 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart';
 import { TrendingUp } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Pie, PieChart } from 'recharts';
-const chartData = [
-  { browser: 'Conformes', visitors: 275, fill: 'var(--color-Conformes)' },
-  {
-    browser: 'Non_conformes',
-    visitors: 200,
-    fill: 'var(--color-Non_conformes)',
-  },
-  { browser: 'Non_declares', visitors: 187, fill: 'var(--color-Non_declares)' },
-  // { browser: 'edge', visitors: 173, fill: 'var(--color-edge)' },
-  // { browser: 'other', visitors: 90, fill: 'var(--color-other)' },
-];
-const chartConfig = {
-  visitors: {
-    label: 'Visitors',
-  },
-  Conformes: {
-    label: 'Conformes',
-    color: 'hsl(var(--chart-1))',
-  },
-  Non_conformes: {
-    label: 'Non_Conformes',
-    color: 'hsl(var(--chart-2))',
-  },
-  Non_declares: {
-    label: 'Non_Declare',
-    color: 'hsl(var(--chart-3))',
-  },
-  edge: {
-    label: 'Edge',
-    color: 'hsl(var(--chart-4))',
-  },
-  other: {
-    label: 'Other',
-    color: 'hsl(var(--chart-5))',
-  },
-} satisfies ChartConfig;
+
 export function Chart() {
+  const [countConformes, setCountConformes] = useState<number>(0);
+  const [countNonConformes, setCountNonConformes] = useState<number>(0);
+  const [countNonDeclare, setCountNonDeclare] = useState<number>(0);
+  const chartData = [
+    {
+      browser: 'Conformes',
+      visitors: countConformes,
+      fill: 'var(--color-Conformes)',
+    },
+    {
+      browser: 'Non_conformes',
+      visitors: countNonConformes,
+      fill: 'var(--color-Non_conformes)',
+    },
+    {
+      browser: 'Non_declares',
+      visitors: countNonDeclare,
+      fill: 'var(--color-Non_declares)',
+    },
+  ];
+
+  const chartConfig = {
+    visitors: {
+      label: 'Navire',
+    },
+    Conformes: {
+      label: 'Conformes',
+      color: 'hsl(var(--chart-1))',
+    },
+    Non_conformes: {
+      label: 'Non_Conformes',
+      color: 'hsl(var(--chart-2))',
+    },
+    Non_declares: {
+      label: 'Non_Declare',
+      color: 'hsl(var(--chart-3))',
+    },
+  } satisfies ChartConfig;
+
+  useEffect(() => {
+    url
+      .get('/api/declare-conforme')
+      .then(res => res.data)
+      .then(data => setCountConformes(data.length))
+      .catch(error => console.log(error));
+    url
+      .get('/api/declare-non-conforme')
+      .then(res => res.data)
+      .then(data => setCountNonConformes(data.length))
+      .catch(error => console.log(error));
+
+    url
+      .get('/api/non-declare')
+      .then(res => res.data)
+      .then(data => setCountNonDeclare(data.length))
+      .catch(error => console.log(error));
+  }, []);
+  // console.log(countNavire);
+  // console.log(countConsignataire);
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
@@ -64,7 +90,7 @@ export function Chart() {
       <CardContent className="flex-1 pb-0">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px]"
+          className="mx-auto aspect-square max-h-[400px]"
         >
           <PieChart>
             <ChartTooltip

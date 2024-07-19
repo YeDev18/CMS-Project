@@ -3,9 +3,10 @@ import { Icon } from '@iconify/react';
 import { AllMonths, headerTable, Year } from '../Data';
 
 import { useEffect, useState } from 'react';
+import Libelle from '../ui/Libelle';
 // import{SecondTab;}
 const NonDeclaration = () => {
-  const [data1, setData1] = useState<any>(['']);
+  const [data1, setData1] = useState<any>([]);
   const data2: any = [];
   const [data3, setData3] = useState<any>(['']);
   const [current, setCurrent] = useState(1);
@@ -70,17 +71,12 @@ const NonDeclaration = () => {
     <div className="w-screen flex flex-col gap-4   ">
       <div className="flex justify-between w-full pb-6">
         <div className="flex gap-4">
-          <button className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex items-center whitespace-nowrap">
-            {' '}
-            <Icon
-              icon="ph:x-circle"
-              width="1em"
-              height="1em"
-              className="mr-2 text-[#ea546c]"
-            />
-            Nom declares :{' '}
-            <span className="font-semibold pl-1"> {data1.length}</span>
-          </button>
+          <Libelle
+            icon="ph:x-circle"
+            libelle="Non declare"
+            color="#ea546c"
+            number={data1.length}
+          />
           <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
             <form
               action=""

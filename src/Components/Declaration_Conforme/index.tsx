@@ -2,6 +2,7 @@ import url from '@/api';
 import { Icon } from '@iconify/react';
 import { useEffect, useMemo, useState } from 'react';
 import { AllMonths, headerTable, Year } from '../Data';
+import Libelle from '../ui/Libelle';
 
 const DeclarationConforme = () => {
   const [data1, setData1] = useState<any[]>(['']);
@@ -112,17 +113,12 @@ const DeclarationConforme = () => {
       <div className="w-screen flex flex-col gap-6 ">
         <div className="flex justify-between w-full pb-6">
           <div className="flex gap-4">
-            <button className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex items-center whitespace-nowrap">
-              {' '}
-              <Icon
-                icon="lucide:circle-check-big"
-                width="1em"
-                height="1em"
-                className="mr-2 text-lime-800"
-              />
-              Conformes :{' '}
-              <span className="font-semibold pl-1"> {Data3.length}</span>
-            </button>
+            <Libelle
+              icon="lucide:circle-check-big"
+              libelle="Conformes"
+              color="#114837"
+              number={Data3.length}
+            />
             <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
               <form
                 action=""

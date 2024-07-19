@@ -3,9 +3,14 @@ import { Icon } from '@iconify/react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { headerTable } from '../Data';
+import Libelle from '../ui/Libelle';
 const DeclaratioNConforme = () => {
   const [data1, setData1] = useState<any>([]);
   const [data2, setData2] = useState<any>(['']);
+  const [current, setCurrent] = useState(1);
+  const itemsPerPage = 10;
+  const startIndex = (current - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
   const [data3, setDate3] = useState({
     idInstance: '',
     nonDTCI: '',
@@ -20,6 +25,38 @@ const DeclaratioNConforme = () => {
     dateTM: '',
   });
   const [form, setForm] = useState(false);
+
+  const goToNextPage = () => {
+    setCurrent(prevPage => prevPage + 1);
+  };
+  const goToPrevPage = () => {
+    setCurrent(prevPage => prevPage - 1);
+  };
+  const renderPaginationControls = () => {
+    const totalPages = Math.ceil(data1.length / itemsPerPage);
+    return (
+      <div className="flex justify-end pb-5">
+        <button
+          onClick={goToPrevPage}
+          disabled={current === 1}
+          className="border text-shadowColors border-shadowColors p-1 rounded active:bg-firstBlue active:border hover:border-firstBlue hover:text-firstColors hover:bg-firstBlue hover:border"
+        >
+          <Icon icon="ep:arrow-left-bold" />
+        </button>
+        <div className="px-2 w-16 text-center">
+          <span className="font-medium text-borderColor">{current}</span> /{' '}
+          <span className="text-borderColor">{totalPages}</span>
+        </div>
+        <button
+          onClick={goToNextPage}
+          disabled={current === totalPages}
+          className="border text-shadowColors border-shadowColors p-1 rounded active:bg-firstBlue active:border hover:border-firstBlue hover:text-firstColors hover:bg-firstBlue hover:border"
+        >
+          <Icon icon="ep:arrow-right-bold" />
+        </button>
+      </div>
+    );
+  };
 
   useEffect(() => {
     url
@@ -54,7 +91,7 @@ const DeclaratioNConforme = () => {
       dateTM: val.trafic_maritime.date_trafic,
     });
   };
-  const modifiedData = data1.map((item: any, index: any) => ({
+  const modifiedData = data1.map((item: any) => ({
     idCms: item.id,
     statusCms: item.status,
     dtci: item.soumission_dtci,
@@ -63,6 +100,18 @@ const DeclaratioNConforme = () => {
   console.log(modifiedData);
   return (
     <div className="w-screen flex flex-col gap-4  ">
+      <div className="flex justify-between w-full pb-6">
+        <div className="flex gap-4">
+          <Libelle
+            icon="charm:notes-cross"
+            libelle="Non_Conformes"
+            color="#ea546c"
+            number={data1.length}
+          />
+
+          {/* <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center"></div> */}
+        </div>
+      </div>
       <table className="w-full pb-6">
         <tr className="flex justify-start  py-4 px-2  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
           {headerTable.map((item, index) => {
@@ -76,7 +125,7 @@ const DeclaratioNConforme = () => {
             );
           })}
         </tr>
-        {data1.map((val: any, index: number) => {
+        {data1.slice(startIndex, endIndex).map((val: any, index: number) => {
           return (
             <>
               <tr
@@ -84,7 +133,7 @@ const DeclaratioNConforme = () => {
                 className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
               >
                 <td className="text-start lg:w-32 text-sm xl:text-base">
-                  {index}
+                  {index + 1}
                 </td>
                 <td className="text-start lg:w-32 text-sm xl:text-base">
                   {val.soumission_dtci.imo_dtci}
@@ -105,9 +154,7 @@ const DeclaratioNConforme = () => {
                 </td>
                 <td className="text-end lg:w-28 xl:w-48 ">
                   <button onClick={() => handleChange(val)}>
-                    {/* <Link to={`/update/${val.id}`}> */}
                     <Icon icon="mingcute:more-2-fill" width="20" height="20" />
-                    {/* </Link> */}
                   </button>
                 </td>
               </tr>
@@ -115,6 +162,7 @@ const DeclaratioNConforme = () => {
           );
         })}
       </table>
+      {renderPaginationControls()}
       {form ? (
         <div className=" absolute w-full h-full  justify-center items-center  ">
           <div className=" absolute bg-black opacity-15 rounded-md w-full h-full z-[1]"></div>
@@ -193,7 +241,7 @@ const DeclaratioNConforme = () => {
                 <form action="" className="flex flex-col gap-3">
                   <div className="flex flex-col gap-1">
                     <label htmlFor="" className="text-gray-500 font-semibold">
-                      Date DTCI
+                      Imo TM
                     </label>
                     <input
                       disabled
@@ -205,7 +253,7 @@ const DeclaratioNConforme = () => {
 
                   <div className="flex flex-col gap-1">
                     <label htmlFor="" className="text-gray-500 font-semibold">
-                      Date DTCI
+                      Nom TM
                     </label>
                     <input
                       disabled
@@ -217,7 +265,7 @@ const DeclaratioNConforme = () => {
 
                   <div className="flex flex-col gap-1">
                     <label htmlFor="" className="text-gray-500 font-semibold">
-                      Date DTCI
+                      Mouvement TM
                     </label>
                     <input
                       disabled
@@ -229,7 +277,7 @@ const DeclaratioNConforme = () => {
 
                   <div className="flex flex-col gap-1">
                     <label htmlFor="" className="text-gray-500 font-semibold">
-                      Date DTCI
+                      Consignataire TM
                     </label>
                     <input
                       disabled
@@ -241,7 +289,7 @@ const DeclaratioNConforme = () => {
 
                   <div className="flex flex-col gap-1">
                     <label htmlFor="" className="text-gray-500 font-semibold">
-                      Date DTCI
+                      Date TM
                     </label>
                     <input
                       disabled
