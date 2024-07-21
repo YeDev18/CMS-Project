@@ -5,7 +5,7 @@ type Icon = {
   libelle: string;
   icon: string;
   color: string;
-  number: string;
+  number: number;
 };
 const Libelle: FC<Icon> = ({ libelle, icon, color, number }) => {
   return (

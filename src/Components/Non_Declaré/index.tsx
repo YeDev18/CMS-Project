@@ -72,9 +72,9 @@ const NonDeclaration = () => {
       <div className="flex justify-between w-full pb-6">
         <div className="flex gap-4">
           <Libelle
-            icon="ph:x-circle"
-            libelle="Non declare"
-            color="#ea546c"
+            icon="lucide:circle-check-big"
+            libelle="Conformes"
+            color="#114837"
             number={data1.length}
           />
           <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
@@ -126,6 +126,20 @@ const NonDeclaration = () => {
                 <Icon icon="mdi:filter" width="1.5em" height="1.5em" />
               </button>
             </form>
+          </div>
+          <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
+            <label htmlFor="">
+              <Icon icon="mdi:search" width="1.5em" height="1.5em" />
+            </label>
+            <input
+              type="number"
+              placeholder="IMO"
+              // onChange={() => handleChange}
+              className="border w-32 outline-none p-1 rounded-sm text-sm font-medium"
+              // onChange={e => {
+              //   setSelectValue(e.target.value);
+              // }}
+            />
           </div>
         </div>
       </div>

@@ -60,17 +60,31 @@ const Navire = () => {
   return (
     <div className=" flex flex-col gap-6 text-grayBlack w-full ">
       <div className="flex justify-between w-full">
-        <p className="rounded-md shadow-sm  p-2 inline-flex items-center bg-firstBlue text-firstColors">
-          {' '}
-          <Icon
-            icon="lucide:ship"
-            width="1em"
-            height="1em"
-            style={{ color: 'rgb(255, 255, 255)' }}
-            className="mr-2"
-          />
-          Navires : <span className="font-semibold pl-1"> {Navire.length}</span>
-        </p>
+        <div className="flex gap-4">
+          <p className="rounded-md shadow-sm  p-2 inline-flex items-center bg-firstBlue text-firstColors">
+            {' '}
+            <Icon
+              icon="lucide:ship"
+              width="1em"
+              height="1em"
+              style={{ color: 'rgb(255, 255, 255)' }}
+              className="mr-2"
+            />
+            Navires :{' '}
+            <span className="font-semibold pl-1"> {Navire.length}</span>
+          </p>
+          <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
+            <label htmlFor="">
+              <Icon icon="mdi:search" width="1.5em" height="1.5em" />
+            </label>
+            <input
+              type="Number"
+              placeholder="IMO"
+              className="border w-48 outline-none p-1 rounded-sm text-sm font-medium"
+            />
+          </div>
+        </div>
+
         <button
           className="rounded-md shadow-sm p-2 inline-flex items-center bg-firstBlue text-firstColors"
           type="button"
@@ -85,7 +99,6 @@ const Navire = () => {
           Export en csv
         </button>
       </div>
-      {/* <Tab(les lib={'Navires'} HeaderTable={headersNavire} Table={TableNavire} /> */}
       <table className="w-full pb-6">
         <tr className="flex justify-start  py-4 px-4  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
           {headersNavire.map((item, index) => {

@@ -55,18 +55,31 @@ const Consignataire = () => {
   return (
     <div className=" flex flex-col gap-6 text-grayBlack w-full ">
       <div className="flex justify-between w-full">
-        <p className="rounded-md shadow-sm  p-2 inline-flex items-center bg-firstBlue text-firstColors">
-          {' '}
-          <Icon
-            icon="lucide:contact"
-            width="1em"
-            height="1em"
-            style={{ color: 'rgb(255, 255, 255)' }}
-            className="mr-2"
-          />
-          Consignatires :{' '}
-          <span className="font-semibold pl-1"> {data1.length}</span>
-        </p>
+        <div className="flex gap-4">
+          <p className="rounded-md shadow-sm  p-2 inline-flex items-center bg-firstBlue text-firstColors">
+            {' '}
+            <Icon
+              icon="lucide:contact"
+              width="1em"
+              height="1em"
+              style={{ color: 'rgb(255, 255, 255)' }}
+              className="mr-2"
+            />
+            Consignatires :{' '}
+            <span className="font-semibold pl-1"> {data1.length}</span>
+          </p>
+          <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
+            <label htmlFor="">
+              <Icon icon="mdi:search" width="1.5em" height="1.5em" />
+            </label>
+            <input
+              type="text"
+              placeholder="Consignataire"
+              className="border w-48 outline-none p-1 rounded-sm text-sm font-medium"
+            />
+          </div>
+        </div>
+
         <button
           className="rounded-md shadow-sm p-2 inline-flex items-center bg-firstBlue text-firstColors"
           type="button"

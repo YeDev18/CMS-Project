@@ -5,8 +5,9 @@ import { AllMonths, headerTable, Year } from '../Data';
 import Libelle from '../ui/Libelle';
 
 const DeclarationConforme = () => {
-  const [data1, setData1] = useState<any[]>(['']);
-  const data2: any = [];
+  const [data1, setData1] = useState<any[]>([]);
+  const [data2, setData2] = useState<any[]>(['']);
+  // const data2: any = [];
   const Data3: any = [];
   const [selectValue, setSelectValue] = useState('');
   const [selectValue2, setSelectValue2] = useState('');
@@ -15,7 +16,8 @@ const DeclarationConforme = () => {
   const startIndex = (current - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const MonthsYears = selectValue2 + '-' + selectValue;
-  const [filteredData, setFilteredData] = useState([]);
+  // const [modifiedData, setModifiedData] = useState<any[]>([]);
+  // const [filteredData, setFilteredData] = useState([]);
   useEffect(() => {
     url
       .get('/api/declare-conforme')
@@ -25,55 +27,52 @@ const DeclarationConforme = () => {
       })
       .catch(error => console.log(error));
   }, []);
-  for (let index = 1; index < data1.length; index++) {
-    data2.push(data1[index].soumission_dtci);
-  }
-  const modifiedData = data2.map((item: any, index: number) => ({
+  console.log(data1);
+  // for (let index = 1; index < data1.length; index++) {
+  //   data2.push(data1[index].soumission_dtci);
+  // }
+
+  // setModifiedData([
+  //   ...modifiedData
+  //   {imo : data1.somm}
+  // ]);
+  const modifiedData = data1.map((item: any, index: number) => ({
     id: index,
-    imo: item.imo_dtci,
-    libDTCI: item.nom_navire_dtci,
+    imo: item?.soumission_dtci?.imo_dtci,
+    libDTCI: item?.soumission_dtci?.nom_navire_dtci,
     type: 'viav',
-    mouvement: item.mouvement_dtci === 'Arrivée' ? 'ETA' : 'ETD',
-    date: item.mouvement_dtci === 'Arrivée' ? item.eta_dtci : item.etd_dtci,
+    mouvement:
+      item?.soumission_dtci?.mouvement_dtci === 'Arrivée' ? 'ETA' : 'ETD',
+    date:
+      item?.soumission_dtci?.mouvement_dtci === 'Arrivée'
+        ? item?.soumission_dtci?.eta_dtci
+        : item?.soumission_dtci?.etd_dtci,
   }));
-  // console.log(modifiedData);
+  console.log(modifiedData);
   for (let index = 1; index < modifiedData.length; index++) {
     Data3.push(modifiedData[index]);
   }
-  const Filt = useMemo(() => {
-    return Data3.filter(
-      (item: any) => item.date.slice(0, 7) == MonthsYears
-    ).map((item: any, index: number) => ({
-      id: index,
-      imo: item.imo,
-      libDTCI: item.libDTCI,
-      type: 'viav',
-      mouvement: item.mouvement,
-      date: item.date,
-    }));
-  }, [MonthsYears]);
-  const Filt2 = useMemo(() => {
-    return Data3.filter((item: any) => item.date).map(
-      (item: any, index: number) => ({
-        id: index,
-        imo: item.imo,
-        libDTCI: item.libDTCI,
-        type: 'viav',
-        mouvement: item.mouvement,
-        date: item.date,
-      })
-    );
-  }, [MonthsYears]);
-  console.log(filteredData);
+  // const Filter = useMemo(() => {
+  //   return modifiedData.filter(
+  //     (item: any) => item?.date.slice(0, 7) == MonthsYears
+  //   );
+  // }, [MonthsYears]);
+  const Filter2 = useMemo(() => {
+    return modifiedData.filter((item: any) => item?.date);
+  }, [MonthsYears == '-' || 'All-All']);
+  // console.log(Filter);
+  console.log(Filter2);
 
   const handleClick2 = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const newFilteredData = Filt2;
-    const newFilteredDataAll = Filt;
+    // setData3(newFilteredDataAll);
+    // console.log(Filter);
+    console.log(Filter2);
+    console.log(selectValue);
     console.log(MonthsYears);
-    console.log(newFilteredData);
-    console.log(newFilteredDataAll);
   };
+  // setData2([data1.slice(startIndex, endIndex), ...data2]);
+  // console.log(data2);
 
   // console.log(Filt, Filt2);
 
@@ -84,7 +83,7 @@ const DeclarationConforme = () => {
     setCurrent(prevPage => prevPage - 1);
   };
   const renderPaginationControls = () => {
-    const totalPages = Math.ceil(Data3.length / itemsPerPage);
+    const totalPages = Math.ceil(data1.length / itemsPerPage);
     return (
       <div className="flex justify-end pb-5">
         <button
@@ -117,7 +116,7 @@ const DeclarationConforme = () => {
               icon="lucide:circle-check-big"
               libelle="Conformes"
               color="#114837"
-              number={Data3.length}
+              number={data1.length}
             />
             <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
               <form
@@ -169,6 +168,20 @@ const DeclarationConforme = () => {
                 </button>
               </form>
             </div>
+            <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
+              <label htmlFor="">
+                <Icon icon="mdi:search" width="1.5em" height="1.5em" />
+              </label>
+              <input
+                type="number"
+                placeholder="IMO"
+                // onChange={() => handleChange}
+                className="border w-32 outline-none p-1 rounded-sm text-sm font-medium"
+                onChange={e => {
+                  setSelectValue(e.target.value);
+                }}
+              />
+            </div>
           </div>
         </div>
 
@@ -185,31 +198,33 @@ const DeclarationConforme = () => {
               );
             })}
           </tr>
-          {Data3.slice(startIndex, endIndex).map((val: any, index: number) => {
-            return (
-              <tr
-                key={index}
-                className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
-              >
-                <td className="text-start lg:w-32 text-sm xl:text-base">
-                  {val.id}
-                </td>
-                <td className="text-start lg:w-32 text-sm xl:text-base">
-                  {val.imo}
-                </td>
-                <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
-                  {val.libDTCI}
-                </td>
-                <td className="text-start lg:w-40 text-sm xl:text-base">
-                  {val.mouvement}
-                </td>
+          {modifiedData
+            .slice(startIndex, endIndex)
+            .map((val: any, index: number) => {
+              return (
+                <tr
+                  key={index}
+                  className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
+                >
+                  <td className="text-start lg:w-32 text-sm xl:text-base">
+                    {index}
+                  </td>
+                  <td className="text-start lg:w-32 text-sm xl:text-base">
+                    {val?.imo}
+                  </td>
+                  <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
+                    {val?.libDTCI}
+                  </td>
+                  <td className="text-start lg:w-40 text-sm xl:text-base">
+                    {val?.mouvement}
+                  </td>
 
-                <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
-                  {val.date}
-                </td>
-              </tr>
-            );
-          })}
+                  <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
+                    {val?.date}
+                  </td>
+                </tr>
+              );
+            })}
         </table>
         {renderPaginationControls()}
       </div>
