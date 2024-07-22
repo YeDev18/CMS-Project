@@ -5,6 +5,7 @@ import Header from '../Header';
 const Connection = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [token, setToken] = useState<string>('');
   const auth = useAuth();
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();

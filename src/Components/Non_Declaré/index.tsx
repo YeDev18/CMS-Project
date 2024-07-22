@@ -39,7 +39,7 @@ const NonDeclaration = () => {
     setCurrent(prevPage => prevPage - 1);
   };
   const renderPaginationControls = () => {
-    const totalPages = Math.ceil(mondifieData.length / itemsPerPage);
+    const totalPages = Math.ceil(data8.length / itemsPerPage);
     return (
       <div className="flex justify-end pb-5">
         <button
@@ -63,7 +63,13 @@ const NonDeclaration = () => {
       </div>
     );
   };
-  // setData3(mondifieData);
+  const [searchValue, setSearchValue] = useState();
+  const data8 = searchValue
+    ? mondifieData.filter((val: any) =>
+        val.imo.toString().includes(searchValue)
+      )
+    : mondifieData;
+  console.log(data8);
   console.log(mondifieData);
   ///Leureur vient de la je dois trouve le probleme
   // console.log(data3);
@@ -72,9 +78,9 @@ const NonDeclaration = () => {
       <div className="flex justify-between w-full pb-6">
         <div className="flex gap-4">
           <Libelle
-            icon="lucide:circle-check-big"
-            libelle="Conformes"
-            color="#114837"
+            icon="ph:x-circle"
+            libelle="Nom declares"
+            color="#AC4D39"
             number={data1.length}
           />
           <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
@@ -134,11 +140,10 @@ const NonDeclaration = () => {
             <input
               type="number"
               placeholder="IMO"
-              // onChange={() => handleChange}
               className="border w-32 outline-none p-1 rounded-sm text-sm font-medium"
-              // onChange={e => {
-              //   setSelectValue(e.target.value);
-              // }}
+              onChange={(e: any) => {
+                setSearchValue(e.target.value);
+              }}
             />
           </div>
         </div>
@@ -156,33 +161,31 @@ const NonDeclaration = () => {
             );
           })}
         </tr>
-        {mondifieData
-          .slice(startIndex, endIndex)
-          .map((val: any, index: number) => {
-            return (
-              <tr
-                key={index}
-                className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
-              >
-                <td className="text-start lg:w-32 text-sm xl:text-base">
-                  {val.id}
-                </td>
-                <td className="text-start lg:w-32 text-sm xl:text-base">
-                  {val.imo}
-                </td>
-                <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
-                  {val.libTM}
-                </td>
-                <td className="text-start lg:w-40 text-sm xl:text-base">
-                  {val.mouvement}
-                </td>
+        {data8.slice(startIndex, endIndex).map((val: any, index: number) => {
+          return (
+            <tr
+              key={index}
+              className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
+            >
+              <td className="text-start lg:w-32 text-sm xl:text-base">
+                {index + 1}
+              </td>
+              <td className="text-start lg:w-32 text-sm xl:text-base">
+                {val.imo}
+              </td>
+              <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
+                {val.libTM}
+              </td>
+              <td className="text-start lg:w-40 text-sm xl:text-base">
+                {val.mouvement}
+              </td>
 
-                <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
-                  {val.date}
-                </td>
-              </tr>
-            );
-          })}
+              <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
+                {val.date}
+              </td>
+            </tr>
+          );
+        })}
       </table>
       {renderPaginationControls()}
     </div>

@@ -7,7 +7,6 @@ import Libelle from '../ui/Libelle';
 const DeclarationConforme = () => {
   const [data1, setData1] = useState<any[]>([]);
   const [data2, setData2] = useState<any[]>(['']);
-  // const data2: any = [];
   const Data3: any = [];
   const [selectValue, setSelectValue] = useState('');
   const [selectValue2, setSelectValue2] = useState('');
@@ -56,8 +55,6 @@ const DeclarationConforme = () => {
           : val.soumission_dtci.etd_dtci,
     });
   };
-  // const [modifiedData, setModifiedData] = useState<any[]>([]);
-  // const [filteredData, setFilteredData] = useState([]);
   useEffect(() => {
     url
       .get('/api/declare-conforme')
@@ -67,15 +64,8 @@ const DeclarationConforme = () => {
       })
       .catch(error => console.log(error));
   }, []);
-  console.log(data1);
-  // for (let index = 1; index < data1.length; index++) {
-  //   data2.push(data1[index].soumission_dtci);
-  // }
+  // console.log(data1);
 
-  // setModifiedData([
-  //   ...modifiedData
-  //   {imo : data1.somm}
-  // ]);
   const modifiedData = data1.map((item: any, index: number) => ({
     id: index,
     imo: item?.soumission_dtci?.imo_dtci,
@@ -87,33 +77,21 @@ const DeclarationConforme = () => {
         ? item?.soumission_dtci?.eta_dtci
         : item?.soumission_dtci?.etd_dtci,
   }));
-  console.log(modifiedData);
+  // console.log(modifiedData);
   for (let index = 1; index < modifiedData.length; index++) {
     Data3.push(modifiedData[index]);
   }
-  // const Filter = useMemo(() => {
-  //   return modifiedData.filter(
-  //     (item: any) => item?.date.slice(0, 7) == MonthsYears
-  //   );
-  // }, [MonthsYears]);
   const Filter2 = useMemo(() => {
     return modifiedData.filter((item: any) => item?.date);
   }, [MonthsYears == '-' || 'All-All']);
-  // console.log(Filter);
-  console.log(Filter2);
+  // console.log(Filter2);
 
   const handleClick2 = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // setData3(newFilteredDataAll);
-    // console.log(Filter);
     console.log(Filter2);
     console.log(selectValue);
     console.log(MonthsYears);
   };
-  // setData2([data1.slice(startIndex, endIndex), ...data2]);
-  // console.log(data2);
-
-  // console.log(Filt, Filt2);
 
   const goToNextPage = () => {
     setCurrent(prevPage => prevPage + 1);
@@ -122,7 +100,7 @@ const DeclarationConforme = () => {
     setCurrent(prevPage => prevPage - 1);
   };
   const renderPaginationControls = () => {
-    const totalPages = Math.ceil(data1.length / itemsPerPage);
+    const totalPages = Math.ceil(data8.length / itemsPerPage);
     return (
       <div className="flex justify-end pb-5">
         <button
@@ -146,6 +124,14 @@ const DeclarationConforme = () => {
       </div>
     );
   };
+  const [searchValue, setSearchValue] = useState();
+  const data8 = searchValue
+    ? data1.filter(val =>
+        val.soumission_dtci.imo_dtci.toString().includes(searchValue)
+      )
+    : data1;
+  console.log(data8);
+
   return (
     <>
       <div className="w-screen flex flex-col gap-6 ">
@@ -214,10 +200,10 @@ const DeclarationConforme = () => {
               <input
                 type="number"
                 placeholder="IMO"
-                // onChange={() => handleChange}
+                value={searchValue}
                 className="border w-32 outline-none p-1 rounded-sm text-sm font-medium"
-                onChange={e => {
-                  setSelectValue(e.target.value);
+                onChange={(e: any) => {
+                  setSearchValue(e.target.value);
                 }}
               />
             </div>
@@ -237,14 +223,14 @@ const DeclarationConforme = () => {
               );
             })}
           </tr>
-          {data1.slice(startIndex, endIndex).map((val: any, index: number) => {
+          {data8.slice(startIndex, endIndex).map((val: any, index: number) => {
             return (
               <tr
                 key={index}
                 className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
               >
                 <td className="text-start lg:w-32 text-sm xl:text-base">
-                  {index}
+                  {index + 1}
                 </td>
                 <td className="text-start lg:w-32 text-sm xl:text-base">
                   {val.soumission_dtci.imo_dtci}
@@ -276,10 +262,7 @@ const DeclarationConforme = () => {
         {renderPaginationControls()}
         {modal ? (
           <div className="absolute w-full h-full  justify-center items-center  ">
-            <div className="absolute bg-black opacity-15 rounded-md w-full h-full z-[1]">
-              {' '}
-              vfas
-            </div>
+            <div className="absolute bg-black opacity-15 rounded-md w-full h-full z-[1]"></div>
             <div className="w-96 h-fit absolute z-[2] inset-1/2 flex flex-col justify-center items-center gap-2 bg-firstColors -translate-x-2/4  -translate-y-2/4 shadow-sm shadow-slate-100 rounded-sm p-6">
               <div className="flex flex-col gap-1 w-full px-2">
                 <label htmlFor="" className="text-gray-500 font-semibold">

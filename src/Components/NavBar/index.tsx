@@ -5,7 +5,9 @@ import { Icon } from '@iconify/react';
 
 const NavBar = () => {
   const auth = useAuth();
+  const user = auth?.token;
   const [log, setLog] = useState<boolean>(false);
+  console.log(user);
   const handleClick = () => {
     setLog(!log);
   };
@@ -38,6 +40,7 @@ const NavBar = () => {
 
         {log ? (
           <div className=" absolute right-0 top-12 py-4 px-6 flex flex-col gap-4 rounded shadow-md bg-firstColors">
+            <p></p>
             <button className="flex gap-2  text-gray-700">
               <Icon
                 icon="mingcute:information-fill"

@@ -33,11 +33,6 @@ export const MenuItems = [
     icon: 'lucide:contact',
     route: '/consignataire',
   },
-  // {
-  //   lib: 'Periode',
-  //   icon: 'lucide:calendar-fold',
-  //   route: '/periode',
-  // },
   {
     lib: 'Declaration',
     icon: 'mdi:file-check-outline',

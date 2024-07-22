@@ -3,7 +3,7 @@ import { FC, ReactNode, createContext, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 type Context = {
   token: string;
-  userName: string;
+  name: string;
   email: string;
   RegisterAction: Function;
   LoginAction: Function;
@@ -15,10 +15,12 @@ type Props = {
 interface Register {
   email: string;
   password: string;
+  name: string;
+  token: string;
 }
 const AuthContext = createContext<Context | null>(null);
 const AuthProvider: FC<Props> = ({ children }) => {
-  const [userName, setUserName] = useState<string>('');
+  const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string>('');
@@ -28,11 +30,16 @@ const AuthProvider: FC<Props> = ({ children }) => {
   const navigate = useNavigate();
   console.log(password);
 
-  const RegisterAction = async (email: Register, password: Register) => {
+  const RegisterAction = async (
+    name: Register,
+    email: Register,
+    password: Register
+  ) => {
     try {
       const response = await axios.post(
-        'https://reqres.in/api/register',
+        'https://dj-declaration.onrender.com/api/register',
         {
+          name,
           email,
           password,
         },
@@ -42,14 +49,15 @@ const AuthProvider: FC<Props> = ({ children }) => {
           },
         }
       );
-      setUserName(response.data.userName);
+      setName(response.data.name);
       setPassword(response.data.password);
       setEmail(response.data.email);
       setToken(response.data.token);
       setSucces(`register successful: ${response.data.token}`);
       localStorage.setItem('site', response.data.token);
-      console.log(userName, password, email);
-      navigate('/accueil');
+      console.log(response.data);
+      console.log(name, password, email);
+      navigate('/');
     } catch (err: any) {
       setError(err.response?.data?.error || 'Login failed');
       console.log(error);
@@ -60,7 +68,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
   const LoginAction = async (email: Register, password: Register) => {
     try {
       const response = await axios.post(
-        'https://reqres.in/api/login',
+        'https://dj-declaration.onrender.com/api/login',
         {
           email,
           password,
@@ -71,10 +79,12 @@ const AuthProvider: FC<Props> = ({ children }) => {
           },
         }
       );
+
+      // setName(response.data.nme);
+      setToken(response.data);
+      localStorage.setItem('site', response.data);
       navigate('/accueil');
-      setUserName(response.data.user);
-      setToken(response.data.token);
-      localStorage.setItem('site', response.data.token);
+      console.log(token);
     } catch (err: any) {
       console.log(err);
       console.log(password, succes);
@@ -82,14 +92,21 @@ const AuthProvider: FC<Props> = ({ children }) => {
   };
 
   const logout = () => {
-    setUserName('');
+    setName('');
     setToken('');
     localStorage.removeItem('site');
     navigate('/');
   };
   return (
     <AuthContext.Provider
-      value={{ token, userName, email, RegisterAction, LoginAction, logout }}
+      value={{
+        token,
+        name,
+        email,
+        RegisterAction,
+        LoginAction,
+        logout,
+      }}
     >
       {' '}
       {children}

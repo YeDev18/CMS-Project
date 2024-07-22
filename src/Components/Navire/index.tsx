@@ -1,6 +1,7 @@
 import url from '@/api';
 import { Icon } from '@iconify/react';
 import { useEffect, useState } from 'react';
+import * as XLSX from 'xlsx';
 import { headersNavire } from '../Data';
 
 const Navire = () => {
@@ -26,7 +27,7 @@ const Navire = () => {
     setCurrent(prevPage => prevPage - 1);
   };
   const renderPaginationControls = () => {
-    const totalPages = Math.ceil(data1.length / itemsPerPage);
+    const totalPages = Math.ceil(data8.length / itemsPerPage);
     return (
       <div className="flex justify-end pb-5">
         <button
@@ -52,10 +53,26 @@ const Navire = () => {
   };
 
   const Navire = data1.map((item: any, index: number) => ({
-    id: index + 1,
+    id: index,
     imo: item.imo,
     nom: item.nom,
   }));
+
+  const [searchValue, setSearchValue] = useState();
+  const data8 = searchValue
+    ? Navire.filter((val: any) => val.imo.toString().includes(searchValue))
+    : Navire;
+
+  const exportToExcel = () => {
+    // Créer une nouvelle feuille de calcul
+    const ws = XLSX.utils.json_to_sheet(data8);
+    // Créer un nouveau classeur
+    const wb = XLSX.utils.book_new();
+    // Ajouter la feuille de calcul au classeur
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    // Générer et télécharger le fichier Excel
+    XLSX.writeFile(wb, `lib.xlsx`);
+  };
 
   return (
     <div className=" flex flex-col gap-6 text-grayBlack w-full ">
@@ -80,6 +97,9 @@ const Navire = () => {
             <input
               type="Number"
               placeholder="IMO"
+              onChange={(e: any) => {
+                setSearchValue(e.target.value);
+              }}
               className="border w-48 outline-none p-1 rounded-sm text-sm font-medium"
             />
           </div>
@@ -112,13 +132,13 @@ const Navire = () => {
             );
           })}
         </tr>
-        {Navire.slice(startIndex, endIndex).map((val: any, id: number) => {
+        {data8.slice(startIndex, endIndex).map((val: any, index: number) => {
           return (
             <tr
-              key={id}
+              key={index}
               className="flex justify-start p-4  w-full border-b-2 border-slate-50 "
             >
-              <td className="text-start w-32">{val.id}</td>
+              <td className="text-start w-32">{index + 1}</td>
               <td className="text-start w-72">{val.imo}</td>
               <td className="text-start w-72">{val.nom}</td>
             </tr>

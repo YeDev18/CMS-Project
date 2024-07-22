@@ -33,7 +33,7 @@ const DeclaratioNConforme = () => {
     setCurrent(prevPage => prevPage - 1);
   };
   const renderPaginationControls = () => {
-    const totalPages = Math.ceil(data1.length / itemsPerPage);
+    const totalPages = Math.ceil(data8.length / itemsPerPage);
     return (
       <div className="flex justify-end pb-5">
         <button
@@ -97,15 +97,22 @@ const DeclaratioNConforme = () => {
     dtci: item.soumission_dtci,
     tm: item.trafic_maritimes,
   }));
+  const [searchValue, setSearchValue] = useState();
   console.log(modifiedData);
+  const data8 = searchValue
+    ? data1.filter((val: any) =>
+        val.soumission_dtci.imo_dtci.toString().includes(searchValue)
+      )
+    : data1;
+  console.log(data8);
   return (
     <div className="w-screen flex flex-col gap-4  ">
       <div className="flex justify-between w-full pb-6">
         <div className="flex gap-4">
           <Libelle
-            icon="lucide:circle-check-big"
-            libelle="Conformes"
-            color="#114837"
+            icon="charm:notes-cross"
+            libelle="Non Conformes"
+            color="#5E1C16"
             number={data1.length}
           />
           <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
@@ -165,11 +172,10 @@ const DeclaratioNConforme = () => {
             <input
               type="number"
               placeholder="IMO"
-              // onChange={() => handleChange}
               className="border w-32 outline-none p-1 rounded-sm text-sm font-medium"
-              // onChange={e => {
-              //   setSelectValue(e.target.value);
-              // }}
+              onChange={(e: any) => {
+                setSearchValue(e.target.value);
+              }}
             />
           </div>
         </div>
@@ -187,7 +193,7 @@ const DeclaratioNConforme = () => {
             );
           })}
         </tr>
-        {data1.slice(startIndex, endIndex).map((val: any, index: number) => {
+        {data8.slice(startIndex, endIndex).map((val: any, index: number) => {
           return (
             <>
               <tr

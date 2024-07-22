@@ -1,21 +1,52 @@
 //
 import { FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthProvider';
 import Header from '../Header';
+
 const Register = () => {
-  const [userName, setUserName] = useState<string>('');
+  const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [token, setToken] = useState(localStorage.getItem('site') || '');
+  const navigate = useNavigate();
   const auth = useAuth();
-  // const [error, setError] = useState<string>('');
-  // const [success, setSuccess] = useState<string>('');
+  const [succes, setSucces] = useState<string>('');
+  const [error, setError] = useState<string>('');
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (userName !== '' && password !== '' && email !== '') {
+    if (name !== '' && password !== '' && email !== '') {
       console.log('tout est Bon');
-      console.log(userName, email, password);
-      auth?.RegisterAction(email, password);
+      console.log(name, email, password);
+      auth?.RegisterAction(name, email, password);
+      // try {
+      //   const response = await axios.post(
+      //     'https://dj-declaration.onrender.com/api/register',
+      //     {
+      //       name,
+      //       email,
+      //       password,
+      //     },
+      //     {
+      //       headers: {
+      //         'Content-Type': 'application/json',
+      //       },
+      //     }
+      //   );
+      //   setName(response.data.name);
+      //   setPassword(response.data.password);
+      //   setEmail(response.data.email);
+      //   setToken(response.data.token);
+      //   setSucces(`register successful: ${response.data.token}`);
+      //   localStorage.setItem('site', response.data.token);
+      //   console.log(name, password, email);
+      //   navigate('/');
+      // } catch (err: any) {
+      //   setError(err.response?.data?.error || 'Login failed');
+      //   console.log(error);
+      //   setSucces('');
+      // }
       // try {
       //   const response = await axios.post(
       //     'https://reqres.in/api/register',
@@ -56,12 +87,12 @@ const Register = () => {
             <div className="relative z-0 w-full mb-5 group">
               <input
                 type="text"
-                value={userName}
+                value={name}
                 name="name"
                 id="name"
                 className="block py-2.5 px-0 w-full text-md text-gray-900 bg-transparent border-0 border-b-[0.8px] border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-firstBlue peer"
                 onChange={e => {
-                  setUserName(e.target.value);
+                  setName(e.target.value);
                 }}
                 placeholder=" "
                 required
@@ -80,7 +111,7 @@ const Register = () => {
                 onChange={e => {
                   setEmail(e.target.value);
                 }}
-                placeholder=" "
+                placeholder=""
                 required
               />
               <label className="peer-focus:font-medium absolute text-md text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-firstBlue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
@@ -97,7 +128,7 @@ const Register = () => {
                 onChange={e => {
                   setPassword(e.target.value);
                 }}
-                placeholder=" "
+                placeholder=""
                 required
               />
               <label className="peer-focus:font-medium absolute text-md text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-firstBlue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
