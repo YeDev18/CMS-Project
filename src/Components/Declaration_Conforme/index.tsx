@@ -143,6 +143,7 @@ const DeclarationConforme = () => {
               color="#114837"
               number={data1.length}
             />
+            <div></div>
             <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
               <form
                 action=""
@@ -208,6 +209,16 @@ const DeclarationConforme = () => {
               />
             </div>
           </div>
+          <button className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex items-center">
+            <Icon
+              icon="material-symbols:download"
+              width="1em"
+              height="1em"
+              style={{ color: '#313131' }}
+              className="mr-2"
+            />
+            Export en csv
+          </button>
         </div>
 
         <table className="w-full pb-6">

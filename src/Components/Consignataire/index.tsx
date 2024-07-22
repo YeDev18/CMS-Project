@@ -1,6 +1,7 @@
 import url from '@/api';
 import { Icon } from '@iconify/react';
 import { useEffect, useState } from 'react';
+import * as XLSX from 'xlsx';
 import { headersConsignataires } from '../Data';
 const Consignataire = () => {
   const [data1, setData1] = useState<any>([]);
@@ -52,6 +53,13 @@ const Consignataire = () => {
     imo: item.imo,
     nom: item.nom,
   }));
+  const exportToExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(data1);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, `Consignataire.xlsx`);
+    console.log('vit');
+  };
 
   const [searchValue, setSearchValue] = useState();
   const data8 = searchValue
@@ -91,6 +99,7 @@ const Consignataire = () => {
         <button
           className="rounded-md shadow-sm p-2 inline-flex items-center bg-firstBlue text-firstColors"
           type="button"
+          onClick={() => exportToExcel()}
         >
           <Icon
             icon="material-symbols:download"

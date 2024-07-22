@@ -65,13 +65,14 @@ const Navire = () => {
 
   const exportToExcel = () => {
     // Créer une nouvelle feuille de calcul
-    const ws = XLSX.utils.json_to_sheet(data8);
+    const ws = XLSX.utils.json_to_sheet(data1);
     // Créer un nouveau classeur
     const wb = XLSX.utils.book_new();
     // Ajouter la feuille de calcul au classeur
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     // Générer et télécharger le fichier Excel
-    XLSX.writeFile(wb, `lib.xlsx`);
+    XLSX.writeFile(wb, `Navires.xlsx`);
+    console.log('vit');
   };
 
   return (
@@ -108,6 +109,7 @@ const Navire = () => {
         <button
           className="rounded-md shadow-sm p-2 inline-flex items-center bg-firstBlue text-firstColors"
           type="button"
+          onClick={() => exportToExcel()}
         >
           <Icon
             icon="material-symbols:download"

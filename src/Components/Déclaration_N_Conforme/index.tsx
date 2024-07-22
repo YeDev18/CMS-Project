@@ -179,6 +179,16 @@ const DeclaratioNConforme = () => {
             />
           </div>
         </div>
+        <button className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex items-center">
+          <Icon
+            icon="material-symbols:download"
+            width="1em"
+            height="1em"
+            style={{ color: '#313131' }}
+            className="mr-2"
+          />
+          Export en csv
+        </button>
       </div>
       <table className="w-full pb-6">
         <tr className="flex justify-start  py-4 px-2  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
