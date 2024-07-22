@@ -25,7 +25,6 @@ const Accueil = () => {
   }, [selectedFile2]); // Remplacez par les valeurs que vous voulez exclure
   useEffect(() => {
     handleCompare();
-    console.log(`C'est fait`);
   }, [selected === true]);
 
   useEffect(() => {
@@ -58,14 +57,16 @@ const Accueil = () => {
 
   const handleCompare = () => {
     console.log(10 + 1);
-    api
-      .get('/api/compare-declaration-status')
-      .then(res => res.data)
-      .then(data => {
-        setDat(data);
-        console.log(dat);
-      })
-      .catch(error => console.log(error));
+    setTimeout(() => {
+      api
+        .get('/api/compare-declaration-status')
+        .then(res => res.data)
+        .then(data => {
+          setDat(data);
+          console.log(dat);
+        })
+        .catch(error => console.log(error));
+    }, 1000);
   };
 
   const handleFileChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -238,25 +239,40 @@ const Accueil = () => {
           </div>
           <div className="flex flex-col justify-between gap-4 p-1 rounded-sm">
             <div className="flex flex-col gap-3  py-2">
-              <div className=" p-2 gap-4 bg-orange-100 rounded-sm flex justify-between shadow-sm">
-                <p className="font-semibold text-base">File Navires DTCI</p>
-                <button>
-                  <Icon icon="ic:round-close" width="1em" height="1.5em" />
-                </button>
-              </div>
-              <div className="p-2 w-fit gap-4 bg-red-100 rounded-sm flex justify-between shadow-sm">
-                <p className="font-semibold text-base"> File Navires Trafic</p>
-                <button>
-                  <Icon icon="ic:round-close" width="1em" height="1.5em" />
-                </button>
-              </div>
+              {selectedFile1 ? (
+                <div className=" p-2 gap-4 bg-orange-100 rounded-sm flex justify-between shadow-sm">
+                  <p className="font-semibold text-base">File Navires DTCI</p>
+                  <button>
+                    <Icon icon="ic:round-close" width="1em" height="1.5em" />
+                  </button>
+                </div>
+              ) : (
+                ''
+              )}
+              {selectedFile2 ? (
+                <div className="p-2 w-fit gap-4 bg-red-100 rounded-sm flex justify-between shadow-sm">
+                  <p className="font-semibold text-base">
+                    {' '}
+                    File Navires Trafic
+                  </p>
+                  <button>
+                    <Icon icon="ic:round-close" width="1em" height="1.5em" />
+                  </button>
+                </div>
+              ) : (
+                ''
+              )}
             </div>
-            <button
-              className="bg-firstBlue w-40 rounded-md text-[#EEEEEC] h-10 shadow-sm"
-              onClick={handleCompare}
-            >
-              Comparez
-            </button>
+            {selected ? (
+              <button
+                className="bg-firstBlue w-40 rounded-md text-[#EEEEEC] h-10 shadow-sm"
+                onClick={handleCompare}
+              >
+                Comparez
+              </button>
+            ) : (
+              ''
+            )}
           </div>
         </div>
         <div className="w-[50%] h-40">

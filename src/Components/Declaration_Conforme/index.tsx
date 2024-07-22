@@ -16,6 +16,46 @@ const DeclarationConforme = () => {
   const startIndex = (current - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const MonthsYears = selectValue2 + '-' + selectValue;
+  const [modal, setModal] = useState<boolean>(false);
+  const [data3, setDate3] = useState({
+    idInstance: '',
+    nonDTCI: '',
+    imoDTCI: '',
+    consignataireDTCI: '',
+    mouvementDTCI: '',
+    dateDTCI: '',
+    dateDeclaration: '',
+    port: '',
+    typeNavire: '',
+    mrn: '',
+    numVoyage: '',
+    consignataire: '',
+    tonage: '',
+  });
+
+  const handleChange = (val: any) => {
+    setModal(true);
+    setDate3({
+      ...data3,
+      idInstance: val.id,
+      nonDTCI: val.soumission_dtci.nom_navire_dtci,
+      imoDTCI: val.soumission_dtci.imo_dtci,
+      mouvementDTCI:
+        val.soumission_dtci.mouvement_dtci === 'Arrivée' ? 'ETA' : 'ETD',
+      consignataireDTCI: val.soumission_dtci.consignataire_dtci,
+      dateDeclaration: val?.soumission_dtci?.date_declaration_dtci,
+      port: val?.soumission_dtci?.port_dtci,
+      typeNavire: val?.soumission_dtci?.type_de_navire_dtci,
+      mrn: val?.soumission_dtci?.mrn_dtci,
+      numVoyage: val?.soumission_dtci?.numero_voyage_dtci,
+      consignataire: val?.soumission_dtci?.consignataire_dtci,
+      tonage: val?.soumission_dtci?.tonage_facture_dtci,
+      dateDTCI:
+        val.soumission_dtci.mouvement_dtci === 'Arrivée'
+          ? val.soumission_dtci.eta_dtci
+          : val.soumission_dtci.etd_dtci,
+    });
+  };
   // const [modifiedData, setModifiedData] = useState<any[]>([]);
   // const [filteredData, setFilteredData] = useState([]);
   useEffect(() => {
@@ -40,7 +80,6 @@ const DeclarationConforme = () => {
     id: index,
     imo: item?.soumission_dtci?.imo_dtci,
     libDTCI: item?.soumission_dtci?.nom_navire_dtci,
-    type: 'viav',
     mouvement:
       item?.soumission_dtci?.mouvement_dtci === 'Arrivée' ? 'ETA' : 'ETD',
     date:
@@ -198,35 +237,156 @@ const DeclarationConforme = () => {
               );
             })}
           </tr>
-          {modifiedData
-            .slice(startIndex, endIndex)
-            .map((val: any, index: number) => {
-              return (
-                <tr
-                  key={index}
-                  className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
-                >
-                  <td className="text-start lg:w-32 text-sm xl:text-base">
-                    {index}
-                  </td>
-                  <td className="text-start lg:w-32 text-sm xl:text-base">
-                    {val?.imo}
-                  </td>
-                  <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
-                    {val?.libDTCI}
-                  </td>
-                  <td className="text-start lg:w-40 text-sm xl:text-base">
-                    {val?.mouvement}
-                  </td>
+          {data1.slice(startIndex, endIndex).map((val: any, index: number) => {
+            return (
+              <tr
+                key={index}
+                className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
+              >
+                <td className="text-start lg:w-32 text-sm xl:text-base">
+                  {index}
+                </td>
+                <td className="text-start lg:w-32 text-sm xl:text-base">
+                  {val.soumission_dtci.imo_dtci}
+                </td>
+                <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
+                  {val.soumission_dtci.nom_navire_dtci}
+                </td>
+                <td className="text-start lg:w-40 text-sm xl:text-base">
+                  {val.soumission_dtci.mouvement_dtci === 'Arrivée'
+                    ? 'ETA'
+                    : 'ETD'}
+                </td>
 
-                  <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
-                    {val?.date}
-                  </td>
-                </tr>
-              );
-            })}
+                <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
+                  {val.soumission_dtci.mouvement_dtci === 'Arrivée'
+                    ? val.soumission_dtci.eta_dtci
+                    : val.soumission_dtci.etd_dtci}
+                </td>
+                <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
+                  <button onClick={() => handleChange(val)}>
+                    <Icon icon="weui:eyes-on-filled" width="1em" height="1em" />
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
         </table>
+
         {renderPaginationControls()}
+        {modal ? (
+          <div className="absolute w-full h-full  justify-center items-center  ">
+            <div className="absolute bg-black opacity-15 rounded-md w-full h-full z-[1]">
+              {' '}
+              vfas
+            </div>
+            <div className="w-96 h-fit absolute z-[2] inset-1/2 flex flex-col justify-center items-center gap-2 bg-firstColors -translate-x-2/4  -translate-y-2/4 shadow-sm shadow-slate-100 rounded-sm p-6">
+              <div className="flex flex-col gap-1 w-full px-2">
+                <label htmlFor="" className="text-gray-500 font-semibold">
+                  Date de declaration
+                </label>
+                <input
+                  disabled
+                  type="text"
+                  className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                  value={data3.dateDeclaration}
+                />
+              </div>
+              <div className="flex flex-col gap-1 w-full px-2">
+                <label htmlFor="" className="text-gray-500 font-semibold">
+                  IMO
+                </label>
+                <input
+                  disabled
+                  type="text"
+                  className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                  value={data3.imoDTCI}
+                />
+              </div>
+              <div className="flex flex-col gap-1 w-full px-2 ">
+                <label htmlFor="" className="text-gray-500 font-semibold">
+                  MRN
+                </label>
+                <input
+                  disabled
+                  type="text"
+                  className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                  value={data3.mrn}
+                />
+              </div>
+              <div className="flex flex-col gap-1 w-full px-2">
+                <label htmlFor="" className="text-gray-500 font-semibold">
+                  Nom
+                </label>
+                <input
+                  disabled
+                  type="text"
+                  className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                  value={data3.nonDTCI}
+                />
+              </div>
+              <div className="flex flex-col gap-1 w-full px-2">
+                <label htmlFor="" className="text-gray-500 font-semibold">
+                  Mouvement
+                </label>
+                <input
+                  disabled
+                  type="text"
+                  className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                  value={data3.mouvementDTCI}
+                />
+              </div>
+              <div className="flex flex-col gap-1 w-full px-2 ">
+                <label htmlFor="" className="text-gray-500 font-semibold">
+                  Consignataire
+                </label>
+                <input
+                  disabled
+                  type="text"
+                  className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                  value={data3.consignataireDTCI}
+                />
+              </div>
+              <div className="flex flex-col gap-1 w-full px-2 ">
+                <label htmlFor="" className="text-gray-500 font-semibold">
+                  Port
+                </label>
+                <input
+                  disabled
+                  type="text"
+                  className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                  value={data3.port}
+                />
+              </div>
+
+              <div className="flex flex-col gap-1 w-full px-2 ">
+                <label htmlFor="" className="text-gray-500 font-semibold">
+                  Numero Voyage
+                </label>
+                <input
+                  disabled
+                  type="text"
+                  className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                  value={data3.numVoyage}
+                />
+              </div>
+
+              <button
+                className="absolute right-4 top-2"
+                onClick={() => setModal(false)}
+              >
+                <Icon
+                  icon="majesticons:close"
+                  width="1.5em"
+                  height="1.5em"
+                  className="text-black"
+                />
+              </button>
+            </div>
+          </div>
+        ) : (
+          ''
+        )}
       </div>
     </>
   );

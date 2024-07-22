@@ -42,12 +42,11 @@ const AuthProvider: FC<Props> = ({ children }) => {
           },
         }
       );
-      navigate('/accueil');
       setUserName(response.data.userName);
       setPassword(response.data.password);
       setEmail(response.data.email);
       setToken(response.data.token);
-      setSucces(`Login successful: ${response.data.token}`);
+      setSucces(`register successful: ${response.data.token}`);
       localStorage.setItem('site', response.data.token);
       console.log(userName, password, email);
       navigate('/accueil');

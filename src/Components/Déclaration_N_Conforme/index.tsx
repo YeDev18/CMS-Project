@@ -187,49 +187,42 @@ const DeclaratioNConforme = () => {
             );
           })}
         </tr>
-        {data1
-          .slice(startIndex, endIndex)
-          .includes()
-          .map((val: any, index: number) => {
-            return (
-              <>
-                <tr
-                  key={index}
-                  className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
-                >
-                  <td className="text-start lg:w-32 text-sm xl:text-base">
-                    {index + 1}
-                  </td>
-                  <td className="text-start lg:w-32 text-sm xl:text-base">
-                    {val.soumission_dtci.imo_dtci}
-                  </td>
-                  <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
-                    {val.soumission_dtci.nom_navire_dtci}
-                  </td>
-                  <td className="text-start lg:w-40 text-sm xl:text-base">
-                    {val.soumission_dtci.mouvement_dtci === 'Arrivée'
-                      ? 'ETA'
-                      : 'ETD'}
-                  </td>
+        {data1.slice(startIndex, endIndex).map((val: any, index: number) => {
+          return (
+            <>
+              <tr
+                key={index}
+                className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
+              >
+                <td className="text-start lg:w-32 text-sm xl:text-base">
+                  {index + 1}
+                </td>
+                <td className="text-start lg:w-32 text-sm xl:text-base">
+                  {val.soumission_dtci.imo_dtci}
+                </td>
+                <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
+                  {val.soumission_dtci.nom_navire_dtci}
+                </td>
+                <td className="text-start lg:w-40 text-sm xl:text-base">
+                  {val.soumission_dtci.mouvement_dtci === 'Arrivée'
+                    ? 'ETA'
+                    : 'ETD'}
+                </td>
 
-                  <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
-                    {val.soumission_dtci.mouvement_dtci === 'Arrivée'
-                      ? val.soumission_dtci.eta_dtci
-                      : val.soumission_dtci.etd_dtci}
-                  </td>
-                  <td className="text-end lg:w-28 xl:w-48 ">
-                    <button onClick={() => handleChange(val)}>
-                      <Icon
-                        icon="mingcute:more-2-fill"
-                        width="20"
-                        height="20"
-                      />
-                    </button>
-                  </td>
-                </tr>
-              </>
-            );
-          })}
+                <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
+                  {val.soumission_dtci.mouvement_dtci === 'Arrivée'
+                    ? val.soumission_dtci.eta_dtci
+                    : val.soumission_dtci.etd_dtci}
+                </td>
+                <td className="text-end lg:w-28 xl:w-48 ">
+                  <button onClick={() => handleChange(val)}>
+                    <Icon icon="mingcute:more-2-fill" width="20" height="20" />
+                  </button>
+                </td>
+              </tr>
+            </>
+          );
+        })}
       </table>
       {renderPaginationControls()}
       {form ? (
