@@ -1,4 +1,5 @@
 import { Icon } from '@iconify/react';
+import { Link } from 'react-router-dom';
 import { FC, useRef } from 'react';
 
 type Compo1 = {
@@ -7,6 +8,7 @@ type Compo1 = {
   name: string;
   number: number;
   index: number;
+  route: string;
 };
 
 export const Component1: FC<Compo1> = ({
@@ -15,6 +17,7 @@ export const Component1: FC<Compo1> = ({
   name,
   number,
   index,
+  route,
 }) => {
   return (
     <div
@@ -32,7 +35,10 @@ export const Component1: FC<Compo1> = ({
       <p className="text-lg">{name}</p>
       <div className="flex justify-between items-center">
         <p className="text-3xl font-medium">{number}</p>
-        <div className=" bg-firstBlue  w-fit p-1 rounded-md cursor-pointer">
+        <Link
+          to={route}
+          className=" bg-firstBlue  w-fit p-1 rounded-md cursor-pointer"
+        >
           <Icon
             icon={icon2}
             width="1.2rem"
@@ -40,7 +46,7 @@ export const Component1: FC<Compo1> = ({
             style={{ color: '#EEEEEC' }}
             className="rotate-45"
           />
-        </div>
+        </Link>
       </div>
     </div>
   );

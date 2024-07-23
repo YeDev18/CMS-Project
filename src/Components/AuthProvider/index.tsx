@@ -1,4 +1,4 @@
-import axios from 'axios';
+import url from '@/api';
 import { FC, ReactNode, createContext, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 type Context = {
@@ -36,8 +36,8 @@ const AuthProvider: FC<Props> = ({ children }) => {
     password: Register
   ) => {
     try {
-      const response = await axios.post(
-        'https://dj-declaration.onrender.com/api/register',
+      const response = await url.post(
+        '/api/register',
         {
           name,
           email,
@@ -66,8 +66,8 @@ const AuthProvider: FC<Props> = ({ children }) => {
 
   const LoginAction = async (email: Register, password: Register) => {
     try {
-      const response = await axios.post(
-        'https://dj-declaration.onrender.com/api/login',
+      const response = await url.post(
+        '/api/login',
         {
           email,
           password,
@@ -89,13 +89,17 @@ const AuthProvider: FC<Props> = ({ children }) => {
       console.log(password, succes);
     }
   };
-
-  const logout = () => {
-    setName('');
-    setToken('');
-    localStorage.removeItem('site');
-    navigate('/');
+  const logout = async () => {
+    try {
+      const response = await url.post('/api/logout');
+      console.log('Logged out successfully', response);
+      navigate('/');
+      localStorage.removeItem('site');
+    } catch (error) {
+      console.error('Erreur:', error);
+    }
   };
+
   return (
     <AuthContext.Provider
       value={{

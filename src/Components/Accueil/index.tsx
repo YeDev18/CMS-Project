@@ -27,12 +27,7 @@ const Accueil = () => {
   }, [selectedFile1]);
   useEffect(() => {
     fetchDataTM();
-  }, [selectedFile2]); // Remplacez par les valeurs que vous voulez exclure
-  // useEffect(() => {
-  //   setSelected(true);
-  //   handleCompare();
-  //   setSelected(false);
-  // }, [selection === true]);
+  }, [selectedFile2]);
 
   useEffect(() => {
     url
@@ -47,20 +42,6 @@ const Accueil = () => {
       .then(data => setCountConsignataire(data.length))
       .catch(error => console.log(error));
   }, []);
-  // console.log(countNavire);
-  // console.log(countConsignataire);
-
-  // const excelDateToJSDate = (serial: number) => {
-  //   const excelEpoch = new Date(Date.UTC(1900, 0, 0)); // 1 Janvier 1900
-  //   const jsDate = new Date(
-  //     excelEpoch.getTime() + (serial - 1) * 24 * 60 * 60 * 1000
-  //   ); // Ajustement pour le nombre de jours
-  //   const day = jsDate.getUTCDate().toString().padStart(2, '0');
-  //   const month = (jsDate.getUTCMonth() + 1).toString().padStart(2, '0');
-  //   const year = jsDate.getUTCFullYear();
-
-  //   return `${day}/${month}/${year}`;
-  // };
 
   const handleCompare = () => {
     setIsLoading(true);
@@ -185,15 +166,15 @@ const Accueil = () => {
     newDate.setDate(date.getDate() + day);
     return newDate;
   }
-
   const todayDate = new Date();
   const days = 0;
   const newDate = Days(todayDate, days);
-
+  const dateFormatter = new Intl.DateTimeFormat('fr-FR');
+  const formattedDate = dateFormatter.format(newDate);
   return (
     <div className="w-full">
       <div className="flex justify-between items-center">
-        <div className="text-borderColor">{newDate.toDateString()}</div>
+        <div className="text-borderColor font-semibold">{formattedDate}</div>
         <div className="flex justify-center items-center border-[0.5px] border-borderColor rounded-2xl px-2 py-1  w-fit">
           <Icon
             icon="typcn:location"
@@ -213,6 +194,7 @@ const Accueil = () => {
               icon2="mingcute:arrow-up-fill"
               name="Navire"
               number={countNavire}
+              route="/navire"
             />
             <Component1
               index={2}
@@ -220,6 +202,7 @@ const Accueil = () => {
               icon2="mingcute:arrow-up-fill"
               name="Consignataire"
               number={countConsignataire}
+              route="/consignataire"
             />
           </div>
           <div className="flex gap-4 items-center justify-center">
@@ -267,7 +250,9 @@ const Accueil = () => {
               <div className="flex flex-col gap-3  py-2">
                 {selectedFile1 ? (
                   <div className=" p-2 gap-4 w-48 bg-orange-100 rounded-sm flex justify-between shadow-sm">
-                    <p className="font-semibold text-base">File Navires DTCI</p>
+                    <p className="font-semibold text-base">
+                      Fichier Navires DTCI
+                    </p>
                   </div>
                 ) : (
                   ''
@@ -276,7 +261,7 @@ const Accueil = () => {
                   <div className="p-2  gap-4 w-48 bg-red-100 rounded-sm flex justify-between shadow-sm">
                     <p className="font-semibold text-base">
                       {' '}
-                      File Navires Trafic
+                      Fichier Navires Trafic
                     </p>
                   </div>
                 ) : (
@@ -296,8 +281,22 @@ const Accueil = () => {
             </div>
           )}
         </div>
-        <div className="w-[50%] h-40">
-          <Chart />
+        <div className="w-[100%] h-40 flex gap-6">
+          <div className="w-[50%]">
+            <Chart />
+          </div>
+          <div className="w-fit h-fit border rounded-md flex flex-col justify-start items-start p-4 gap-6">
+            <h2 className="font-semibold text-xl">
+              Tonages des differents navires
+            </h2>
+            <div className="flex flex-col gap-2">
+              <div className="w-80 h-8 bg-black opacity-5 rounded-md"></div>
+              <div className="w-80 h-8 bg-black opacity-5 rounded-md"></div>
+              <div className="w-80 h-8 bg-black opacity-5 rounded-md"></div>
+              <div className="w-80 h-8 bg-black opacity-5 rounded-md"></div>
+              <div className="w-80 h-8 bg-black opacity-5 rounded-md"></div>
+            </div>
+          </div>
         </div>
       </div>
       <div className="absolute w-full h-fit bottom-0 left-0  flex justify-end items-end">
@@ -305,7 +304,7 @@ const Accueil = () => {
           <div className="absolute  bg-sky-100 w-96 h-16 rounded-sm shadow-lg inline-flex align-middle px-4">
             {IsLoading ? (
               <div className="flex items-center justify-center gap-2">
-                <p className="font-medium">Sending Donnees</p>
+                <p className="font-medium">Envoi des Données</p>
                 <Icon
                   icon="eos-icons:three-dots-loading"
                   width="2em"

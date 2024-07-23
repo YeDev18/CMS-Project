@@ -2,21 +2,18 @@ import { Outlet } from 'react-router-dom';
 import { Countries } from '../Components/Data';
 import logo from '../assets/images/logo.png';
 
-// type CountrieTypes = {
-//   countrie: string;
-//   index: number
-// };
-
 const RCLayout = () => {
-  function addDays(date: Date, days: number) {
+  function Days(date: Date, day: number) {
     const newDate = new Date(date);
-    newDate.setDate(date.getDate() + days);
+    newDate.setDate(date.getDate() + day);
     return newDate;
-    ////COMPRENDRE
   }
   const todayDate = new Date();
   const days = 0;
-  const newDate = addDays(todayDate, days);
+  const newDate = Days(todayDate, days);
+  const dateFormatter = new Intl.DateTimeFormat('fr-FR');
+  const formattedDate = dateFormatter.format(newDate);
+  console.log(formattedDate);
   return (
     <div className="bg-bgColors w-full h-screen py-9  px-9 text-textColor">
       <div className=" bg-firstColors w-full h-full rounded-md shadow-lg p-8">
@@ -26,7 +23,7 @@ const RCLayout = () => {
               <p>Abidjan</p>
             </div>
             <span className="border-[0.5px] border-borderColor h-8 "></span>
-            <div>{newDate.toDateString()}</div>
+            <p className="font-semibold">{formattedDate}</p>
           </div>
           <div className="flex gap-4">
             {Countries.map((countrie, index) => {

@@ -43,18 +43,6 @@ function App() {
               <Route path="/update/:id" element={<Update />} />
             </Route>
           </Route>
-          {/* <Route path="/" element={<Home />}>
-            <Route path="/accueil" element={<Accueil />} />
-            <Route path="/consignataire" element={<Consignataire />} />
-            <Route path="/navire" element={<Navire />} />
-            <Route path="/periode" element={<Periode />} />
-            <Route
-              path="/declaration_conforme"
-              element={<DeclarationConforme />}
-            />
-            <Route path="/nom_declaration" element={<NonDeclaration />} />
-            <Route path="/nom_declaré" element={<DeclaratioNConforme />} />
-          </Route> */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AuthProvider>
