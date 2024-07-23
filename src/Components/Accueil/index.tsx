@@ -14,7 +14,12 @@ const Accueil = () => {
   const [dat, setDat] = useState<any[]>(['']);
   const [countNavire, setCountNavire] = useState<number>(0);
   const [countConsignataire, setCountConsignataire] = useState<number>(0);
-  const selected = selectedFile1 && selectedFile2 ? true : false;
+  const [selected, setSelected] = useState(false);
+  const selection = selectedFile1 && selectedFile2 ? true : false;
+  const [IsLoading, setIsLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
+
   console.log(selected);
 
   useEffect(() => {
@@ -23,9 +28,11 @@ const Accueil = () => {
   useEffect(() => {
     fetchDataTM();
   }, [selectedFile2]); // Remplacez par les valeurs que vous voulez exclure
-  useEffect(() => {
-    handleCompare();
-  }, [selected === true]);
+  // useEffect(() => {
+  //   setSelected(true);
+  //   handleCompare();
+  //   setSelected(false);
+  // }, [selection === true]);
 
   useEffect(() => {
     url
@@ -40,8 +47,8 @@ const Accueil = () => {
       .then(data => setCountConsignataire(data.length))
       .catch(error => console.log(error));
   }, []);
-  console.log(countNavire);
-  console.log(countConsignataire);
+  // console.log(countNavire);
+  // console.log(countConsignataire);
 
   // const excelDateToJSDate = (serial: number) => {
   //   const excelEpoch = new Date(Date.UTC(1900, 0, 0)); // 1 Janvier 1900
@@ -56,18 +63,34 @@ const Accueil = () => {
   // };
 
   const handleCompare = () => {
-    console.log(10 + 1);
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 3500);
     setTimeout(() => {
       api
         .get('/api/compare-declaration-status')
         .then(res => res.data)
         .then(data => {
           setDat(data);
+          setSuccess(true);
+          setTimeout(() => {
+            setSuccess(false);
+          }, 3000);
+
           console.log(dat);
         })
-        .catch(error => console.log(error));
-    }, 1000);
+        .catch(error => {
+          console.log(error);
+          setError(true);
+          setTimeout(() => {
+            setError(false);
+          }, 3000);
+        });
+    }, 100);
+    setSelected(true);
   };
+  console.log(selected);
 
   const handleFileChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -237,47 +260,91 @@ const Accueil = () => {
               </div>
             ))}
           </div>
-          <div className="flex flex-col justify-between gap-4 p-1 rounded-sm">
-            <div className="flex flex-col gap-3  py-2">
-              {selectedFile1 ? (
-                <div className=" p-2 gap-4 bg-orange-100 rounded-sm flex justify-between shadow-sm">
-                  <p className="font-semibold text-base">File Navires DTCI</p>
-                  <button>
-                    <Icon icon="ic:round-close" width="1em" height="1.5em" />
-                  </button>
-                </div>
-              ) : (
-                ''
-              )}
-              {selectedFile2 ? (
-                <div className="p-2 w-fit gap-4 bg-red-100 rounded-sm flex justify-between shadow-sm">
-                  <p className="font-semibold text-base">
-                    {' '}
-                    File Navires Trafic
-                  </p>
-                  <button>
-                    <Icon icon="ic:round-close" width="1em" height="1.5em" />
-                  </button>
-                </div>
+          {selected ? (
+            ''
+          ) : (
+            <div className="flex flex-col justify-between gap-4 p-1 rounded-sm">
+              <div className="flex flex-col gap-3  py-2">
+                {selectedFile1 ? (
+                  <div className=" p-2 gap-4 w-48 bg-orange-100 rounded-sm flex justify-between shadow-sm">
+                    <p className="font-semibold text-base">File Navires DTCI</p>
+                  </div>
+                ) : (
+                  ''
+                )}
+                {selectedFile2 ? (
+                  <div className="p-2  gap-4 w-48 bg-red-100 rounded-sm flex justify-between shadow-sm">
+                    <p className="font-semibold text-base">
+                      {' '}
+                      File Navires Trafic
+                    </p>
+                  </div>
+                ) : (
+                  ''
+                )}
+              </div>
+              {selection === true ? (
+                <button
+                  className="bg-firstBlue w-40 rounded-md text-[#EEEEEC] h-10 shadow-sm"
+                  onClick={() => handleCompare()}
+                >
+                  Comparez
+                </button>
               ) : (
                 ''
               )}
             </div>
-            {selected ? (
-              <button
-                className="bg-firstBlue w-40 rounded-md text-[#EEEEEC] h-10 shadow-sm"
-                onClick={handleCompare}
-              >
-                Comparez
-              </button>
-            ) : (
-              ''
-            )}
-          </div>
+          )}
         </div>
         <div className="w-[50%] h-40">
           <Chart />
         </div>
+      </div>
+      <div className="absolute w-full h-fit bottom-0 left-0  flex justify-end items-end">
+        {(IsLoading || success || error) && (
+          <div className="absolute  bg-sky-100 w-96 h-16 rounded-sm shadow-lg inline-flex align-middle px-4">
+            {IsLoading ? (
+              <div className="flex items-center justify-center gap-2">
+                <p className="font-medium">Sending Donnees</p>
+                <Icon
+                  icon="eos-icons:three-dots-loading"
+                  width="2em"
+                  height="2em"
+                />
+              </div>
+            ) : (
+              ''
+            )}
+
+            {success ? (
+              <div className="flex items-center justify-center gap-2">
+                <Icon
+                  icon="lucide:circle-check-big"
+                  width="1.2em"
+                  height="1.2em"
+                  className="text-green-700"
+                />
+                <p className="font-medium">Comparaison Reussie</p>
+              </div>
+            ) : (
+              ''
+            )}
+
+            {error ? (
+              <div className="flex items-center justify-center gap-2">
+                <Icon
+                  icon="ph:x-circle"
+                  width="1.2em"
+                  height="1.2em"
+                  className="text-red-600"
+                />
+                <p className="font-medium">Comparaison Echoue</p>
+              </div>
+            ) : (
+              ''
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

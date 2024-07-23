@@ -52,9 +52,8 @@ const AuthProvider: FC<Props> = ({ children }) => {
       setName(response.data.name);
       setPassword(response.data.password);
       setEmail(response.data.email);
-      setToken(response.data.token);
-      setSucces(`register successful: ${response.data.token}`);
-      localStorage.setItem('site', response.data.token);
+      setSucces(`register successful:`);
+      // localStorage.setItem('site', response.data.token);
       console.log(response.data);
       console.log(name, password, email);
       navigate('/');
