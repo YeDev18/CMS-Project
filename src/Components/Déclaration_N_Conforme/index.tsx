@@ -112,7 +112,7 @@ const DeclaratioNConforme = () => {
           <Libelle
             icon="charm:notes-cross"
             libelle="Non Conformes"
-            color="#5E1C16"
+            color="#F59069"
             number={data1.length}
           />
           <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">

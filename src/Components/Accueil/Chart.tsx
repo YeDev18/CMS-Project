@@ -51,11 +51,11 @@ export function Chart() {
     },
     Non_conformes: {
       label: 'Non_Conformes',
-      color: 'hsl(var(--chart-2))',
+      color: '#F59069',
     },
     Non_declares: {
       label: 'Non_Declare',
-      color: 'hsl(var(--chart-3))',
+      color: '#F0352B',
     },
   } satisfies ChartConfig;
 

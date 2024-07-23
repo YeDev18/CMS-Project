@@ -1,6 +1,7 @@
 import url from '@/api';
 import { Icon } from '@iconify/react';
 import { useEffect, useMemo, useState } from 'react';
+import * as XLSX from 'xlsx';
 import { AllMonths, headerTable, Year } from '../Data';
 import Libelle from '../ui/Libelle';
 
@@ -92,6 +93,13 @@ const DeclarationConforme = () => {
     console.log(selectValue);
     console.log(MonthsYears);
   };
+  const exportToExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(data8);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, `Decalaration conforme.xlsx`);
+    console.log('vit');
+  };
 
   const goToNextPage = () => {
     setCurrent(prevPage => prevPage + 1);
@@ -140,7 +148,7 @@ const DeclarationConforme = () => {
             <Libelle
               icon="lucide:circle-check-big"
               libelle="Conformes"
-              color="#114837"
+              color="#2563eb"
               number={data1.length}
             />
             <div></div>
@@ -209,7 +217,10 @@ const DeclarationConforme = () => {
               />
             </div>
           </div>
-          <button className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex items-center">
+          <button
+            className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex items-center"
+            onClick={() => exportToExcel()}
+          >
             <Icon
               icon="material-symbols:download"
               width="1em"

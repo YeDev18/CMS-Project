@@ -47,28 +47,29 @@ const Accueil = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-    }, 3500);
-    setTimeout(() => {
-      api
-        .get('/api/compare-declaration-status')
-        .then(res => res.data)
-        .then(data => {
-          setDat(data);
-          setSuccess(true);
-          setTimeout(() => {
-            setSuccess(false);
-          }, 3000);
+    }, 2500);
 
-          console.log(dat);
-        })
-        .catch(error => {
-          console.log(error);
-          setError(true);
-          setTimeout(() => {
-            setError(false);
-          }, 3000);
-        });
-    }, 100);
+    api
+      .get('/api/compare-declaration-status')
+      .then(res => res.data)
+      .then(data => {
+        setDat(data);
+        setSuccess(true);
+        setTimeout(() => {
+          setSuccess(false);
+          window.location.reload();
+        }, 3000);
+
+        console.log(dat);
+      })
+      .catch(error => {
+        console.log(error);
+        setError(true);
+        setTimeout(() => {
+          setError(false);
+        }, 3000);
+      });
+
     setSelected(true);
   };
   console.log(selected);

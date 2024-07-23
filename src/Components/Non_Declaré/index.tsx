@@ -71,8 +71,6 @@ const NonDeclaration = () => {
     : mondifieData;
   console.log(data8);
   console.log(mondifieData);
-  ///Leureur vient de la je dois trouve le probleme
-  // console.log(data3);
   return (
     <div className="w-screen flex flex-col gap-4   ">
       <div className="flex justify-between w-full pb-6">
@@ -80,7 +78,7 @@ const NonDeclaration = () => {
           <Libelle
             icon="ph:x-circle"
             libelle="Nom declares"
-            color="#AC4D39"
+            color="#F0352B"
             number={data1.length}
           />
           <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
