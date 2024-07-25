@@ -79,7 +79,6 @@ const AuthProvider: FC<Props> = ({ children }) => {
         }
       );
 
-      // setName(response.data.nme);
       setToken(response.data);
       localStorage.setItem('site', response.data);
       navigate('/accueil');

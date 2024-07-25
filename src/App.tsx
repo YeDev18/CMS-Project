@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
-import AuthProvider from './Components/AuthProvider';
 import ProtectRoutes from './Components/ProtectRoutes';
+import AuthProvider from './Context/AuthProvider';
 import {
   Accueil,
   Connection,

@@ -1,7 +1,7 @@
 //
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../AuthProvider';
+import { useAuth } from '../../Context/AuthProvider';
 import Header from '../Header';
 
 const Register = () => {
