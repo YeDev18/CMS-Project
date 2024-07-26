@@ -8,6 +8,7 @@ const Register = () => {
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [role, setRole] = useState<string>('');
   const [token, setToken] = useState(localStorage.getItem('site') || '');
   const navigate = useNavigate();
   const auth = useAuth();
@@ -19,57 +20,7 @@ const Register = () => {
     if (name !== '' && password !== '' && email !== '') {
       console.log('tout est Bon');
       console.log(name, email, password);
-      auth?.RegisterAction(name, email, password);
-      // try {
-      //   const response = await axios.post(
-      //     'https://dj-declaration.onrender.com/api/register',
-      //     {
-      //       name,
-      //       email,
-      //       password,
-      //     },
-      //     {
-      //       headers: {
-      //         'Content-Type': 'application/json',
-      //       },
-      //     }
-      //   );
-      //   setName(response.data.name);
-      //   setPassword(response.data.password);
-      //   setEmail(response.data.email);
-      //   setToken(response.data.token);
-      //   setSucces(`register successful: ${response.data.token}`);
-      //   localStorage.setItem('site', response.data.token);
-      //   console.log(name, password, email);
-      //   navigate('/');
-      // } catch (err: any) {
-      //   setError(err.response?.data?.error || 'Login failed');
-      //   console.log(error);
-      //   setSucces('');
-      // }
-      // try {
-      //   const response = await axios.post(
-      //     'https://reqres.in/api/register',
-      //     {
-      //       email,
-      //       password,
-      //     },
-      //     {
-      //       headers: {
-      //         'Content-Type': 'application/json',
-      //       },
-      //     }
-      //   );
-      //   navigate('/accueil');
-
-      //   setSuccess(`Login successful: ${response.data.token}`);
-      //   console.log(success);
-      //   setError('');
-      // } catch (err: any) {
-      //   // Typage de l'erreur comme 'any' pour accéder aux propriétés
-      //   setError(err.response?.data?.error || 'Login failed');
-      //   setSuccess('');
-      // }
+      auth?.RegisterAction(name, email, password, role);
     } else {
       console.log('Rentrez vos id');
     }
@@ -116,6 +67,25 @@ const Register = () => {
               />
               <label className="peer-focus:font-medium absolute text-md text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-firstBlue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
                 Email
+              </label>
+            </div>
+            <div className="relative z-0 w-full mb-5 group">
+              <select
+                value={role}
+                name="role"
+                id="role"
+                className="block py-2.5 px-0 w-full text-md text-gray-900 bg-transparent border-0 border-b-[0.8px] border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-firstBlue peer"
+                onChange={e => {
+                  setRole(e.target.value);
+                }}
+                required
+              >
+                <option value="analyst">Analyst</option>
+                <option value="manager">Manager</option>
+                <option value="dev">Dev</option>
+              </select>
+              <label className="peer-focus:font-medium absolute text-md text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-firstBlue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                role
               </label>
             </div>
             <div className="relative z-0 w-full mb-5 group">

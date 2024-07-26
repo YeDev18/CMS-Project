@@ -425,7 +425,7 @@ export const ItemsPeriode = [
 
 export const AllMonths = [
   {
-    value: 'All',
+    value: '',
     name: 'Tous les mois',
   },
   {
@@ -480,7 +480,7 @@ export const AllMonths = [
 
 export const Year = [
   {
-    value: 'All',
+    value: '',
     year: 'Annee',
   },
   {

@@ -5,6 +5,7 @@ type Context = {
   token: string;
   name: string;
   email: string;
+  role: string;
   RegisterAction: Function;
   LoginAction: Function;
   logout: () => void;
@@ -16,6 +17,7 @@ interface Register {
   email: string;
   password: string;
   name: string;
+  role: string;
   token: string;
 }
 const AuthContext = createContext<Context | null>(null);
@@ -23,17 +25,18 @@ const AuthProvider: FC<Props> = ({ children }) => {
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [role, setRole] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [succes, setSucces] = useState<string>('');
 
   const [token, setToken] = useState(localStorage.getItem('site') || '');
   const navigate = useNavigate();
-  console.log(password);
 
   const RegisterAction = async (
     name: Register,
     email: Register,
-    password: Register
+    password: Register,
+    role: Register
   ) => {
     try {
       const response = await url.post(
@@ -42,6 +45,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
           name,
           email,
           password,
+          role,
         },
         {
           headers: {
@@ -52,10 +56,11 @@ const AuthProvider: FC<Props> = ({ children }) => {
       setName(response.data.name);
       setPassword(response.data.password);
       setEmail(response.data.email);
+      setRole(response.data.role);
       setSucces(`register successful:`);
       // localStorage.setItem('site', response.data.token);
       console.log(response.data);
-      console.log(name, password, email);
+      console.log(name, password, email, role);
       navigate('/');
     } catch (err: any) {
       setError(err.response?.data?.error || 'Login failed');
@@ -105,6 +110,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
         token,
         name,
         email,
+        role,
         RegisterAction,
         LoginAction,
         logout,

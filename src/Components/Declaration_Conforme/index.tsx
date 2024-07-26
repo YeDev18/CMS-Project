@@ -16,6 +16,8 @@ const DeclarationConforme = () => {
   const startIndex = (current - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const MonthsYears = selectValue2 + '-' + selectValue;
+  console.log(MonthsYears);
+
   const [modal, setModal] = useState<boolean>(false);
   const [data3, setDate3] = useState({
     idInstance: '',
@@ -65,41 +67,13 @@ const DeclarationConforme = () => {
       })
       .catch(error => console.log(error));
   }, []);
-  // console.log(data1);
 
-  const modifiedData = data1.map((item: any, index: number) => ({
-    id: index,
-    imo: item?.soumission_dtci?.imo_dtci,
-    libDTCI: item?.soumission_dtci?.nom_navire_dtci,
-    mouvement:
-      item?.soumission_dtci?.mouvement_dtci === 'Arrivée' ? 'ETA' : 'ETD',
-    date:
-      item?.soumission_dtci?.mouvement_dtci === 'Arrivée'
-        ? item?.soumission_dtci?.eta_dtci
-        : item?.soumission_dtci?.etd_dtci,
-  }));
-  // console.log(modifiedData);
-  for (let index = 1; index < modifiedData.length; index++) {
-    Data3.push(modifiedData[index]);
-  }
-  const Filter2 = useMemo(() => {
-    return modifiedData.filter((item: any) => item?.date);
-  }, [MonthsYears == '-' || 'All-All']);
+  // const Filter2 = useMemo(() => {
+  //   return modifiedData.filter(
+  //     (item: any) => item?.Date.slice(0, 7) === MonthsYears
+  //   );
+  // }, [MonthsYears]);
   // console.log(Filter2);
-
-  const handleClick2 = (e: React.ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log(Filter2);
-    console.log(selectValue);
-    console.log(MonthsYears);
-  };
-  const exportToExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(data8);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, `Decalaration conforme.xlsx`);
-    console.log('vit');
-  };
 
   const goToNextPage = () => {
     setCurrent(prevPage => prevPage + 1);
@@ -108,7 +82,7 @@ const DeclarationConforme = () => {
     setCurrent(prevPage => prevPage - 1);
   };
   const renderPaginationControls = () => {
-    const totalPages = Math.ceil(data8.length / itemsPerPage);
+    const totalPages = Math.ceil(dataFinal.length / itemsPerPage);
     return (
       <div className="flex justify-end pb-5">
         <button
@@ -133,12 +107,48 @@ const DeclarationConforme = () => {
     );
   };
   const [searchValue, setSearchValue] = useState();
-  const data8 = searchValue
-    ? data1.filter(val =>
+  const Filter = useMemo(() => {
+    return data1.filter(val =>
+      val.soumission_dtci.mouvement_dtci === 'Arrivée'
+        ? val.soumission_dtci.eta_dtci.toString().slice(0, 7) === MonthsYears
+        : val.soumission_dtci.etd_dtci.toString().slice(0, 7) === MonthsYears
+    );
+  }, [MonthsYears]);
+  const Final = MonthsYears === '-' ? data1 : Filter;
+  const dataFinal = searchValue
+    ? Final.filter(val =>
         val.soumission_dtci.imo_dtci.toString().includes(searchValue)
       )
-    : data1;
-  console.log(data8);
+    : Final;
+
+  const modifiedData = dataFinal.map((item: any, index: number) => ({
+    Id: index,
+    DateDeclaration: item?.soumission_dtci.date_declaration_dtci,
+    Port: item?.soumission_dtci.port_dtci,
+    Imo: item?.soumission_dtci?.imo_dtci,
+    Navire: item?.soumission_dtci?.nom_navire_dtci,
+    Mrn: item?.soumission_dtci?.mrn_dtci,
+    Consignataire: item?.soumission_dtci?.consignataire_dtci,
+    Tonnage: item?.soumission_dtci?.tonnage_facture_dtci,
+    Numero_de_Voyage: item?.soumission_dtci?.numero_voyage_dtci,
+    Mouvement:
+      item?.soumission_dtci?.mouvement_dtci === 'Arrivée' ? 'ETA' : 'ETD',
+    Date:
+      item?.soumission_dtci?.mouvement_dtci === 'Arrivée'
+        ? item?.soumission_dtci?.eta_dtci
+        : item?.soumission_dtci?.etd_dtci,
+  }));
+  for (let index = 1; index < modifiedData.length; index++) {
+    Data3.push(modifiedData[index]);
+  }
+
+  const exportToExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(modifiedData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, `Decalaration conforme.xlsx`);
+    console.log('vit');
+  };
 
   return (
     <>
@@ -156,7 +166,6 @@ const DeclarationConforme = () => {
               <form
                 action=""
                 className="flex gap-3  items-center justify-center"
-                onSubmit={handleClick2}
               >
                 <label htmlFor="">
                   <Icon
@@ -196,10 +205,6 @@ const DeclarationConforme = () => {
                     </option>
                   ))}
                 </select>
-                <button type="submit">
-                  {' '}
-                  <Icon icon="mdi:filter" width="1.5em" height="1.5em" />
-                </button>
               </form>
             </div>
             <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
@@ -245,40 +250,46 @@ const DeclarationConforme = () => {
               );
             })}
           </tr>
-          {data8.slice(startIndex, endIndex).map((val: any, index: number) => {
-            return (
-              <tr
-                key={index}
-                className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
-              >
-                <td className="text-start lg:w-32 text-sm xl:text-base">
-                  {index + 1}
-                </td>
-                <td className="text-start lg:w-32 text-sm xl:text-base">
-                  {val.soumission_dtci.imo_dtci}
-                </td>
-                <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
-                  {val.soumission_dtci.nom_navire_dtci}
-                </td>
-                <td className="text-start lg:w-40 text-sm xl:text-base">
-                  {val.soumission_dtci.mouvement_dtci === 'Arrivée'
-                    ? 'ETA'
-                    : 'ETD'}
-                </td>
+          {dataFinal
+            .slice(startIndex, endIndex)
+            .map((val: any, index: number) => {
+              return (
+                <tr
+                  key={index}
+                  className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
+                >
+                  <td className="text-start lg:w-32 text-sm xl:text-base">
+                    {index + 1}
+                  </td>
+                  <td className="text-start lg:w-32 text-sm xl:text-base">
+                    {val.soumission_dtci.imo_dtci}
+                  </td>
+                  <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
+                    {val.soumission_dtci.nom_navire_dtci}
+                  </td>
+                  <td className="text-start lg:w-40 text-sm xl:text-base">
+                    {val.soumission_dtci.mouvement_dtci === 'Arrivée'
+                      ? 'ETA'
+                      : 'ETD'}
+                  </td>
 
-                <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
-                  {val.soumission_dtci.mouvement_dtci === 'Arrivée'
-                    ? val.soumission_dtci.eta_dtci
-                    : val.soumission_dtci.etd_dtci}
-                </td>
-                <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
-                  <button onClick={() => handleChange(val)}>
-                    <Icon icon="weui:eyes-on-filled" width="1em" height="1em" />
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
+                  <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
+                    {val.soumission_dtci.mouvement_dtci === 'Arrivée'
+                      ? val.soumission_dtci.eta_dtci
+                      : val.soumission_dtci.etd_dtci}
+                  </td>
+                  <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
+                    <button onClick={() => handleChange(val)}>
+                      <Icon
+                        icon="weui:eyes-on-filled"
+                        width="1em"
+                        height="1em"
+                      />
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
         </table>
 
         {renderPaginationControls()}
