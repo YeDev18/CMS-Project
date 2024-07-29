@@ -1,36 +1,24 @@
-import url from '@/api';
+import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
+import { useState } from 'react';
 import { AllMonths, headerTable, Year } from '../Data';
-
-import { useEffect, useState } from 'react';
 import Libelle from '../ui/Libelle';
-// import{SecondTab;}
 const NonDeclaration = () => {
-  const [data1, setData1] = useState<any>([]);
-  const data2: any = [];
-  const [data3, setData3] = useState<any>(['']);
+  const undeclared = useServer().undeclared;
+
   const [current, setCurrent] = useState(1);
   const itemsPerPage = 10;
   const startIndex = (current - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  useEffect(() => {
-    url
-      .get('api/non-declare')
-      .then(res => res.data)
-      .then(data => setData1(data))
-      .catch(error => console.log(error));
-  }, []);
-  for (let index = 1; index < data1.length; index++) {
-    data2.push(data1[index].trafic_maritime);
-  }
-  const mondifieData = data2.map((item: any, index: number) => ({
+
+  const mondifieData = undeclared.map((item: any, index: number) => ({
     id: index,
-    imo: item.imo_trafic,
-    libTM: item.nom_navire_trafic,
-    type: 'viav',
-    consignataire: item.consignataire_trafic,
-    mouvement: item.mouvement_trafic === 'Arrivée' ? 'ETA' : 'ETD',
-    date: item.date_trafic,
+    imo: item.trafic_maritime.imo_trafic,
+    libTM: item.trafic_maritime.nom_navire_trafic,
+    consignataire: item.trafic_maritime.consignataire_trafic,
+    mouvement:
+      item.trafic_maritime.mouvement_trafic === 'Arrivée' ? 'ETA' : 'ETD',
+    date: item.trafic_maritime.date_trafic,
   }));
   const goToNextPage = () => {
     setCurrent(prevPage => prevPage + 1);
@@ -38,6 +26,7 @@ const NonDeclaration = () => {
   const goToPrevPage = () => {
     setCurrent(prevPage => prevPage - 1);
   };
+
   const renderPaginationControls = () => {
     const totalPages = Math.ceil(data8.length / itemsPerPage);
     return (
@@ -79,7 +68,7 @@ const NonDeclaration = () => {
             icon="ph:x-circle"
             libelle="Nom declares"
             color="#F0352B"
-            number={data1.length}
+            number={mondifieData.length}
           />
           <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
             <form

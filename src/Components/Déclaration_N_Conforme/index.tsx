@@ -1,17 +1,18 @@
-import url from '@/api';
+import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AllMonths, headerTable, Year } from '../Data';
 import Libelle from '../ui/Libelle';
 const DeclaratioNConforme = () => {
-  const [data1, setData1] = useState<any>([]);
-  const [data2, setData2] = useState<any>(['']);
+  const notConform = useServer().notConform;
+
   const [current, setCurrent] = useState(1);
   const itemsPerPage = 10;
   const startIndex = (current - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const [data3, setDate3] = useState({
+
+  const [data3, setData3] = useState({
     idInstance: '',
     nonDTCI: '',
     imoDTCI: '',
@@ -25,6 +26,7 @@ const DeclaratioNConforme = () => {
     dateTM: '',
   });
   const [form, setForm] = useState(false);
+  console.log(notConform);
 
   const goToNextPage = () => {
     setCurrent(prevPage => prevPage + 1);
@@ -33,7 +35,7 @@ const DeclaratioNConforme = () => {
     setCurrent(prevPage => prevPage - 1);
   };
   const renderPaginationControls = () => {
-    const totalPages = Math.ceil(data8.length / itemsPerPage);
+    const totalPages = Math.ceil(TrueData.length / itemsPerPage);
     return (
       <div className="flex justify-end pb-5">
         <button
@@ -58,20 +60,9 @@ const DeclaratioNConforme = () => {
     );
   };
 
-  useEffect(() => {
-    url
-      .get('api/declare-non-conforme')
-      .then(res => res.data)
-      .then(data => setData1(data))
-      .catch(error => console.log(error));
-
-    setData2(data1);
-  }, []);
-  console.log(data1);
-
   const handleChange = (val: any) => {
     setForm(true);
-    setDate3({
+    setData3({
       ...data3,
       idInstance: val.id,
       nonDTCI: val.soumission_dtci.nom_navire_dtci,
@@ -91,7 +82,7 @@ const DeclaratioNConforme = () => {
       dateTM: val.trafic_maritime.date_trafic,
     });
   };
-  const modifiedData = data1.map((item: any) => ({
+  const modifiedData = notConform.map((item: any) => ({
     idCms: item.id,
     statusCms: item.status,
     dtci: item.soumission_dtci,
@@ -99,12 +90,11 @@ const DeclaratioNConforme = () => {
   }));
   const [searchValue, setSearchValue] = useState();
   console.log(modifiedData);
-  const data8 = searchValue
-    ? data1.filter((val: any) =>
+  const TrueData = searchValue
+    ? notConform.filter((val: any) =>
         val.soumission_dtci.imo_dtci.toString().includes(searchValue)
       )
-    : data1;
-  console.log(data8);
+    : notConform;
   return (
     <div className="w-screen flex flex-col gap-4  ">
       <div className="flex justify-between w-full pb-6">
@@ -113,14 +103,10 @@ const DeclaratioNConforme = () => {
             icon="charm:notes-cross"
             libelle="Non Conformes"
             color="#F59069"
-            number={data1.length}
+            number={notConform.length}
           />
           <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
-            <form
-              action=""
-              className="flex gap-3  items-center justify-center"
-              // onSubmit={handleClick2}
-            >
+            <form action="" className="flex gap-3  items-center justify-center">
               <label htmlFor="">
                 <Icon
                   icon="lucide:calendar-days"
@@ -203,7 +189,7 @@ const DeclaratioNConforme = () => {
             );
           })}
         </tr>
-        {data8.slice(startIndex, endIndex).map((val: any, index: number) => {
+        {TrueData.slice(startIndex, endIndex).map((val: any, index: number) => {
           return (
             <>
               <tr

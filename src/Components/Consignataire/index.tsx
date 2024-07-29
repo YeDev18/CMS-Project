@@ -1,30 +1,25 @@
-import url from '@/api';
+import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import * as XLSX from 'xlsx';
 import { headersConsignataires } from '../Data';
 const Consignataire = () => {
-  const [data1, setData1] = useState<any>([]);
+  const data = useServer().consignataire;
+
   const [current, setCurrent] = useState(1);
   const itemsPerPage = 10;
   const startIndex = (current - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  useEffect(() => {
-    url
-      .get('api/consignataire-dtci')
-      .then(res => res.data)
-      .then(data => setData1(data))
-      .catch(error => console.log(error));
-  }, []);
-  console.log(data1);
+
   const goToNextPage = () => {
     setCurrent(prevPage => prevPage + 1);
   };
   const goToPrevPage = () => {
     setCurrent(prevPage => prevPage - 1);
   };
+
   const renderPaginationControls = () => {
-    const totalPages = Math.ceil(data8.length / itemsPerPage);
+    const totalPages = Math.ceil(TrueData.length / itemsPerPage);
     return (
       <div className="flex justify-end pb-5">
         <button
@@ -48,13 +43,13 @@ const Consignataire = () => {
       </div>
     );
   };
-  const Consignataire = data1.map((item: any, index: number) => ({
+  const Consignataire = data.map((item: any, index: number) => ({
     id: index + 1,
     imo: item.imo,
     nom: item.nom,
   }));
   const exportToExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(data1);
+    const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     XLSX.writeFile(wb, `Consignataire.xlsx`);
@@ -62,7 +57,7 @@ const Consignataire = () => {
   };
 
   const [searchValue, setSearchValue] = useState();
-  const data8 = searchValue
+  const TrueData = searchValue
     ? Consignataire.filter((val: any) => val.nom.includes(searchValue))
     : Consignataire;
   return (
@@ -79,7 +74,7 @@ const Consignataire = () => {
               className="mr-2"
             />
             Consignatires :{' '}
-            <span className="font-semibold pl-1"> {data1.length}</span>
+            <span className="font-semibold pl-1"> {data.length}</span>
           </p>
           <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
             <label htmlFor="">
@@ -124,13 +119,13 @@ const Consignataire = () => {
             );
           })}
         </tr>
-        {data8.slice(startIndex, endIndex).map((val: any, id: number) => {
+        {TrueData.slice(startIndex, endIndex).map((val: any, index: number) => {
           return (
             <tr
-              key={id}
+              key={index}
               className="flex justify-start p-4  w-full border-b-2 border-slate-50 "
             >
-              <td className="text-start w-32">{val.id}</td>
+              <td className="text-start w-32">{index + 1}</td>
               <td className="text-start w-94">{val.nom}</td>
             </tr>
           );

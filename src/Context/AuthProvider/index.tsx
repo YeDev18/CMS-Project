@@ -1,4 +1,5 @@
 import url from '@/api';
+import { jwtDecode } from 'jwt-decode';
 import { FC, ReactNode, createContext, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 type Context = {
@@ -6,6 +7,7 @@ type Context = {
   name: string;
   email: string;
   role: string;
+  user: number;
   RegisterAction: Function;
   LoginAction: Function;
   logout: () => void;
@@ -28,6 +30,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
   const [role, setRole] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [succes, setSucces] = useState<string>('');
+  const [user, setUser] = useState<any>();
 
   const [token, setToken] = useState(localStorage.getItem('site') || '');
   const navigate = useNavigate();
@@ -58,7 +61,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
       setEmail(response.data.email);
       setRole(response.data.role);
       setSucces(`register successful:`);
-      // localStorage.setItem('site', response.data.token);
+      localStorage.setItem('site', response.data.token);
       console.log(response.data);
       console.log(name, password, email, role);
       navigate('/');
@@ -85,14 +88,19 @@ const AuthProvider: FC<Props> = ({ children }) => {
       );
 
       setToken(response.data);
-      localStorage.setItem('site', response.data);
+      localStorage.setItem('site', response.data.jwt);
       navigate('/accueil');
-      console.log(token);
+      console.log(response);
+      const decode: any = jwtDecode(response.data.jwt);
+      console.log(decode);
+      // console.log(decode[0]);
+      setUser(decode.id);
     } catch (err: any) {
       console.log(err);
       console.log(password, succes);
     }
   };
+  console.log(user);
   const logout = async () => {
     try {
       const response = await url.post('/api/logout');
@@ -111,6 +119,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
         name,
         email,
         role,
+        user,
         RegisterAction,
         LoginAction,
         logout,

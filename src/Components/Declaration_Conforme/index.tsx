@@ -7,7 +7,6 @@ import Libelle from '../ui/Libelle';
 
 const DeclarationConforme = () => {
   const [data1, setData1] = useState<any[]>([]);
-  const [data2, setData2] = useState<any[]>(['']);
   const Data3: any = [];
   const [selectValue, setSelectValue] = useState('');
   const [selectValue2, setSelectValue2] = useState('');
@@ -67,13 +66,6 @@ const DeclarationConforme = () => {
       })
       .catch(error => console.log(error));
   }, []);
-
-  // const Filter2 = useMemo(() => {
-  //   return modifiedData.filter(
-  //     (item: any) => item?.Date.slice(0, 7) === MonthsYears
-  //   );
-  // }, [MonthsYears]);
-  // console.log(Filter2);
 
   const goToNextPage = () => {
     setCurrent(prevPage => prevPage + 1);

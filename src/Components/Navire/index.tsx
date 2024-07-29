@@ -1,24 +1,16 @@
-import url from '@/api';
+import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import * as XLSX from 'xlsx';
 import { headersNavire } from '../Data';
 
 const Navire = () => {
-  const [data1, setData1] = useState<any>([]);
+  const data = useServer().navire;
+
   const [current, setCurrent] = useState(1);
   const itemsPerPage = 10;
   const startIndex = (current - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-
-  useEffect(() => {
-    url
-      .get('api/navire-soumission-dtci')
-      .then(res => res.data)
-      .then(data => setData1(data))
-      .catch(error => console.log(error));
-  }, []);
-  console.log(data1);
 
   const goToNextPage = () => {
     setCurrent(prevPage => prevPage + 1);
@@ -26,8 +18,9 @@ const Navire = () => {
   const goToPrevPage = () => {
     setCurrent(prevPage => prevPage - 1);
   };
+
   const renderPaginationControls = () => {
-    const totalPages = Math.ceil(data8.length / itemsPerPage);
+    const totalPages = Math.ceil(TrueData.length / itemsPerPage);
     return (
       <div className="flex justify-end pb-5">
         <button
@@ -52,20 +45,20 @@ const Navire = () => {
     );
   };
 
-  const Navire = data1.map((item: any, index: number) => ({
+  const Navire = data.map((item: any, index: number) => ({
     id: index,
     imo: item.imo,
     nom: item.nom,
   }));
 
   const [searchValue, setSearchValue] = useState();
-  const data8 = searchValue
+  const TrueData = searchValue
     ? Navire.filter((val: any) => val.imo.toString().includes(searchValue))
     : Navire;
 
   const exportToExcel = () => {
     // Créer une nouvelle feuille de calcul
-    const ws = XLSX.utils.json_to_sheet(data1);
+    const ws = XLSX.utils.json_to_sheet(TrueData);
     // Créer un nouveau classeur
     const wb = XLSX.utils.book_new();
     // Ajouter la feuille de calcul au classeur
@@ -134,7 +127,7 @@ const Navire = () => {
             );
           })}
         </tr>
-        {data8.slice(startIndex, endIndex).map((val: any, index: number) => {
+        {TrueData.slice(startIndex, endIndex).map((val: any, index: number) => {
           return (
             <tr
               key={index}

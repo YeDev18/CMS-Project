@@ -1,4 +1,5 @@
 import { default as api, default as url } from '@/api';
+import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
@@ -11,9 +12,9 @@ const Accueil = () => {
   const [selectedFile2, setSelectedFile2] = useState<File | null>(null);
   const [dataDtci, setDataDtci] = useState<any[]>(['']);
   const [dataTM, setDataTM] = useState<any[]>(['']);
+  const navire = useServer().navire;
+  const consignataire = useServer().consignataire;
   const [dat, setDat] = useState<any[]>(['']);
-  const [countNavire, setCountNavire] = useState<number>(0);
-  const [countConsignataire, setCountConsignataire] = useState<number>(0);
   const [selected, setSelected] = useState(false);
   const selection = selectedFile1 && selectedFile2 ? true : false;
   const [IsLoading, setIsLoading] = useState(false);
@@ -24,24 +25,11 @@ const Accueil = () => {
 
   useEffect(() => {
     fetchDataDtci();
+    return () => console.log('clean');
   }, [selectedFile1]);
   useEffect(() => {
     fetchDataTM();
   }, [selectedFile2]);
-
-  useEffect(() => {
-    url
-      .get('api/navire-soumission-dtci')
-      .then(res => res.data)
-      .then(data => setCountNavire(data.length))
-      .catch(error => console.log(error));
-
-    url
-      .get('api/consignataire-dtci')
-      .then(res => res.data)
-      .then(data => setCountConsignataire(data.length))
-      .catch(error => console.log(error));
-  }, []);
 
   const handleCompare = () => {
     setIsLoading(true);
@@ -87,7 +75,6 @@ const Accueil = () => {
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
       const parsedData = XLSX.utils.sheet_to_json(sheet);
-      setDataDtci(parsedData);
     };
 
     reader.readAsArrayBuffer(file);
@@ -194,7 +181,7 @@ const Accueil = () => {
               icon1="lucide:ship"
               icon2="mingcute:arrow-up-fill"
               name="Navire"
-              number={countNavire}
+              number={navire.length}
               route="/navire"
             />
             <Component1
@@ -202,7 +189,7 @@ const Accueil = () => {
               icon1="lucide:contact"
               icon2="mingcute:arrow-up-fill"
               name="Consignataire"
-              number={countConsignataire}
+              number={consignataire.length}
               route="/consignataire"
             />
           </div>
