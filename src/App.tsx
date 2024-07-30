@@ -25,7 +25,7 @@ function App() {
         <Routes>
           <Route path="/" element={<RCLayout />}>
             <Route index element={<Connection />} />
-            <Route path="/Register" element={<Register />} />
+            <Route path="/inscription" element={<Register />} />
           </Route>
           <Route element={<ProtectRoutes />}>
             <Route path="/" element={<Home />}>

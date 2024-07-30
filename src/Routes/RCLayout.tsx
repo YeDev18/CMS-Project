@@ -13,11 +13,10 @@ const RCLayout = () => {
   const newDate = Days(todayDate, days);
   const dateFormatter = new Intl.DateTimeFormat('fr-FR');
   const formattedDate = dateFormatter.format(newDate);
-  console.log(formattedDate);
   return (
-    <div className="bg-bgColors w-full h-screen py-9  px-9 text-textColor">
+    <div className="bg-bgColors w-full h-screen p-6 text-textColor">
       <div className=" bg-firstColors w-full h-full rounded-md shadow-lg p-8">
-        <div className="flex justify-between pb-8">
+        <div className="flex justify-between pb-2">
           <div className="flex gap-4 items-center">
             <div className="flex border-[0.5px] border-borderColor rounded-2xl px-2 py-1  w-fit">
               <p>Abidjan</p>
@@ -40,10 +39,8 @@ const RCLayout = () => {
           </div>
         </div>
         <div className="flex flex-col justify-center items-center w-full gap-12 py-12">
-          <div className="">
-            <div className="w-80 h-35">
-              <img src={logo} alt="Logo" className="w-full h-full" />
-            </div>
+          <div className="w-48 h-35">
+            <img src={logo} alt="Logo" className="w-full h-full" />
           </div>
           <div>
             <Outlet />

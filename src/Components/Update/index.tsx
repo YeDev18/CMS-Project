@@ -21,7 +21,7 @@ const Update = () => {
   const handleSubmit = (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     url
-      .post(`api/update-soumission-dtci-and-status/${id2}/`, data2)
+      .put(`api/update-soumission-dtci-and-status/${id2}/`, data2)
       .then(res => {
         alert('Data Suucess');
         navigate('/nom_conforme');
@@ -41,6 +41,7 @@ const Update = () => {
           </label>
           <input
             type="text"
+            required
             name=""
             onChange={e =>
               setData2({ ...data2, nom_navire_dtci: e.target.value })
@@ -60,6 +61,7 @@ const Update = () => {
           <input
             type="text"
             name=""
+            required
             onChange={e =>
               setData2({ ...data2, consignataire_dtci: e.target.value })
             }
@@ -77,6 +79,7 @@ const Update = () => {
           <input
             type="text"
             name=""
+            required
             onChange={e =>
               setData2({ ...data2, date_mouvement: e.target.value })
             }

@@ -1,6 +1,5 @@
 //
 import { FormEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Context/AuthProvider';
 import Header from '../Header';
 
@@ -9,20 +8,14 @@ const Register = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [role, setRole] = useState<string>('');
-  const [token, setToken] = useState(localStorage.getItem('site') || '');
-  const navigate = useNavigate();
   const auth = useAuth();
-  const [succes, setSucces] = useState<string>('');
-  const [error, setError] = useState<string>('');
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (name !== '' && password !== '' && email !== '') {
-      console.log('tout est Bon');
-      console.log(name, email, password);
       auth?.RegisterAction(name, email, password, role);
     } else {
-      console.log('Rentrez vos id');
+      console.log('Une Erreur du backend');
     }
   };
 
@@ -80,6 +73,7 @@ const Register = () => {
                 }}
                 required
               >
+                <option value="tous">Rôle</option>
                 <option value="analyst">Analyst</option>
                 <option value="admin">Administrateur</option>
                 <option value="dev">Dev</option>
@@ -115,8 +109,6 @@ const Register = () => {
               </button>
             </div>
           </form>
-          {/* {error && <p style={{ color: 'red' }}>{error}</p>}
-          {success && <p style={{ color: 'green' }}>{success}</p>} */}
         </div>
       </div>
     </div>

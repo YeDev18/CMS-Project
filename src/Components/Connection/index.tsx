@@ -1,3 +1,4 @@
+import { Icon } from '@iconify/react';
 import { FormEvent, useState } from 'react';
 import { useAuth } from '../../Context/AuthProvider';
 import Header from '../Header';
@@ -6,6 +7,7 @@ const Connection = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const auth = useAuth();
+  const error = useAuth()?.error;
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (email !== '' && password !== '') {
@@ -21,7 +23,7 @@ const Connection = () => {
           <form
             onSubmit={handleSubmit}
             action=""
-            className="max-w-lg mx-auto flex flex-col gap-4"
+            className="max-w-lg mx-auto flex flex-col gap-3"
           >
             <div className="relative z-0 w-full mb-5 group">
               <input
@@ -62,6 +64,14 @@ const Connection = () => {
               </button>
               <button type="submit">Mot de passe oublie</button>
             </div>
+            {error ? (
+              <div className="flex justify-center items-center gap-2 text-red-800">
+                <Icon icon="icon-park-outline:attention" />
+                <p className="font-medium ">Email et mot de passe incorrect</p>
+              </div>
+            ) : (
+              ''
+            )}
           </form>
         </div>
       </div>

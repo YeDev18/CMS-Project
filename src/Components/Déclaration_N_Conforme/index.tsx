@@ -1,20 +1,23 @@
+import url from '@/api';
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AllMonths, headerTable, Year } from '../Data';
 import Libelle from '../ui/Libelle';
 const DeclaratioNConforme = () => {
   const notConform = useServer().notConform;
   console.log(notConform);
   const user = useServer().user;
-  console.log(user);
 
   const [formValue, setFormValue] = useState({
     months: '',
     years: '',
   });
   const [searchValue, setSearchValue] = useState();
+  const [observation, setObservation] = useState({
+    observation: '',
+  });
 
   const [current, setCurrent] = useState(1);
 
@@ -22,6 +25,7 @@ const DeclaratioNConforme = () => {
   const startIndex = (current - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const MonthsYears = formValue.years + '-' + formValue.months;
+  const navigate = useNavigate();
 
   const [data3, setData3] = useState({
     idInstance: '',
@@ -37,6 +41,7 @@ const DeclaratioNConforme = () => {
     dateTM: '',
   });
 
+  console.log(typeof data3.idInstance);
   const [form, setForm] = useState(false);
 
   const goToNextPage = () => {
@@ -44,6 +49,17 @@ const DeclaratioNConforme = () => {
   };
   const goToPrevPage = () => {
     setCurrent(prevPage => prevPage - 1);
+  };
+
+  const handleSubmit = (id: any, data: any) => {
+    url
+      .put(`api/declarationstatus/${id}/add_observation/`, data)
+      .then(res => {
+        alert('Data Suucess');
+        navigate('/nom_conforme');
+        window.location.reload();
+      })
+      .catch(error => console.log(error));
   };
 
   const Filter = useMemo(() => {
@@ -70,7 +86,7 @@ const DeclaratioNConforme = () => {
         >
           <Icon icon="ep:arrow-left-bold" />
         </button>
-        <div className="px-2 w-16 text-center">
+        <div className="px-2 w-fit text-center">
           <span className="font-medium text-borderColor">{current}</span> /{' '}
           <span className="text-borderColor">{totalPages}</span>
         </div>
@@ -261,7 +277,10 @@ const DeclaratioNConforme = () => {
       {renderPaginationControls()}
       {form ? (
         <div className=" absolute w-full h-full  justify-center items-center  ">
-          <div className=" absolute bg-black opacity-15 rounded-md w-full h-full z-[1]"></div>
+          <div
+            className=" absolute bg-black opacity-15 rounded-md w-full h-full z-[1]"
+            onClick={() => setForm(false)}
+          ></div>
           <div className="w-[40rem] h-fit  absolute z-[2] top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 rounded">
             <div className="flex gap-2 justify-between py-6 flex-col bg-firstColors rounded-sm items-center h-full">
               <div className="flex justify-center items-center gap-4 w-full px-12">
@@ -396,23 +415,33 @@ const DeclaratioNConforme = () => {
                   </div>
                 </form>
               </div>
-              <div className="flex flex-col w-full px-14 gap-1">
-                <label htmlFor="" className="text-gray-500 font-semibold">
-                  Observation
-                </label>
-                <textarea
-                  name="observation"
-                  className="border outline-none p-2"
-                  id=""
-                ></textarea>
-              </div>
+
               {user.role === 'analyst' ? (
-                <Link
-                  to={``}
-                  className="bg-firstBlue mt-4  w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold flex items-center justify-center"
-                >
-                  Validez
-                </Link>
+                <>
+                  <div className="flex flex-col w-full px-14 gap-1">
+                    <label htmlFor="" className="text-gray-500 font-semibold">
+                      Observation
+                    </label>
+                    <textarea
+                      name="observation"
+                      className="border outline-none p-2"
+                      onChange={(e: any) =>
+                        setObservation({
+                          ...observation,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
+                    ></textarea>
+                  </div>
+                  <button
+                    className="bg-firstBlue  w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold flex items-center justify-center"
+                    onClick={() => {
+                      handleSubmit(data3.idInstance, observation);
+                    }}
+                  >
+                    TAGS
+                  </button>
+                </>
               ) : (
                 <Link
                   to={`/update/${data3.idInstance}`}

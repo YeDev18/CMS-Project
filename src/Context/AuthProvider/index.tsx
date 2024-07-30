@@ -8,6 +8,8 @@ type Context = {
   email: string;
   role: string;
   user: number;
+  success: boolean;
+  error: boolean;
   RegisterAction: Function;
   LoginAction: Function;
   logout: () => void;
@@ -28,8 +30,8 @@ const AuthProvider: FC<Props> = ({ children }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [role, setRole] = useState<string>('');
-  const [error, setError] = useState<string>('');
-  const [succes, setSucces] = useState<string>('');
+  const [error, setError] = useState<boolean>(false);
+  const [success, setSuccess] = useState<boolean>(false);
   const [user, setUser] = useState<any>();
 
   const [token, setToken] = useState(localStorage.getItem('site') || '');
@@ -60,13 +62,12 @@ const AuthProvider: FC<Props> = ({ children }) => {
       setPassword(response.data.password);
       setEmail(response.data.email);
       setRole(response.data.role);
-      setSucces(`register successful:`);
+      // setSucces(`register successful:`);
       localStorage.setItem('site', response.data.token);
       navigate('/');
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Login failed');
+      // setError(err.response?.data?.error || 'Login failed');
       console.log(error);
-      setSucces('');
     }
   };
 
@@ -87,12 +88,13 @@ const AuthProvider: FC<Props> = ({ children }) => {
 
       setToken(response.data.jwt);
       localStorage.setItem('site', response.data.jwt);
+      setSuccess(true);
       navigate('/accueil');
       const decode: any = jwtDecode(response.data.jwt);
       setUser(decode.id);
     } catch (err: any) {
+      setError(true);
       console.log(err);
-      console.log(password, succes);
     }
   };
   const logout = async () => {
@@ -116,6 +118,8 @@ const AuthProvider: FC<Props> = ({ children }) => {
         RegisterAction,
         LoginAction,
         logout,
+        error,
+        success,
       }}
     >
       {' '}

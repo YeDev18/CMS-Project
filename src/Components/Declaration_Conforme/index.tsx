@@ -290,7 +290,10 @@ const DeclarationConforme = () => {
         {renderPaginationControls()}
         {modal ? (
           <div className="absolute w-full h-full justify-center items-center ">
-            <div className="absolute bg-black opacity-15 rounded-md w-full h-[90%] z-[1]"></div>
+            <div
+              className="absolute bg-black opacity-15 rounded-md w-full h-[90%] z-[1]"
+              onClick={() => setModal(false)}
+            ></div>
             <div className="w-96 h-fit absolute z-[2] inset-1/2 flex flex-col justify-center items-center gap-2 bg-firstColors -translate-x-2/4  -translate-y-2/4 shadow-sm shadow-slate-100 rounded-sm p-6">
               <div className="flex flex-col gap-1 w-full px-2">
                 <label htmlFor="" className="text-gray-500 font-semibold">

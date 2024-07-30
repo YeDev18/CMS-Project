@@ -11,7 +11,7 @@ const Header = () => {
           Connection
         </Link>
         <Link
-          to="/Register"
+          to="/inscription"
           className="active:text-firstBlue focus:border-b-2 focus:border-firstBlue focus:text-firstBlue pb-2 "
         >
           {' '}
