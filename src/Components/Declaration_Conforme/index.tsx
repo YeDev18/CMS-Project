@@ -1,21 +1,27 @@
-import url from '@/api';
+import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import * as XLSX from 'xlsx';
 import { AllMonths, headerTable, Year } from '../Data';
 import Libelle from '../ui/Libelle';
 
 const DeclarationConforme = () => {
-  const [data1, setData1] = useState<any[]>([]);
+  const conform = useServer().conform;
+
   const Data3: any = [];
-  const [selectValue, setSelectValue] = useState('');
-  const [selectValue2, setSelectValue2] = useState('');
+
+  const [formValue, setFormValue] = useState({
+    months: '',
+    years: '',
+  });
+  const [searchValue, setSearchValue] = useState();
+
   const [current, setCurrent] = useState(1);
+
   const itemsPerPage = 10;
   const startIndex = (current - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const MonthsYears = selectValue2 + '-' + selectValue;
-  console.log(MonthsYears);
+  const MonthsYears = formValue.years + '-' + formValue.months;
 
   const [modal, setModal] = useState<boolean>(false);
   const [data3, setDate3] = useState({
@@ -57,15 +63,6 @@ const DeclarationConforme = () => {
           : val.soumission_dtci.etd_dtci,
     });
   };
-  useEffect(() => {
-    url
-      .get('/api/declare-conforme')
-      .then(res => res.data)
-      .then(data => {
-        setData1(data);
-      })
-      .catch(error => console.log(error));
-  }, []);
 
   const goToNextPage = () => {
     setCurrent(prevPage => prevPage + 1);
@@ -98,17 +95,17 @@ const DeclarationConforme = () => {
       </div>
     );
   };
-  const [searchValue, setSearchValue] = useState();
+
   const Filter = useMemo(() => {
-    return data1.filter(val =>
+    return conform.filter((val: any) =>
       val.soumission_dtci.mouvement_dtci === 'Arrivée'
         ? val.soumission_dtci.eta_dtci.toString().slice(0, 7) === MonthsYears
         : val.soumission_dtci.etd_dtci.toString().slice(0, 7) === MonthsYears
     );
   }, [MonthsYears]);
-  const Final = MonthsYears === '-' ? data1 : Filter;
+  const Final = MonthsYears === '-' ? conform : Filter;
   const dataFinal = searchValue
-    ? Final.filter(val =>
+    ? Final.filter((val: any) =>
         val.soumission_dtci.imo_dtci.toString().includes(searchValue)
       )
     : Final;
@@ -151,7 +148,7 @@ const DeclarationConforme = () => {
               icon="lucide:circle-check-big"
               libelle="Conformes"
               color="#2563eb"
-              number={data1.length}
+              number={conform.length}
             />
             <div></div>
             <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
@@ -169,11 +166,14 @@ const DeclarationConforme = () => {
                   />
                 </label>
                 <select
-                  name=""
+                  name="months"
                   id=""
                   className="bg-none outline-4 bg-firstColors"
                   onChange={e => {
-                    setSelectValue(e.target.value);
+                    setFormValue({
+                      ...formValue,
+                      [e.target.name]: e.target.value,
+                    });
                   }}
                 >
                   {AllMonths.map((month, index) => (
@@ -184,11 +184,14 @@ const DeclarationConforme = () => {
                 </select>
                 <span className="border border-borderColor h-4"></span>
                 <select
-                  name=""
+                  name="years"
                   id=""
                   className="bg-none outline-none bg-firstColors"
                   onChange={e => {
-                    setSelectValue2(e.target.value);
+                    setFormValue({
+                      ...formValue,
+                      [e.target.name]: e.target.value,
+                    });
                   }}
                 >
                   {Year.map((year, index) => (

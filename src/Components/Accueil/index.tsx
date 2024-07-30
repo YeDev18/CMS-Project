@@ -21,8 +21,6 @@ const Accueil = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
 
-  console.log(selected);
-
   useEffect(() => {
     fetchDataDtci();
     return () => console.log('clean');
@@ -47,8 +45,6 @@ const Accueil = () => {
           setSuccess(false);
           window.location.reload();
         }, 3000);
-
-        console.log(dat);
       })
       .catch(error => {
         console.log(error);
@@ -60,13 +56,11 @@ const Accueil = () => {
 
     setSelected(true);
   };
-  console.log(selected);
 
   const handleFileChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setSelectedFile1(file);
-    console.log(file.name);
     const reader = new FileReader();
     reader.onload = (e: ProgressEvent<FileReader>) => {
       const arrayBuffer = e.target?.result as ArrayBuffer;
@@ -94,7 +88,6 @@ const Accueil = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('Success:', response.data);
     } catch (error: any) {
       if (error.response) {
         console.log('Error response:', error.response.data);
@@ -139,7 +132,6 @@ const Accueil = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('Success:', response.data);
     } catch (error: any) {
       if (error.response) {
         console.log('Error response:', error.response.data);

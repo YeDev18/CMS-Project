@@ -1,16 +1,27 @@
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AllMonths, headerTable, Year } from '../Data';
 import Libelle from '../ui/Libelle';
 const DeclaratioNConforme = () => {
   const notConform = useServer().notConform;
+  console.log(notConform);
+  const user = useServer().user;
+  console.log(user);
+
+  const [formValue, setFormValue] = useState({
+    months: '',
+    years: '',
+  });
+  const [searchValue, setSearchValue] = useState();
 
   const [current, setCurrent] = useState(1);
+
   const itemsPerPage = 10;
   const startIndex = (current - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
+  const MonthsYears = formValue.years + '-' + formValue.months;
 
   const [data3, setData3] = useState({
     idInstance: '',
@@ -25,8 +36,8 @@ const DeclaratioNConforme = () => {
     mouvementTM: '',
     dateTM: '',
   });
+
   const [form, setForm] = useState(false);
-  console.log(notConform);
 
   const goToNextPage = () => {
     setCurrent(prevPage => prevPage + 1);
@@ -34,8 +45,22 @@ const DeclaratioNConforme = () => {
   const goToPrevPage = () => {
     setCurrent(prevPage => prevPage - 1);
   };
+
+  const Filter = useMemo(() => {
+    return notConform.filter((val: any) =>
+      val.soumission_dtci.mouvement_dtci === 'Arrivée'
+        ? val.soumission_dtci.eta_dtci.toString().slice(0, 7) === MonthsYears
+        : val.soumission_dtci.etd_dtci.toString().slice(0, 7) === MonthsYears
+    );
+  }, [MonthsYears]);
+  const Final = MonthsYears === '-' ? notConform : Filter;
+  const dataFinal = searchValue
+    ? Final.filter((val: any) =>
+        val.soumission_dtci.imo_dtci.toString().includes(searchValue)
+      )
+    : Final;
   const renderPaginationControls = () => {
-    const totalPages = Math.ceil(TrueData.length / itemsPerPage);
+    const totalPages = Math.ceil(dataFinal.length / itemsPerPage);
     return (
       <div className="flex justify-end pb-5">
         <button
@@ -82,19 +107,7 @@ const DeclaratioNConforme = () => {
       dateTM: val.trafic_maritime.date_trafic,
     });
   };
-  const modifiedData = notConform.map((item: any) => ({
-    idCms: item.id,
-    statusCms: item.status,
-    dtci: item.soumission_dtci,
-    tm: item.trafic_maritimes,
-  }));
-  const [searchValue, setSearchValue] = useState();
-  console.log(modifiedData);
-  const TrueData = searchValue
-    ? notConform.filter((val: any) =>
-        val.soumission_dtci.imo_dtci.toString().includes(searchValue)
-      )
-    : notConform;
+
   return (
     <div className="w-screen flex flex-col gap-4  ">
       <div className="flex justify-between w-full pb-6">
@@ -117,12 +130,15 @@ const DeclaratioNConforme = () => {
                 />
               </label>
               <select
-                name=""
+                name="months"
                 id=""
                 className="bg-none outline-4 bg-firstColors"
-                // onChange={e => {
-                //   setSelectValue(e.target.value);
-                // }}
+                onChange={e => {
+                  setFormValue({
+                    ...formValue,
+                    [e.target.name]: e.target.value,
+                  });
+                }}
               >
                 {AllMonths.map((month, index) => (
                   <option key={index} value={month.value}>
@@ -132,12 +148,15 @@ const DeclaratioNConforme = () => {
               </select>
               <span className="border border-borderColor h-4"></span>
               <select
-                name=""
+                name="years"
                 id=""
                 className="bg-none outline-none bg-firstColors"
-                // onChange={e => {
-                //   setSelectValue2(e.target.value);
-                // }}
+                onChange={e => {
+                  setFormValue({
+                    ...formValue,
+                    [e.target.name]: e.target.value,
+                  });
+                }}
               >
                 {Year.map((year, index) => (
                   <option key={index} value={year.value}>
@@ -189,48 +208,61 @@ const DeclaratioNConforme = () => {
             );
           })}
         </tr>
-        {TrueData.slice(startIndex, endIndex).map((val: any, index: number) => {
-          return (
-            <>
-              <tr
-                key={index}
-                className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
-              >
-                <td className="text-start lg:w-32 text-sm xl:text-base">
-                  {index + 1}
-                </td>
-                <td className="text-start lg:w-32 text-sm xl:text-base">
-                  {val.soumission_dtci.imo_dtci}
-                </td>
-                <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
-                  {val.soumission_dtci.nom_navire_dtci}
-                </td>
-                <td className="text-start lg:w-40 text-sm xl:text-base">
-                  {val.soumission_dtci.mouvement_dtci === 'Arrivée'
-                    ? 'ETA'
-                    : 'ETD'}
-                </td>
+        {dataFinal
+          .slice(startIndex, endIndex)
+          .map((val: any, index: number) => {
+            return (
+              <>
+                <tr
+                  key={index}
+                  className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
+                >
+                  <td className="text-start lg:w-32 text-sm xl:text-base">
+                    {index + 1}
+                  </td>
+                  <td className="text-start lg:w-32 text-sm xl:text-base">
+                    {val.soumission_dtci.imo_dtci}
+                  </td>
+                  <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
+                    {val.soumission_dtci.nom_navire_dtci}
+                  </td>
+                  <td className="text-start lg:w-40 text-sm xl:text-base">
+                    {val.soumission_dtci.mouvement_dtci === 'Arrivée'
+                      ? 'ETA'
+                      : 'ETD'}
+                  </td>
 
-                <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
-                  {val.soumission_dtci.mouvement_dtci === 'Arrivée'
-                    ? val.soumission_dtci.eta_dtci
-                    : val.soumission_dtci.etd_dtci}
-                </td>
-                <td className="text-end lg:w-28 xl:w-48 ">
-                  <button onClick={() => handleChange(val)}>
-                    <Icon icon="mingcute:more-2-fill" width="20" height="20" />
-                  </button>
-                </td>
-              </tr>
-            </>
-          );
-        })}
+                  <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
+                    {val.soumission_dtci.mouvement_dtci === 'Arrivée'
+                      ? val.soumission_dtci.eta_dtci
+                      : val.soumission_dtci.etd_dtci}
+                  </td>
+                  <td className="text-end lg:w-28 xl:w-48 flex gap-3 ">
+                    <button onClick={() => handleChange(val)}>
+                      <Icon
+                        icon="mingcute:more-2-fill"
+                        width="20"
+                        height="20"
+                      />
+                    </button>
+                    {!val.observation ? (
+                      ''
+                    ) : (
+                      <p className="bg-[#F59069] text-firstColors px-2 py-1 font-medium rounded-md text-sm">
+                        Mettre a jour
+                      </p>
+                    )}
+                  </td>
+                </tr>
+              </>
+            );
+          })}
       </table>
       {renderPaginationControls()}
       {form ? (
         <div className=" absolute w-full h-full  justify-center items-center  ">
           <div className=" absolute bg-black opacity-15 rounded-md w-full h-full z-[1]"></div>
-          <div className="w-[40rem] h-[36rem] bg-red-600 absolute z-[2] top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 rounded">
+          <div className="w-[40rem] h-fit  absolute z-[2] top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 rounded">
             <div className="flex gap-2 justify-between py-6 flex-col bg-firstColors rounded-sm items-center h-full">
               <div className="flex justify-center items-center gap-4 w-full px-12">
                 <h3 className="w-[16rem] p-2 rounded-sm bg-cyan-200 text-lg text-gray-800 font-semibold">
@@ -364,12 +396,31 @@ const DeclaratioNConforme = () => {
                   </div>
                 </form>
               </div>
-              <Link
-                to={`/update/${data3.idInstance}`}
-                className="bg-firstBlue  w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold flex items-center justify-center"
-              >
-                UPDATE
-              </Link>
+              <div className="flex flex-col w-full px-14 gap-1">
+                <label htmlFor="" className="text-gray-500 font-semibold">
+                  Observation
+                </label>
+                <textarea
+                  name="observation"
+                  className="border outline-none p-2"
+                  id=""
+                ></textarea>
+              </div>
+              {user.role === 'analyst' ? (
+                <Link
+                  to={``}
+                  className="bg-firstBlue mt-4  w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold flex items-center justify-center"
+                >
+                  Validez
+                </Link>
+              ) : (
+                <Link
+                  to={`/update/${data3.idInstance}`}
+                  className="bg-firstBlue mt-4  w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold flex items-center justify-center"
+                >
+                  UPDATE
+                </Link>
+              )}
             </div>
 
             <button className="absolute right-4 top-2">

@@ -5,7 +5,8 @@ import * as XLSX from 'xlsx';
 import { headersNavire } from '../Data';
 
 const Navire = () => {
-  const data = useServer().navire;
+  const Navire = useServer().navire;
+  console.log(Navire);
 
   const [current, setCurrent] = useState(1);
   const itemsPerPage = 10;
@@ -45,16 +46,14 @@ const Navire = () => {
     );
   };
 
-  const Navire = data.map((item: any, index: number) => ({
-    id: index,
-    imo: item.imo,
-    nom: item.nom,
-  }));
-
   const [searchValue, setSearchValue] = useState();
+  const [searchNavire, setSearchNavire] = useState();
   const TrueData = searchValue
     ? Navire.filter((val: any) => val.imo.toString().includes(searchValue))
     : Navire;
+  const FinalData = searchNavire
+    ? TrueData.filter((val: any) => val.nom.toString().includes(searchNavire))
+    : TrueData;
 
   const exportToExcel = () => {
     // Créer une nouvelle feuille de calcul
@@ -96,6 +95,14 @@ const Navire = () => {
               }}
               className="border w-48 outline-none p-1 rounded-sm text-sm font-medium"
             />
+            <input
+              type="text"
+              placeholder="NAVIRE"
+              onChange={(e: any) => {
+                setSearchNavire(e.target.value);
+              }}
+              className="border w-48 outline-none p-1 rounded-sm text-sm font-medium"
+            />
           </div>
         </div>
 
@@ -127,18 +134,20 @@ const Navire = () => {
             );
           })}
         </tr>
-        {TrueData.slice(startIndex, endIndex).map((val: any, index: number) => {
-          return (
-            <tr
-              key={index}
-              className="flex justify-start p-4  w-full border-b-2 border-slate-50 "
-            >
-              <td className="text-start w-32">{index + 1}</td>
-              <td className="text-start w-72">{val.imo}</td>
-              <td className="text-start w-72">{val.nom}</td>
-            </tr>
-          );
-        })}
+        {FinalData.slice(startIndex, endIndex).map(
+          (val: any, index: number) => {
+            return (
+              <tr
+                key={index}
+                className="flex justify-start p-4  w-full border-b-2 border-slate-50 "
+              >
+                <td className="text-start w-32">{index + 1}</td>
+                <td className="text-start w-72">{val.imo}</td>
+                <td className="text-start w-72">{val.nom}</td>
+              </tr>
+            );
+          }
+        )}
       </table>
       {renderPaginationControls()}
     </div>

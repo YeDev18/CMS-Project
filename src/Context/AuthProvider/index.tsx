@@ -62,8 +62,6 @@ const AuthProvider: FC<Props> = ({ children }) => {
       setRole(response.data.role);
       setSucces(`register successful:`);
       localStorage.setItem('site', response.data.token);
-      console.log(response.data);
-      console.log(name, password, email, role);
       navigate('/');
     } catch (err: any) {
       setError(err.response?.data?.error || 'Login failed');
@@ -87,24 +85,19 @@ const AuthProvider: FC<Props> = ({ children }) => {
         }
       );
 
-      setToken(response.data);
+      setToken(response.data.jwt);
       localStorage.setItem('site', response.data.jwt);
       navigate('/accueil');
-      console.log(response);
       const decode: any = jwtDecode(response.data.jwt);
-      console.log(decode);
-      // console.log(decode[0]);
       setUser(decode.id);
     } catch (err: any) {
       console.log(err);
       console.log(password, succes);
     }
   };
-  console.log(user);
   const logout = async () => {
     try {
       const response = await url.post('/api/logout');
-      console.log('Logged out successfully', response);
       navigate('/');
       localStorage.removeItem('site');
     } catch (error) {

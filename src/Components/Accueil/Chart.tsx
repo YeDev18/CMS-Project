@@ -1,4 +1,3 @@
-import url from '@/api';
 import {
   Card,
   CardContent,
@@ -15,28 +14,28 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
+import { useServer } from '@/Context/ServerProvider';
 import { TrendingUp } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import { Pie, PieChart } from 'recharts';
 
 export function Chart() {
-  const [countConformes, setCountConformes] = useState<number>(0);
-  const [countNonConformes, setCountNonConformes] = useState<number>(0);
-  const [countNonDeclare, setCountNonDeclare] = useState<number>(0);
+  const conform = useServer().conform;
+  const notConform = useServer().notConform;
+  const undeclared = useServer().undeclared;
   const chartData = [
     {
       browser: 'Conformes',
-      visitors: countConformes,
+      visitors: conform.length,
       fill: 'var(--color-Conformes)',
     },
     {
       browser: 'Non_conformes',
-      visitors: countNonConformes,
+      visitors: notConform.length,
       fill: 'var(--color-Non_conformes)',
     },
     {
       browser: 'Non_declares',
-      visitors: countNonDeclare,
+      visitors: undeclared.length,
       fill: 'var(--color-Non_declares)',
     },
   ];
@@ -59,26 +58,6 @@ export function Chart() {
     },
   } satisfies ChartConfig;
 
-  useEffect(() => {
-    url
-      .get('/api/declare-conforme')
-      .then(res => res.data)
-      .then(data => setCountConformes(data.length))
-      .catch(error => console.log(error));
-    url
-      .get('/api/declare-non-conforme')
-      .then(res => res.data)
-      .then(data => setCountNonConformes(data.length))
-      .catch(error => console.log(error));
-
-    url
-      .get('/api/non-declare')
-      .then(res => res.data)
-      .then(data => setCountNonDeclare(data.length))
-      .catch(error => console.log(error));
-  }, []);
-  // console.log(countNavire);
-  // console.log(countConsignataire);
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">
