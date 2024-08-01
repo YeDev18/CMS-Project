@@ -45,6 +45,7 @@ const Connection = () => {
               <input
                 type="password"
                 name="password"
+                minLength={6}
                 id="password"
                 className="block py-2.5 px-0 w-full text-md text-gray-900 bg-transparent border-0 border-b-[0.8px] border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-firstBlue peer"
                 onChange={e => {

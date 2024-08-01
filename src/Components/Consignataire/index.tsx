@@ -107,29 +107,35 @@ const Consignataire = () => {
         </button>
       </div>
       <table className="w-full pb-6">
-        <tr className="flex justify-start  py-4 px-4  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
-          {headersConsignataires.map((item, index) => {
-            return (
-              <th
-                className=" text-start font-semibold lg:w-28 xl:w-72 headerFirst"
-                key={index}
-              >
-                {item}
-              </th>
-            );
-          })}
-        </tr>
-        {TrueData.slice(startIndex, endIndex).map((val: any, index: number) => {
-          return (
-            <tr
-              key={index}
-              className="flex justify-start p-4  w-full border-b-2 border-slate-50 "
-            >
-              <td className="text-start w-32">{index + 1}</td>
-              <td className="text-start w-94">{val.nom}</td>
-            </tr>
-          );
-        })}
+        <thead>
+          <tr className="flex justify-start  py-4 px-4  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
+            {headersConsignataires.map((item, index) => {
+              return (
+                <th
+                  className=" text-start font-semibold lg:w-28 xl:w-72 headerFirst"
+                  key={index}
+                >
+                  {item}
+                </th>
+              );
+            })}
+          </tr>
+        </thead>
+        <tbody>
+          {TrueData.slice(startIndex, endIndex).map(
+            (val: any, index: number) => {
+              return (
+                <tr
+                  key={index}
+                  className="flex justify-start p-4  w-full border-b-2 border-slate-50 "
+                >
+                  <td className="text-start w-32">{index + 1}</td>
+                  <td className="text-start w-94">{val.nom}</td>
+                </tr>
+              );
+            }
+          )}
+        </tbody>
       </table>
       {renderPaginationControls()}
     </div>

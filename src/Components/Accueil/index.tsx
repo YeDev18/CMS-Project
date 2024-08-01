@@ -23,7 +23,6 @@ const Accueil = () => {
 
   useEffect(() => {
     fetchDataDtci();
-    return () => console.log('clean');
   }, [selectedFile1]);
   useEffect(() => {
     fetchDataTM();

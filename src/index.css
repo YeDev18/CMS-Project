@@ -115,6 +115,7 @@
 @layer base {
   * {
     @apply border-border;
+    overflow: none;
   }
   body {
     @apply bg-background text-foreground;
@@ -122,12 +123,14 @@
 }
 @layer components {
   ::-webkit-scrollbar {
+    border-radius: 3rem;
+    background: #eceeed;
     width: 5px;
-    background: #009fe3;
   }
   ::-webkit-scrollbar-thumb {
-    border: solid 0 transparent;
-    background-color: #009fe3;
+    border: 1px solid black transparent;
+    border-radius: 3rem;
+    background-color: #bbcad1;
   }
   .buttonHeader {
     background: transparent;
@@ -136,6 +139,10 @@
     cursor: pointer;
     cursor: pointer;
     text-align: left;
+  }
+  th,
+  td {
+    white-space: nowrap;
   }
 
   select {
@@ -150,6 +157,19 @@
     color: #000000 !important;
     padding: 10px !important;
   }
+  /* input[type='checkbox']:checked {
+    background: yellow;
+    margin: 0px;
+    position: relative;
+  } */
+  textarea {
+    resize: none;
+  }
+  table {
+    width: 100px;
+    overflow-x: scroll;
+  }
+
   .dropdown {
   }
   .dropdown:first-child {

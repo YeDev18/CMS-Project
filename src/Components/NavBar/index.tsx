@@ -7,6 +7,7 @@ const NavBar = () => {
   const auth = useAuth();
   const me = useServer().user;
   const [log, setLog] = useState<boolean>(false);
+
   const handleClick = () => {
     setLog(!log);
   };

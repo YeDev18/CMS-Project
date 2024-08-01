@@ -2,13 +2,20 @@ import url from '@/api';
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import { useMemo, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AllMonths, headerTable, Year } from '../Data';
 import Libelle from '../ui/Libelle';
+
+interface UPDATE {
+  id: any;
+  nom_navire_dtci: string;
+  date_mouvement: string;
+  consignataire_dtci: string;
+}
 const DeclaratioNConforme = () => {
   const notConform = useServer().notConform;
-  console.log(notConform);
   const user = useServer().user;
+  const direction = useNavigate();
 
   const [formValue, setFormValue] = useState({
     months: '',
@@ -18,6 +25,11 @@ const DeclaratioNConforme = () => {
   const [observation, setObservation] = useState({
     observation: '',
   });
+  const [tags, setTags] = useState<boolean>(false);
+
+  const handleChangeCheck = () => {
+    setTags(!tags);
+  };
 
   const [current, setCurrent] = useState(1);
 
@@ -25,10 +37,10 @@ const DeclaratioNConforme = () => {
   const startIndex = (current - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const MonthsYears = formValue.years + '-' + formValue.months;
-  const navigate = useNavigate();
 
   const [data3, setData3] = useState({
     idInstance: '',
+    idSoumission: '',
     nonDTCI: '',
     imoDTCI: '',
     consignataireDTCI: '',
@@ -39,9 +51,9 @@ const DeclaratioNConforme = () => {
     consignataireTM: '',
     mouvementTM: '',
     dateTM: '',
+    observation: '',
   });
 
-  console.log(typeof data3.idInstance);
   const [form, setForm] = useState(false);
 
   const goToNextPage = () => {
@@ -56,7 +68,7 @@ const DeclaratioNConforme = () => {
       .put(`api/declarationstatus/${id}/add_observation/`, data)
       .then(res => {
         alert('Data Suucess');
-        navigate('/nom_conforme');
+        direction('/nom_conforme');
         window.location.reload();
       })
       .catch(error => console.log(error));
@@ -75,8 +87,12 @@ const DeclaratioNConforme = () => {
         val.soumission_dtci.imo_dtci.toString().includes(searchValue)
       )
     : Final;
+
+  const dataFinalChecked = tags
+    ? dataFinal.filter((val: any) => val.observation)
+    : dataFinal;
   const renderPaginationControls = () => {
-    const totalPages = Math.ceil(dataFinal.length / itemsPerPage);
+    const totalPages = Math.ceil(dataFinalChecked.length / itemsPerPage);
     return (
       <div className="flex justify-end pb-5">
         <button
@@ -101,11 +117,33 @@ const DeclaratioNConforme = () => {
     );
   };
 
+  const handleUpdateSubmit = (
+    id: any,
+    nom_navire_dtci: any,
+    date_mouvement: any,
+    consignataire_dtci: any
+  ) => {
+    url
+      .put(`api/update-soumission-dtci-and-status/${id}/`, {
+        nom_navire_dtci,
+        date_mouvement,
+        consignataire_dtci,
+      })
+      .then(res => {
+        alert('Data Suucess');
+        direction('/nom_conforme');
+        window.location.reload();
+      })
+      .catch(error => console.log(error));
+  };
+
   const handleChange = (val: any) => {
     setForm(true);
     setData3({
       ...data3,
+
       idInstance: val.id,
+      idSoumission: val.soumission_dtci.id,
       nonDTCI: val.soumission_dtci.nom_navire_dtci,
       imoDTCI: val.soumission_dtci.imo_dtci,
       mouvementDTCI:
@@ -120,12 +158,13 @@ const DeclaratioNConforme = () => {
       consignataireTM: val.trafic_maritime.consignataire_trafic,
       mouvementTM:
         val.trafic_maritime.mouvement_trafic === 'Arrivée' ? 'ETA' : 'ETD',
-      dateTM: val.trafic_maritime.date_trafic,
+      dateTM: val.trafic_maritime.date_trafic.split('-').reverse().join('-'),
+      observation: val.observation,
     });
   };
 
   return (
-    <div className="w-screen flex flex-col gap-4  ">
+    <div className="w-full flex flex-col gap-2 ">
       <div className="flex justify-between w-full pb-6">
         <div className="flex gap-4">
           <Libelle
@@ -135,7 +174,7 @@ const DeclaratioNConforme = () => {
             number={notConform.length}
           />
           <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
-            <form action="" className="flex gap-3  items-center justify-center">
+            <form action="" className="flex gap-2  items-center justify-center">
               <label htmlFor="">
                 <Icon
                   icon="lucide:calendar-days"
@@ -180,13 +219,9 @@ const DeclaratioNConforme = () => {
                   </option>
                 ))}
               </select>
-              <button type="submit">
-                {' '}
-                <Icon icon="mdi:filter" width="1.5em" height="1.5em" />
-              </button>
             </form>
           </div>
-          <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
+          <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-2 items-center">
             <label htmlFor="">
               <Icon icon="mdi:search" width="1.5em" height="1.5em" />
             </label>
@@ -198,9 +233,22 @@ const DeclaratioNConforme = () => {
                 setSearchValue(e.target.value);
               }}
             />
+            <span className="border border-borderColor h-4"></span>
+            <div className="flex  justify-center items-center">
+              <label htmlFor="" className="font-semibold">
+                Tags
+              </label>
+              <input
+                type="checkbox"
+                checked={tags}
+                onChange={handleChangeCheck}
+                placeholder="IMO"
+                className="border outline-none p-1 rounded-sm text-2xl w-8 h-4 font-medium"
+              />
+            </div>
           </div>
         </div>
-        <button className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex items-center">
+        <button className="rounded-md shadow-sm whitespace-nowrap shadow-shadowColors p-2 inline-flex items-center">
           <Icon
             icon="material-symbols:download"
             width="1em"
@@ -211,72 +259,88 @@ const DeclaratioNConforme = () => {
           Export en csv
         </button>
       </div>
-      <table className="w-full pb-6">
-        <tr className="flex justify-start  py-4 px-2  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
-          {headerTable.map((item, index) => {
-            return (
-              <th
-                className=" text-start font-semibold lg:w-28 xl:w-52 headerSecond"
-                key={index}
-              >
-                {item}
-              </th>
-            );
-          })}
-        </tr>
-        {dataFinal
-          .slice(startIndex, endIndex)
-          .map((val: any, index: number) => {
-            return (
-              <>
-                <tr
-                  key={index}
-                  className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
-                >
-                  <td className="text-start lg:w-32 text-sm xl:text-base">
-                    {index + 1}
-                  </td>
-                  <td className="text-start lg:w-32 text-sm xl:text-base">
-                    {val.soumission_dtci.imo_dtci}
-                  </td>
-                  <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
-                    {val.soumission_dtci.nom_navire_dtci}
-                  </td>
-                  <td className="text-start lg:w-40 text-sm xl:text-base">
-                    {val.soumission_dtci.mouvement_dtci === 'Arrivée'
-                      ? 'ETA'
-                      : 'ETD'}
-                  </td>
+      <div className="w-full pb-4 overflow-x-auto  pr-2">
+        <table className="w-full">
+          <thead>
+            <tr className="flex justify-start  py-4 px-2  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 sticky top-0  ">
+              {headerTable.map((item, index) => {
+                return (
+                  <th
+                    className=" text-start font-semibold lg:w-28 xl:w-52 headerSecond "
+                    key={index}
+                  >
+                    {item}
+                  </th>
+                );
+              })}
+            </tr>
+          </thead>
 
-                  <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
-                    {val.soumission_dtci.mouvement_dtci === 'Arrivée'
-                      ? val.soumission_dtci.eta_dtci
-                      : val.soumission_dtci.etd_dtci}
-                  </td>
-                  <td className="text-end lg:w-28 xl:w-48 flex gap-3 ">
-                    <button onClick={() => handleChange(val)}>
-                      <Icon
-                        icon="mingcute:more-2-fill"
-                        width="20"
-                        height="20"
-                      />
-                    </button>
-                    {!val.observation ? (
-                      ''
-                    ) : (
-                      <p className="bg-[#F59069] text-firstColors px-2 py-1 font-medium rounded-md text-sm">
-                        Mettre a jour
-                      </p>
-                    )}
-                  </td>
-                </tr>
-              </>
-            );
-          })}
-      </table>
+          {dataFinalChecked
+            .slice(startIndex, endIndex)
+            .map((val: any, index: number) => {
+              return (
+                <tbody>
+                  <tr
+                    key={index}
+                    className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
+                  >
+                    <td className="text-start lg:w-32 text-sm xl:text-base">
+                      {index + 1}
+                    </td>
+                    <td className="text-start lg:w-32 text-sm xl:text-base">
+                      {val.soumission_dtci.imo_dtci}
+                    </td>
+                    <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
+                      {val.soumission_dtci.nom_navire_dtci}
+                    </td>
+                    <td className="text-start lg:w-40 text-sm xl:text-base">
+                      {val.soumission_dtci.mouvement_dtci}
+                    </td>
+
+                    <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
+                      {val.soumission_dtci.mouvement_dtci === 'Arrivée'
+                        ? val.soumission_dtci.eta_dtci
+                            .split('-')
+                            .reverse()
+                            .join('-')
+                        : val.soumission_dtci.etd_dtci
+                            .split('-')
+                            .reverse()
+                            .join('-')}
+                    </td>
+
+                    <td className="text-end lg:w-28 xl:w-48 flex gap-3 ">
+                      {!val.observation ? (
+                        <button onClick={() => handleChange(val)}>
+                          <Icon
+                            icon="mingcute:more-2-fill"
+                            width="20"
+                            height="20"
+                          />
+                        </button>
+                      ) : (
+                        <button
+                          className="bg-[#F59069] text-firstColors px-2 py-1 font-medium rounded-md text-sm"
+                          onClick={() => handleChange(val)}
+                        >
+                          Mettre á jour
+                        </button>
+                      )}
+                    </td>
+                    <td className="text-start line-clamp-2 lg:w-28 xl:w-fit text-sm xl:text-base  ">
+                      {val.observation}
+                    </td>
+                  </tr>
+                </tbody>
+              );
+            })}
+        </table>
+      </div>
+
       {renderPaginationControls()}
       {form ? (
-        <div className=" absolute w-full h-full  justify-center items-center  ">
+        <div className="absolute w-full h-full  justify-center items-center">
           <div
             className=" absolute bg-black opacity-15 rounded-md w-full h-full z-[1]"
             onClick={() => setForm(false)}
@@ -309,17 +373,31 @@ const DeclaratioNConforme = () => {
                     <label htmlFor="" className="text-gray-500 font-semibold">
                       Nom DTCI
                     </label>
-                    <input
-                      disabled
-                      type="text"
-                      className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
-                      value={data3.nonDTCI}
-                    />
+                    {user.role === 'analyst' ? (
+                      <input
+                        type="text"
+                        disabled
+                        className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                        value={data3.nonDTCI}
+                      />
+                    ) : (
+                      <input
+                        type="text"
+                        className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm outline-none focus:outline-none focus:ring focus:border-none"
+                        value={data3.nonDTCI}
+                        onChange={(e: any) =>
+                          setData3({
+                            ...data3,
+                            nonDTCI: e.target.value,
+                          })
+                        }
+                      />
+                    )}
                   </div>
 
                   <div className="flex flex-col gap-1">
                     <label htmlFor="" className="text-gray-500 font-semibold">
-                      Date DTCI
+                      Mouvement DTCI
                     </label>
                     <input
                       disabled
@@ -333,24 +411,55 @@ const DeclaratioNConforme = () => {
                     <label htmlFor="" className="text-gray-500 font-semibold">
                       Consignataire DTCI
                     </label>
-                    <input
-                      disabled
-                      type="text"
-                      className=" border p-2 rounded-sm border-shadowColors bg-firstColors w-[16rem] text-sm"
-                      value={data3.consignataireDTCI}
-                    />
+                    {user.role === 'analyst' ? (
+                      <input
+                        type="text"
+                        disabled
+                        className=" border p-2 rounded-sm border-shadowColors bg-firstColors w-[16rem] text-sm"
+                        value={data3.consignataireDTCI}
+                      />
+                    ) : (
+                      <input
+                        type="text"
+                        className=" border p-2 rounded-sm border-shadowColors bg-firstColors w-[16rem] text-sm outline-none focus:outline-none focus:ring focus:border-none"
+                        value={data3.consignataireDTCI}
+                        onChange={(e: any) =>
+                          setData3({
+                            ...data3,
+                            consignataireDTCI: e.target.value,
+                          })
+                        }
+                      />
+                    )}
                   </div>
 
                   <div className="flex flex-col gap-1">
                     <label htmlFor="" className="text-gray-500 font-semibold">
                       Date DTCI
                     </label>
-                    <input
-                      disabled
-                      type="text"
-                      className=" border p-2 rounded-sm border-red-500 bg-firstColors text-sm"
-                      value={data3.dateDTCI}
-                    />
+                    {user.role === 'analyst' ? (
+                      <input
+                        type="text"
+                        disabled
+                        className=" border p-2 rounded-sm border-red-500 bg-firstColors text-sm"
+                        value={data3.dateDTCI.split('-').reverse().join('-')}
+                      />
+                    ) : (
+                      <input
+                        type="text"
+                        className=" border p-2 rounded-sm border-red-500 bg-firstColors text-sm outline-none focus:outline-none focus:ring focus:border-none"
+                        value={data3.dateDTCI.split('-').reverse().join('-')}
+                        onChange={(e: any) =>
+                          setData3({
+                            ...data3,
+                            dateDTCI: e.target.value
+                              .split('-')
+                              .reverse()
+                              .join('-'),
+                          })
+                        }
+                      />
+                    )}
                   </div>
                 </form>
                 <form action="" className="flex flex-col gap-3">
@@ -424,14 +533,16 @@ const DeclaratioNConforme = () => {
                     </label>
                     <textarea
                       name="observation"
-                      className="border outline-none p-2"
+                      className="border outline-none p-2 h-32"
                       onChange={(e: any) =>
                         setObservation({
                           ...observation,
                           [e.target.name]: e.target.value,
                         })
                       }
-                    ></textarea>
+                    >
+                      {data3.observation}
+                    </textarea>
                   </div>
                   <button
                     className="bg-firstBlue  w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold flex items-center justify-center"
@@ -443,12 +554,39 @@ const DeclaratioNConforme = () => {
                   </button>
                 </>
               ) : (
-                <Link
-                  to={`/update/${data3.idInstance}`}
-                  className="bg-firstBlue mt-4  w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold flex items-center justify-center"
-                >
-                  UPDATE
-                </Link>
+                <div className=" w-full flex flex-col justify-center items-center">
+                  {data3.observation ? (
+                    <div className="flex flex-col gap-1  w-[33rem]">
+                      <label htmlFor="" className="text-gray-500 font-semibold">
+                        Observation
+                      </label>
+                      <textarea
+                        disabled
+                        className=" border p-2 rounded-sm bg-firstColors text-sm h-32"
+                        value={data3.observation}
+                      >
+                        {data3.observation}
+                      </textarea>
+                    </div>
+                  ) : (
+                    ''
+                  )}
+
+                  <button
+                    // to={`/update/${data3.idInstance}`}
+                    className="bg-firstBlue mt-4  w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold flex items-center justify-center"
+                    onClick={() =>
+                      handleUpdateSubmit(
+                        data3.idSoumission,
+                        data3.nonDTCI,
+                        data3.dateDTCI.split('-').reverse().join('-'),
+                        data3.consignataireDTCI
+                      )
+                    }
+                  >
+                    UPDATE
+                  </button>
+                </div>
               )}
             </div>
 
@@ -457,8 +595,7 @@ const DeclaratioNConforme = () => {
                 icon="ic:round-close"
                 width="1.5em"
                 height="1.5em"
-                className="text-grayBlack: '#000000',
-"
+                className="text-grayBlack: '#000000',"
                 onClick={() => setForm(!form)}
               />
             </button>

@@ -148,47 +148,55 @@ const NonDeclaration = () => {
         </button>
       </div>
       <table className="w-full pb-6">
-        <tr className="flex justify-start  py-4 px-2  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
-          {headerTable.map((item, index) => {
-            return (
-              <th
-                className=" text-start font-semibold lg:w-28 xl:w-52 headerSecond"
-                key={index}
-              >
-                {item}
-              </th>
-            );
-          })}
-        </tr>
-        {dataFinal
-          .slice(startIndex, endIndex)
-          .map((val: any, index: number) => {
-            return (
-              <tr
-                key={index}
-                className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
-              >
-                <td className="text-start lg:w-32 text-sm xl:text-base">
-                  {index + 1}
-                </td>
-                <td className="text-start lg:w-32 text-sm xl:text-base">
-                  {val.trafic_maritime.imo_trafic}
-                </td>
-                <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
-                  {val.trafic_maritime.nom_navire_trafic}
-                </td>
-                <td className="text-start lg:w-40 text-sm xl:text-base">
-                  {val.trafic_maritime.mouvement_trafic === 'Arrivée'
-                    ? 'ETA'
-                    : 'ETD'}
-                </td>
+        <thead>
+          <tr className="flex justify-start  py-4 px-2  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
+            {headerTable.map((item, index) => {
+              return (
+                <th
+                  className=" text-start font-semibold lg:w-28 xl:w-52 headerSecond"
+                  key={index}
+                >
+                  {item}
+                </th>
+              );
+            })}
+          </tr>
+        </thead>
 
-                <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
-                  {val.trafic_maritime.date_trafic}
-                </td>
-              </tr>
-            );
-          })}
+        <tbody>
+          {dataFinal
+            .slice(startIndex, endIndex)
+            .map((val: any, index: number) => {
+              return (
+                <tr
+                  key={index}
+                  className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
+                >
+                  <td className="text-start lg:w-32 text-sm xl:text-base">
+                    {index + 1}
+                  </td>
+                  <td className="text-start lg:w-32 text-sm xl:text-base">
+                    {val.trafic_maritime.imo_trafic}
+                  </td>
+                  <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
+                    {val.trafic_maritime.nom_navire_trafic}
+                  </td>
+                  <td className="text-start lg:w-40 text-sm xl:text-base">
+                    {val.trafic_maritime.mouvement_trafic === 'Arrivée'
+                      ? 'ETA'
+                      : 'ETD'}
+                  </td>
+
+                  <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
+                    {val.trafic_maritime.date_trafic
+                      .split('-')
+                      .reverse()
+                      .join('-')}
+                  </td>
+                </tr>
+              );
+            })}
+        </tbody>
       </table>
       {renderPaginationControls()}
     </div>

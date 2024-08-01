@@ -94,6 +94,12 @@ const AuthProvider: FC<Props> = ({ children }) => {
       setUser(decode.id);
     } catch (err: any) {
       setError(true);
+      setTimeout(() => {
+        setError(false);
+      }, 3000);
+      setTimeout(() => {
+        localStorage.removeItem('site');
+      }, 36000);
       console.log(err);
     }
   };

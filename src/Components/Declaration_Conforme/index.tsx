@@ -50,7 +50,10 @@ const DeclarationConforme = () => {
       mouvementDTCI:
         val.soumission_dtci.mouvement_dtci === 'Arrivée' ? 'ETA' : 'ETD',
       consignataireDTCI: val.soumission_dtci.consignataire_dtci,
-      dateDeclaration: val?.soumission_dtci?.date_declaration_dtci,
+      dateDeclaration: val?.soumission_dtci?.date_declaration_dtci
+        .split('-')
+        .reverse()
+        .join('-'),
       port: val?.soumission_dtci?.port_dtci,
       typeNavire: val?.soumission_dtci?.type_de_navire_dtci,
       mrn: val?.soumission_dtci?.mrn_dtci,
@@ -59,8 +62,8 @@ const DeclarationConforme = () => {
       tonage: val?.soumission_dtci?.tonage_facture_dtci,
       dateDTCI:
         val.soumission_dtci.mouvement_dtci === 'Arrivée'
-          ? val.soumission_dtci.eta_dtci
-          : val.soumission_dtci.etd_dtci,
+          ? val.soumission_dtci.eta_dtci.split('-').reverse().join('-')
+          : val.soumission_dtci.etd_dtci.split('-').reverse().join('-'),
     });
   };
 
@@ -233,58 +236,68 @@ const DeclarationConforme = () => {
         </div>
 
         <table className="w-full pb-6">
-          <tr className="flex justify-start  py-4 px-2  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
-            {headerTable.map((item, index) => {
-              return (
-                <th
-                  className=" text-start font-semibold lg:w-28 xl:w-52 headerSecond"
-                  key={index}
-                >
-                  {item}
-                </th>
-              );
-            })}
-          </tr>
-          {dataFinal
-            .slice(startIndex, endIndex)
-            .map((val: any, index: number) => {
-              return (
-                <tr
-                  key={index}
-                  className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
-                >
-                  <td className="text-start lg:w-32 text-sm xl:text-base">
-                    {index + 1}
-                  </td>
-                  <td className="text-start lg:w-32 text-sm xl:text-base">
-                    {val.soumission_dtci.imo_dtci}
-                  </td>
-                  <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
-                    {val.soumission_dtci.nom_navire_dtci}
-                  </td>
-                  <td className="text-start lg:w-40 text-sm xl:text-base">
-                    {val.soumission_dtci.mouvement_dtci === 'Arrivée'
-                      ? 'ETA'
-                      : 'ETD'}
-                  </td>
+          <thead>
+            <tr className="flex justify-start  py-4 px-2  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
+              {headerTable.map((item, index) => {
+                return (
+                  <th
+                    className=" text-start font-semibold lg:w-28 xl:w-52 headerSecond"
+                    key={index}
+                  >
+                    {item}
+                  </th>
+                );
+              })}
+            </tr>
+          </thead>
+          <tbody>
+            {dataFinal
+              .slice(startIndex, endIndex)
+              .map((val: any, index: number) => {
+                return (
+                  <tr
+                    key={index}
+                    className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
+                  >
+                    <td className="text-start lg:w-32 text-sm xl:text-base">
+                      {index + 1}
+                    </td>
+                    <td className="text-start lg:w-32 text-sm xl:text-base">
+                      {val.soumission_dtci.imo_dtci}
+                    </td>
+                    <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
+                      {val.soumission_dtci.nom_navire_dtci}
+                    </td>
+                    <td className="text-start lg:w-40 text-sm xl:text-base">
+                      {val.soumission_dtci.mouvement_dtci === 'Arrivée'
+                        ? 'ETA'
+                        : 'ETD'}
+                    </td>
 
-                  <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
-                    {val.soumission_dtci.mouvement_dtci === 'Arrivée'
-                      ? val.soumission_dtci.eta_dtci
-                      : val.soumission_dtci.etd_dtci}
-                  </td>
-                  <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
-                    <button onClick={() => handleChange(val)}>
-                      <Icon
-                        icon="weui:eyes-on-filled"
-                        width="1em"
-                        height="1em"
-                      />
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
+                    <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
+                      {val.soumission_dtci.mouvement_dtci === 'Arrivée'
+                        ? val.soumission_dtci.eta_dtci
+                            .split('-')
+                            .reverse()
+                            .join('-')
+                        : val.soumission_dtci.etd_dtci
+                            .split('-')
+                            .reverse()
+                            .join('-')}
+                    </td>
+                    <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
+                      <button onClick={() => handleChange(val)}>
+                        <Icon
+                          icon="weui:eyes-on-filled"
+                          width="1em"
+                          height="1em"
+                        />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
         </table>
 
         {renderPaginationControls()}
