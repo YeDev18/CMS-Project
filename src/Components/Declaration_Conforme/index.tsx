@@ -269,9 +269,7 @@ const DeclarationConforme = () => {
                       {val.soumission_dtci.nom_navire_dtci}
                     </td>
                     <td className="text-start lg:w-40 text-sm xl:text-base">
-                      {val.soumission_dtci.mouvement_dtci === 'Arrivée'
-                        ? 'ETA'
-                        : 'ETD'}
+                      {val.soumission_dtci.mouvement_dtci}
                     </td>
 
                     <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">

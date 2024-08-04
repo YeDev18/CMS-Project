@@ -182,9 +182,7 @@ const NonDeclaration = () => {
                     {val.trafic_maritime.nom_navire_trafic}
                   </td>
                   <td className="text-start lg:w-40 text-sm xl:text-base">
-                    {val.trafic_maritime.mouvement_trafic === 'Arrivée'
-                      ? 'ETA'
-                      : 'ETD'}
+                    {val.trafic_maritime.mouvement_trafic}
                   </td>
 
                   <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">

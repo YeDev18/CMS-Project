@@ -14,7 +14,7 @@ const Home = () => {
 
         <div className="w-[80vw] flex flex-col  relative left-[17vw] le gap-4 h-[98vh]">
           <NavBar />
-          <div className=" w-[100%] hidden xl:flex h-[85vh]">
+          <div className=" w-[100%] hidden xl:flex h-full">
             <Outlet />
           </div>
           <div className="  w-[100%] flex justify-center items-center xl:hidden h-[85vh]">

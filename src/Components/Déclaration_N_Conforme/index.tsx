@@ -164,7 +164,7 @@ const DeclaratioNConforme = () => {
   };
 
   return (
-    <div className="w-full flex flex-col gap-2 ">
+    <div className="w-full h-full relative flex bg-red-500 flex-col gap-2 ">
       <div className="flex justify-between w-full pb-6">
         <div className="flex gap-4">
           <Libelle
@@ -259,7 +259,7 @@ const DeclaratioNConforme = () => {
           Export en csv
         </button>
       </div>
-      <div className="w-full pb-4 overflow-x-auto  pr-2">
+      <div className="w-full h-full  overflow-x-auto  pr-2 relative">
         <table className="w-full">
           <thead>
             <tr className="flex justify-start  py-4 px-2  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 sticky top-0  ">
@@ -340,7 +340,7 @@ const DeclaratioNConforme = () => {
 
       {renderPaginationControls()}
       {form ? (
-        <div className="absolute w-full h-full  justify-center items-center">
+        <div className="absolute inset-y-0 w-full h-full  justify-center items-center">
           <div
             className=" absolute bg-black opacity-15 rounded-md w-full h-full z-[1]"
             onClick={() => setForm(false)}
