@@ -1,4 +1,5 @@
 import url from '@/api';
+import axios from 'axios';
 import {
   createContext,
   FC,
@@ -31,41 +32,39 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const [conform, setConform] = useState<[]>([]);
   const [notConform, setNotConform] = useState<[]>([]);
   const [undeclared, setUndeclared] = useState<[]>([]);
+  const [initialize, setInitialize] = useState(false);
+
+  const getData = () => {
+    const routes = [
+      'api/consignataire-dtci',
+      'api/navire-soumission-dtci',
+      'api/non-declare',
+      'api/declare-non-conforme',
+      'api/declare-conforme',
+    ];
+    axios.all(routes.map(route => url.get(route))).then(
+      axios.spread(
+        (
+          { data: consignataire },
+          { data: navire },
+          { data: nonDeclare },
+          { data: declareNConforme },
+          { data: declareConforme }
+        ) => {
+          setNavire(navire);
+          setConsignataire(consignataire);
+          setConform(declareConforme);
+          setUndeclared(nonDeclare);
+          setNotConform(declareNConforme);
+        }
+      )
+    );
+  };
 
   useEffect(() => {
-    // NAVIRE
-    url
-      .get('api/consignataire-dtci')
-      .then(res => res.data)
-      .then(data => setConsignataire(data))
-      .catch(error => console.log(error));
-    // CONNSIGNATAIRE
-    url
-      .get('api/navire-soumission-dtci')
-      .then(res => res.data)
-      .then(data => setNavire(data))
-      .catch(error => console.log(error));
-    // NON-DECLARE
-    url
-      .get('api/non-declare')
-      .then(res => res.data)
-      .then(data => setUndeclared(data))
-      .catch(error => console.log(error));
-    //NOM-CONFORME
-    url
-      .get('api/declare-non-conforme')
-      .then(res => res.data)
-      .then(data => setNotConform(data))
-      .catch(error => console.log(error));
-
-    //CONFORME
-
-    url
-      .get('api/declare-conforme')
-      .then(res => res.data)
-      .then(data => setConform(data))
-      .catch(error => console.log(error));
-
+    getData();
+  }, [initialize]);
+  useEffect(() => {
     url
       .get('api/user', {
         headers: {
@@ -93,7 +92,15 @@ const ServerProvider: FC<Props> = ({ children }) => {
 
   return (
     <SeverContext.Provider
-      value={{ user, navire, consignataire, undeclared, notConform, conform }}
+      value={{
+        user,
+        navire,
+        consignataire,
+        undeclared,
+        notConform,
+        conform,
+        setInitialize,
+      }}
     >
       {children}
     </SeverContext.Provider>
