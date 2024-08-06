@@ -48,7 +48,7 @@ const DeclarationConforme = () => {
       nonDTCI: val.soumission_dtci.nom_navire_dtci,
       imoDTCI: val.soumission_dtci.imo_dtci,
       mouvementDTCI:
-        val.soumission_dtci.mouvement_dtci === 'Arrivée' ? 'ETA' : 'ETD',
+        val.soumission_dtci.mouvement_dtci === 'Arrivée' ? 'Arrivée' : 'Départ',
       consignataireDTCI: val.soumission_dtci.consignataire_dtci,
       dateDeclaration: val?.soumission_dtci?.date_declaration_dtci
         .split('-')
@@ -115,7 +115,10 @@ const DeclarationConforme = () => {
 
   const modifiedData = dataFinal.map((item: any, index: number) => ({
     Id: index,
-    DateDeclaration: item?.soumission_dtci.date_declaration_dtci,
+    DateDeclaration: item?.soumission_dtci.date_declaration_dtci
+      .split('-')
+      .reverse()
+      .join('-'),
     Port: item?.soumission_dtci.port_dtci,
     Imo: item?.soumission_dtci?.imo_dtci,
     Navire: item?.soumission_dtci?.nom_navire_dtci,
@@ -124,11 +127,13 @@ const DeclarationConforme = () => {
     Tonnage: item?.soumission_dtci?.tonnage_facture_dtci,
     Numero_de_Voyage: item?.soumission_dtci?.numero_voyage_dtci,
     Mouvement:
-      item?.soumission_dtci?.mouvement_dtci === 'Arrivée' ? 'ETA' : 'ETD',
+      item?.soumission_dtci?.mouvement_dtci === 'Arrivée'
+        ? 'Arrivée'
+        : 'Depart',
     Date:
       item?.soumission_dtci?.mouvement_dtci === 'Arrivée'
-        ? item?.soumission_dtci?.eta_dtci
-        : item?.soumission_dtci?.etd_dtci,
+        ? item?.soumission_dtci?.eta_dtci.split('-').reverse().join('-')
+        : item?.soumission_dtci?.etd_dtci.split('-').reverse().join('-'),
   }));
   for (let index = 1; index < modifiedData.length; index++) {
     Data3.push(modifiedData[index]);
@@ -139,105 +144,100 @@ const DeclarationConforme = () => {
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     XLSX.writeFile(wb, `Decalaration conforme.xlsx`);
-    console.log('vit');
   };
 
   return (
-    <>
-      <div className="w-screen flex flex-col gap-6 ">
-        <div className="flex justify-between w-full pb-6">
-          <div className="flex gap-4">
-            <Libelle
-              icon="lucide:circle-check-big"
-              libelle="Conformes"
-              color="#2563eb"
-              number={conform.length}
-            />
-            <div></div>
-            <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
-              <form
-                action=""
-                className="flex gap-3  items-center justify-center"
-              >
-                <label htmlFor="">
-                  <Icon
-                    icon="lucide:calendar-days"
-                    width="1.5em"
-                    height="1.5em"
-                    style={{ color: '#0a0a0a' }}
-                    className="mr-2"
-                  />
-                </label>
-                <select
-                  name="months"
-                  id=""
-                  className="bg-none outline-4 bg-firstColors"
-                  onChange={e => {
-                    setFormValue({
-                      ...formValue,
-                      [e.target.name]: e.target.value,
-                    });
-                  }}
-                >
-                  {AllMonths.map((month, index) => (
-                    <option key={index} value={month.value}>
-                      {month.name}
-                    </option>
-                  ))}
-                </select>
-                <span className="border border-borderColor h-4"></span>
-                <select
-                  name="years"
-                  id=""
-                  className="bg-none outline-none bg-firstColors"
-                  onChange={e => {
-                    setFormValue({
-                      ...formValue,
-                      [e.target.name]: e.target.value,
-                    });
-                  }}
-                >
-                  {Year.map((year, index) => (
-                    <option key={index} value={year.value}>
-                      {year.year}
-                    </option>
-                  ))}
-                </select>
-              </form>
-            </div>
-            <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
+    <div className="w-full relative h-full flex flex-col gap-6 ">
+      <div className="flex justify-between flex-wrap gap-y-4 w-full pb-6">
+        <div className="flex gap-4">
+          <Libelle
+            icon="lucide:circle-check-big"
+            libelle="Conformes"
+            color="#2563eb"
+            number={conform.length}
+          />
+          <div></div>
+          <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
+            <form action="" className="flex gap-3  items-center justify-center">
               <label htmlFor="">
-                <Icon icon="mdi:search" width="1.5em" height="1.5em" />
+                <Icon
+                  icon="lucide:calendar-days"
+                  width="1.5em"
+                  height="1.5em"
+                  style={{ color: '#0a0a0a' }}
+                  className="mr-2"
+                />
               </label>
-              <input
-                type="number"
-                placeholder="IMO"
-                value={searchValue}
-                className="border w-32 outline-none p-1 rounded-sm text-sm font-medium"
-                onChange={(e: any) => {
-                  setSearchValue(e.target.value);
+              <select
+                name="months"
+                id=""
+                className="bg-none outline-4 bg-firstColors"
+                onChange={e => {
+                  setFormValue({
+                    ...formValue,
+                    [e.target.name]: e.target.value,
+                  });
                 }}
-              />
-            </div>
+              >
+                {AllMonths.map((month, index) => (
+                  <option key={index} value={month.value}>
+                    {month.name}
+                  </option>
+                ))}
+              </select>
+              <span className="border border-borderColor h-4"></span>
+              <select
+                name="years"
+                id=""
+                className="bg-none outline-none bg-firstColors"
+                onChange={e => {
+                  setFormValue({
+                    ...formValue,
+                    [e.target.name]: e.target.value,
+                  });
+                }}
+              >
+                {Year.map((year, index) => (
+                  <option key={index} value={year.value}>
+                    {year.year}
+                  </option>
+                ))}
+              </select>
+            </form>
           </div>
-          <button
-            className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex items-center"
-            onClick={() => exportToExcel()}
-          >
-            <Icon
-              icon="material-symbols:download"
-              width="1em"
-              height="1em"
-              style={{ color: '#313131' }}
-              className="mr-2"
+          <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
+            <label htmlFor="">
+              <Icon icon="mdi:search" width="1.5em" height="1.5em" />
+            </label>
+            <input
+              type="number"
+              placeholder="IMO"
+              value={searchValue}
+              className="border w-32 outline-none p-1 rounded-sm text-sm font-medium"
+              onChange={(e: any) => {
+                setSearchValue(e.target.value);
+              }}
             />
-            Export en csv
-          </button>
+          </div>
         </div>
-
+        <button
+          className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex items-center"
+          onClick={() => exportToExcel()}
+        >
+          <Icon
+            icon="material-symbols:download"
+            width="1em"
+            height="1em"
+            style={{ color: '#313131' }}
+            className="mr-2"
+          />
+          Export en csv
+        </button>
+      </div>
+      <div className="w-full h-full overflow-x-auto  pr-2 relative">
         <table className="w-full pb-6">
           <thead>
-            <tr className="flex justify-start  py-4 px-2  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
+            <tr className="gridArray6 w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
               {headerTable.map((item, index) => {
                 return (
                   <th
@@ -257,7 +257,7 @@ const DeclarationConforme = () => {
                 return (
                   <tr
                     key={index}
-                    className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
+                    className="gridArray6 w-full border-b-2 border-slate-50 "
                   >
                     <td className="text-start lg:w-32 text-sm xl:text-base">
                       {index + 1}
@@ -265,7 +265,7 @@ const DeclarationConforme = () => {
                     <td className="text-start lg:w-32 text-sm xl:text-base">
                       {val.soumission_dtci.imo_dtci}
                     </td>
-                    <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
+                    <td className="text-start lg:w-28 xl:w-52 whitespace-normal text-sm xl:text-sm">
                       {val.soumission_dtci.nom_navire_dtci}
                     </td>
                     <td className="text-start lg:w-40 text-sm xl:text-base">
@@ -283,7 +283,7 @@ const DeclarationConforme = () => {
                             .reverse()
                             .join('-')}
                     </td>
-                    <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
+                    <td className="text-start  text-sm xl:text-base ">
                       <button onClick={() => handleChange(val)}>
                         <Icon
                           icon="weui:eyes-on-filled"
@@ -297,123 +297,122 @@ const DeclarationConforme = () => {
               })}
           </tbody>
         </table>
-
-        {renderPaginationControls()}
-        {modal ? (
-          <div className="absolute w-full h-full justify-center items-center ">
-            <div
-              className="absolute bg-black opacity-15 rounded-md w-full h-[90%] z-[1]"
-              onClick={() => setModal(false)}
-            ></div>
-            <div className="w-96 h-fit absolute z-[2] inset-1/2 flex flex-col justify-center items-center gap-2 bg-firstColors -translate-x-2/4  -translate-y-2/4 shadow-sm shadow-slate-100 rounded-sm p-6">
-              <div className="flex flex-col gap-1 w-full px-2">
-                <label htmlFor="" className="text-gray-500 font-semibold">
-                  Date de declaration
-                </label>
-                <input
-                  disabled
-                  type="text"
-                  className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
-                  value={data3.dateDeclaration}
-                />
-              </div>
-              <div className="flex flex-col gap-1 w-full px-2">
-                <label htmlFor="" className="text-gray-500 font-semibold">
-                  IMO
-                </label>
-                <input
-                  disabled
-                  type="text"
-                  className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
-                  value={data3.imoDTCI}
-                />
-              </div>
-              <div className="flex flex-col gap-1 w-full px-2 ">
-                <label htmlFor="" className="text-gray-500 font-semibold">
-                  MRN
-                </label>
-                <input
-                  disabled
-                  type="text"
-                  className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
-                  value={data3.mrn}
-                />
-              </div>
-              <div className="flex flex-col gap-1 w-full px-2">
-                <label htmlFor="" className="text-gray-500 font-semibold">
-                  Nom
-                </label>
-                <input
-                  disabled
-                  type="text"
-                  className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
-                  value={data3.nonDTCI}
-                />
-              </div>
-              <div className="flex flex-col gap-1 w-full px-2">
-                <label htmlFor="" className="text-gray-500 font-semibold">
-                  Mouvement
-                </label>
-                <input
-                  disabled
-                  type="text"
-                  className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
-                  value={data3.mouvementDTCI}
-                />
-              </div>
-              <div className="flex flex-col gap-1 w-full px-2 ">
-                <label htmlFor="" className="text-gray-500 font-semibold">
-                  Consignataire
-                </label>
-                <input
-                  disabled
-                  type="text"
-                  className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
-                  value={data3.consignataireDTCI}
-                />
-              </div>
-              <div className="flex flex-col gap-1 w-full px-2 ">
-                <label htmlFor="" className="text-gray-500 font-semibold">
-                  Port
-                </label>
-                <input
-                  disabled
-                  type="text"
-                  className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
-                  value={data3.port}
-                />
-              </div>
-
-              <div className="flex flex-col gap-1 w-full px-2 ">
-                <label htmlFor="" className="text-gray-500 font-semibold">
-                  Numero Voyage
-                </label>
-                <input
-                  disabled
-                  type="text"
-                  className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
-                  value={data3.numVoyage}
-                />
-              </div>
-
-              <button
-                className="absolute right-4 top-2"
-                onClick={() => setModal(false)}
-              >
-                <Icon
-                  icon="majesticons:close"
-                  width="1.5em"
-                  height="1.5em"
-                  className="text-black"
-                />
-              </button>
-            </div>
-          </div>
-        ) : (
-          ''
-        )}
       </div>
-    </>
+      {renderPaginationControls()}
+      {modal ? (
+        <div className="absolute inset-y-0 w-full h-full justify-center items-center ">
+          <div
+            className="absolute bg-black opacity-15 rounded-md w-full h-full z-[1]"
+            onClick={() => setModal(false)}
+          ></div>
+          <div className="w-96 h-fit absolute z-[2] inset-1/2 flex flex-col justify-center items-center gap-2 bg-firstColors -translate-x-2/4  -translate-y-2/4 shadow-sm shadow-slate-100 rounded-sm p-6">
+            <div className="flex flex-col gap-1 w-full px-2">
+              <label htmlFor="" className="text-gray-500 font-semibold">
+                Date de declaration
+              </label>
+              <input
+                disabled
+                type="text"
+                className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                value={data3.dateDeclaration}
+              />
+            </div>
+            <div className="flex flex-col gap-1 w-full px-2">
+              <label htmlFor="" className="text-gray-500 font-semibold">
+                IMO
+              </label>
+              <input
+                disabled
+                type="text"
+                className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                value={data3.imoDTCI}
+              />
+            </div>
+            <div className="flex flex-col gap-1 w-full px-2 ">
+              <label htmlFor="" className="text-gray-500 font-semibold">
+                MRN
+              </label>
+              <input
+                disabled
+                type="text"
+                className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                value={data3.mrn}
+              />
+            </div>
+            <div className="flex flex-col gap-1 w-full px-2">
+              <label htmlFor="" className="text-gray-500 font-semibold">
+                Nom
+              </label>
+              <input
+                disabled
+                type="text"
+                className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                value={data3.nonDTCI}
+              />
+            </div>
+            <div className="flex flex-col gap-1 w-full px-2">
+              <label htmlFor="" className="text-gray-500 font-semibold">
+                Mouvement
+              </label>
+              <input
+                disabled
+                type="text"
+                className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                value={data3.mouvementDTCI}
+              />
+            </div>
+            <div className="flex flex-col gap-1 w-full px-2 ">
+              <label htmlFor="" className="text-gray-500 font-semibold">
+                Consignataire
+              </label>
+              <input
+                disabled
+                type="text"
+                className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                value={data3.consignataireDTCI}
+              />
+            </div>
+            <div className="flex flex-col gap-1 w-full px-2 ">
+              <label htmlFor="" className="text-gray-500 font-semibold">
+                Port
+              </label>
+              <input
+                disabled
+                type="text"
+                className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                value={data3.port}
+              />
+            </div>
+
+            <div className="flex flex-col gap-1 w-full px-2 ">
+              <label htmlFor="" className="text-gray-500 font-semibold">
+                Numero Voyage
+              </label>
+              <input
+                disabled
+                type="text"
+                className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                value={data3.numVoyage}
+              />
+            </div>
+
+            <button
+              className="absolute right-4 top-2"
+              onClick={() => setModal(false)}
+            >
+              <Icon
+                icon="majesticons:close"
+                width="1.5em"
+                height="1.5em"
+                className="text-black"
+              />
+            </button>
+          </div>
+        </div>
+      ) : (
+        ''
+      )}
+    </div>
   );
 };
 

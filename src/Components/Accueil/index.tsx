@@ -1,15 +1,15 @@
 import { default as api, default as url } from '@/api';
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import * as XLSX from 'xlsx';
 import { Libs } from '../Data';
 import { Chart } from './Chart';
 import { Component1 } from './Component';
 
 const Accueil = () => {
-  const [selectedFile1, setSelectedFile1] = useState<File | null>(null);
-  const [selectedFile2, setSelectedFile2] = useState<File | null>(null);
+  const [selectedFile1, setSelectedFile1] = useState<File | null | ''>(null);
+  const [selectedFile2, setSelectedFile2] = useState<File | null | ''>(null);
   const [dataDtci, setDataDtci] = useState<any[]>(['']);
   const [dataTM, setDataTM] = useState<any[]>(['']);
   const navire = useServer().navire;
@@ -20,15 +20,13 @@ const Accueil = () => {
   const [IsLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
-
-  useEffect(() => {
-    fetchDataDtci();
-  }, [selectedFile1]);
-  useEffect(() => {
-    fetchDataTM();
-  }, [selectedFile2]);
+  console.log(selectedFile1);
+  console.log(selectedFile2);
 
   const handleCompare = () => {
+    fetchDataDtci();
+    fetchDataTM();
+
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
@@ -88,6 +86,7 @@ const Accueil = () => {
         },
       });
     } catch (error: any) {
+      setError(true);
       if (error.response) {
         console.log('Error response:', error.response.data);
       } else {
@@ -113,7 +112,7 @@ const Accueil = () => {
     };
 
     reader.readAsArrayBuffer(file);
-    fetchDataTM();
+    // fetchDataTM();
   };
 
   const fetchDataTM = async () => {
@@ -132,6 +131,7 @@ const Accueil = () => {
         },
       });
     } catch (error: any) {
+      setError(true);
       if (error.response) {
         console.log('Error response:', error.response.data);
       } else {
@@ -228,20 +228,26 @@ const Accueil = () => {
             <div className="flex flex-col justify-between gap-4 p-1 rounded-sm">
               <div className="flex flex-col gap-3  py-2">
                 {selectedFile1 ? (
-                  <div className=" p-2 gap-4 w-48 bg-orange-100 rounded-sm flex justify-between shadow-sm">
-                    <p className="font-semibold text-base">
+                  <div className=" p-2 gap-4 w-48 bg-orange-100 rounded-sm flex justify-between items-center shadow-sm">
+                    <p className="font-semibold text-base whitespace-nowrap">
                       Fichier Navires DTCI
                     </p>
+                    <button onClick={() => setSelectedFile1('')}>
+                      <Icon icon="mdi:trash-outline" />
+                    </button>
                   </div>
                 ) : (
                   ''
                 )}
                 {selectedFile2 ? (
                   <div className="p-2  gap-4 w-48 bg-red-100 rounded-sm flex justify-between shadow-sm">
-                    <p className="font-semibold text-base">
+                    <p className="font-semibold text-base whitespace-nowrap">
                       {' '}
                       Fichier Navires Trafic
                     </p>
+                    <button onClick={() => setSelectedFile2('')}>
+                      <Icon icon="mdi:trash-outline" />
+                    </button>
                   </div>
                 ) : (
                   ''

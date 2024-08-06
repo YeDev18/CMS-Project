@@ -3,6 +3,7 @@ import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import * as XLSX from 'xlsx';
 import { AllMonths, headerTable, Year } from '../Data';
 import Libelle from '../ui/Libelle';
 
@@ -91,6 +92,36 @@ const DeclaratioNConforme = () => {
   const dataFinalChecked = tags
     ? dataFinal.filter((val: any) => val.observation)
     : dataFinal;
+
+  const modifiedData = dataFinalChecked.map((item: any, index: number) => ({
+    Id: index,
+    DateDeclaration: item?.soumission_dtci.date_declaration_dtci
+      .split('-')
+      .reverse()
+      .join('-'),
+    Port: item?.soumission_dtci.port_dtci,
+    Imo: item?.soumission_dtci?.imo_dtci,
+    Navire: item?.soumission_dtci?.nom_navire_dtci,
+    Mrn: item?.soumission_dtci?.mrn_dtci,
+    Consignataire: item?.soumission_dtci?.consignataire_dtci,
+    Tonnage: item?.soumission_dtci?.tonnage_facture_dtci,
+    Numero_de_Voyage: item?.soumission_dtci?.numero_voyage_dtci,
+    Mouvement:
+      item?.soumission_dtci?.mouvement_dtci === 'Arrivée'
+        ? 'Arrivée'
+        : 'Depart',
+    Date:
+      item?.soumission_dtci?.mouvement_dtci === 'Arrivée'
+        ? item?.soumission_dtci?.eta_dtci.split('-').reverse().join('-')
+        : item?.soumission_dtci?.etd_dtci.split('-').reverse().join('-'),
+  }));
+
+  const exportToExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(modifiedData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, `Decalaration non conforme.xlsx`);
+  };
   const renderPaginationControls = () => {
     const totalPages = Math.ceil(dataFinalChecked.length / itemsPerPage);
     return (
@@ -164,8 +195,8 @@ const DeclaratioNConforme = () => {
   };
 
   return (
-    <div className="w-full h-full relative flex bg-red-500 flex-col gap-2 ">
-      <div className="flex justify-between w-full pb-6">
+    <div className="w-full h-full relative flex flex-col gap-2 ">
+      <div className="flex justify-between flex-wrap gap-y-4 w-full pb-6">
         <div className="flex gap-4">
           <Libelle
             icon="charm:notes-cross"
@@ -248,7 +279,10 @@ const DeclaratioNConforme = () => {
             </div>
           </div>
         </div>
-        <button className="rounded-md shadow-sm whitespace-nowrap shadow-shadowColors p-2 inline-flex items-center">
+        <button
+          className="rounded-md shadow-sm whitespace-nowrap shadow-shadowColors p-2 inline-flex items-center"
+          onClick={() => exportToExcel()}
+        >
           <Icon
             icon="material-symbols:download"
             width="1em"
@@ -259,14 +293,14 @@ const DeclaratioNConforme = () => {
           Export en csv
         </button>
       </div>
-      <div className="w-full h-full  overflow-x-auto  pr-2 relative">
+      <div className="w-full h-full overflow-x-auto  pr-2 relative">
         <table className="w-full">
           <thead>
-            <tr className="flex justify-start  py-4 px-2  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 sticky top-0  ">
+            <tr className="gridArray6  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 sticky top-0 ">
               {headerTable.map((item, index) => {
                 return (
                   <th
-                    className=" text-start font-semibold lg:w-28 xl:w-52 headerSecond "
+                    className=" text-start font-semibold headerSecond "
                     key={index}
                   >
                     {item}
@@ -283,7 +317,7 @@ const DeclaratioNConforme = () => {
                 <tbody>
                   <tr
                     key={index}
-                    className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
+                    className="gridArray6 w-full border-b-2 border-slate-50 "
                   >
                     <td className="text-start lg:w-32 text-sm xl:text-base">
                       {index + 1}

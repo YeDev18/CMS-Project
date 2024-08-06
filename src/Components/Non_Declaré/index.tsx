@@ -1,6 +1,7 @@
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import { useMemo, useState } from 'react';
+import * as XLSX from 'xlsx';
 import { AllMonths, headerTable, Year } from '../Data';
 import Libelle from '../ui/Libelle';
 const NonDeclaration = () => {
@@ -64,9 +65,24 @@ const NonDeclaration = () => {
       )
     : Final;
 
+  const modifiedData = dataFinal.map((item: any, index: number) => ({
+    Id: index,
+    Imo: item?.trafic_maritime?.imo_trafic,
+    Navire: item?.trafic_maritime?.nom_navire_trafic,
+    Mouvement: item?.trafic_maritime.mouvement_trafic,
+    Date: item?.trafic_maritime?.date_trafic.split('-').reverse().join('-'),
+  }));
+
+  const exportToExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(modifiedData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, `Non declare.xlsx`);
+  };
+
   return (
     <div className="w-screen flex flex-col gap-4   ">
-      <div className="flex justify-between w-full pb-6">
+      <div className="flex justify-between flex-wrap w-full gap-y-4 pb-6">
         <div className="flex gap-4">
           <Libelle
             icon="ph:x-circle"
@@ -136,7 +152,10 @@ const NonDeclaration = () => {
             />
           </div>
         </div>
-        <button className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex items-center">
+        <button
+          className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex items-center"
+          onClick={() => exportToExcel()}
+        >
           <Icon
             icon="material-symbols:download"
             width="1em"
@@ -147,55 +166,57 @@ const NonDeclaration = () => {
           Export en csv
         </button>
       </div>
-      <table className="w-full pb-6">
-        <thead>
-          <tr className="flex justify-start  py-4 px-2  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
-            {headerTable.map((item, index) => {
-              return (
-                <th
-                  className=" text-start font-semibold lg:w-28 xl:w-52 headerSecond"
-                  key={index}
-                >
-                  {item}
-                </th>
-              );
-            })}
-          </tr>
-        </thead>
+      <div className="w-full h-full overflow-x-auto  pr-2 relative">
+        <table className="w-full pb-6">
+          <thead>
+            <tr className="gridArray5 text-start py-4 w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
+              {headerTable.map((item, index) => {
+                return (
+                  <th
+                    className=" text-start font-semibold headerSecond"
+                    key={index}
+                  >
+                    {item}
+                  </th>
+                );
+              })}
+            </tr>
+          </thead>
 
-        <tbody>
-          {dataFinal
-            .slice(startIndex, endIndex)
-            .map((val: any, index: number) => {
-              return (
-                <tr
-                  key={index}
-                  className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
-                >
-                  <td className="text-start lg:w-32 text-sm xl:text-base">
-                    {index + 1}
-                  </td>
-                  <td className="text-start lg:w-32 text-sm xl:text-base">
-                    {val.trafic_maritime.imo_trafic}
-                  </td>
-                  <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
-                    {val.trafic_maritime.nom_navire_trafic}
-                  </td>
-                  <td className="text-start lg:w-40 text-sm xl:text-base">
-                    {val.trafic_maritime.mouvement_trafic}
-                  </td>
+          <tbody>
+            {dataFinal
+              .slice(startIndex, endIndex)
+              .map((val: any, index: number) => {
+                return (
+                  <tr
+                    key={index}
+                    className="gridArray5 w-full border-b-2 border-slate-50 "
+                  >
+                    <td className="text-start  text-sm xl:text-base">
+                      {index + 1}
+                    </td>
+                    <td className="text-start  text-sm xl:text-base">
+                      {val.trafic_maritime.imo_trafic}
+                    </td>
+                    <td className="text-start  text-sm xl:text-sm whitespace-normal">
+                      {val.trafic_maritime.nom_navire_trafic}
+                    </td>
+                    <td className="text-start text-sm xl:text-base">
+                      {val.trafic_maritime.mouvement_trafic}
+                    </td>
 
-                  <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
-                    {val.trafic_maritime.date_trafic
-                      .split('-')
-                      .reverse()
-                      .join('-')}
-                  </td>
-                </tr>
-              );
-            })}
-        </tbody>
-      </table>
+                    <td className="text-start text-sm xl:text-base ">
+                      {val.trafic_maritime.date_trafic
+                        .split('-')
+                        .reverse()
+                        .join('-')}
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </table>
+      </div>
       {renderPaginationControls()}
     </div>
   );
