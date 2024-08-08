@@ -7,12 +7,6 @@ import * as XLSX from 'xlsx';
 import { AllMonths, headerTable, Year } from '../Data';
 import Libelle from '../ui/Libelle';
 
-interface UPDATE {
-  id: any;
-  nom_navire_dtci: string;
-  date_mouvement: string;
-  consignataire_dtci: string;
-}
 const DeclaratioNConforme = () => {
   const notConform = useServer().notConform;
   const user = useServer().user;
@@ -296,7 +290,7 @@ const DeclaratioNConforme = () => {
       <div className="w-full h-full overflow-x-auto  pr-2 relative">
         <table className="w-full">
           <thead>
-            <tr className="gridArray6  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 sticky top-0 ">
+            <tr className="gridArray6  w-screen rounded-md shadow-sm shadow-testColors1 bg-slate-50 sticky top-0 ">
               {headerTable.map((item, index) => {
                 return (
                   <th

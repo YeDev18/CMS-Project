@@ -7,6 +7,7 @@ import Libelle from '../ui/Libelle';
 
 const DeclarationConforme = () => {
   const conform = useServer().conform;
+  console.log(conform);
 
   const Data3: any = [];
 

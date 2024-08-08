@@ -1,6 +1,6 @@
 import { Icon } from '@iconify/react';
-import { Link } from 'react-router-dom';
 import { FC, useRef } from 'react';
+import { Link } from 'react-router-dom';
 
 type Compo1 = {
   icon1: string;
@@ -22,7 +22,7 @@ export const Component1: FC<Compo1> = ({
   return (
     <div
       key={index}
-      className="h-40 w-56 flex flex-col justify-between bg-firstColors rounded-md shadow-sm shadow-shadowColors p-4"
+      className="h-48 w-[100%]  flex flex-col justify-between bg-firstColors rounded-md shadow-sm shadow-shadowColors p-4"
     >
       <div className=" bg-firstBlue w-fit p-2 rounded-md">
         <Icon
@@ -32,12 +32,12 @@ export const Component1: FC<Compo1> = ({
           style={{ color: '#EEEEEC' }}
         />
       </div>
-      <p className="text-lg">{name}</p>
+      <p className="text-2xl lg:text-xl xl:text-2xl font-medium ">{name}</p>
       <div className="flex justify-between items-center">
         <p className="text-3xl font-medium">{number}</p>
         <Link
           to={route}
-          className=" bg-firstBlue  w-fit p-1 rounded-md cursor-pointer"
+          className=" bg-firstBlue  w-fit p-1 rounded-md text-2xl cursor-pointer"
         >
           <Icon
             icon={icon2}
