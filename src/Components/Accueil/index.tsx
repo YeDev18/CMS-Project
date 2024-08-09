@@ -14,6 +14,9 @@ const Accueil = () => {
   const [dataTM, setDataTM] = useState<any[]>(['']);
   const navire = useServer().navire;
   const consignataire = useServer().consignataire;
+  const conform = useServer().conform;
+  const notConform = useServer().notConform;
+  const undeclared = useServer().undeclared;
   const [dat, setDat] = useState<any[]>(['']);
   const [selected, setSelected] = useState(false);
   const selection = selectedFile1 && selectedFile2 ? true : false;
@@ -167,21 +170,19 @@ const Accueil = () => {
       <div className="flex flex-col gap-6">
         <div className="flex flex-col items-center justify-start lg:flex-row gap-4">
           <div className="w-full lg:w-2/5 flex-center gap-4">
-            {/* <div className="w-fit mt-2 flex gap-8 "> */}
             <Component1
               index={1}
               icon1="lucide:ship"
               icon2="mingcute:arrow-up-fill"
-              name="Navire"
+              name="Navires"
               number={navire.length}
               route="/navire"
             />
-            {/* </div> */}
             <Component1
               index={2}
               icon1="lucide:contact"
               icon2="mingcute:arrow-up-fill"
-              name="Consignataire"
+              name="Consignataires"
               number={consignataire.length}
               route="/consignataire"
             />
@@ -219,15 +220,21 @@ const Accueil = () => {
                     icon="lucide:circle-check-big"
                     className="drop-shadow-sm"
                   />
-                  <p className="font-medium  drop-shadow-sm">12</p>
+                  <p className="font-medium  drop-shadow-sm">
+                    {conform.length}
+                  </p>
                 </div>
                 <div className="flex-center border-r-2 w-full gap-2 text-xl text-[#f59069] ">
                   <Icon icon="charm:notes-cross" className="drop-shadow-sm" />
-                  <p className="font-medium  drop-shadow-sm">13</p>
+                  <p className="font-medium  drop-shadow-sm">
+                    {notConform.length}
+                  </p>
                 </div>
                 <div className="flex-center w-full gap-2 text-xl  text-[#f0352b]">
                   <Icon icon="ph:x-circle" className="drop-shadow-sm " />
-                  <p className="font-medium drop-shadow-sm">18</p>
+                  <p className="font-medium drop-shadow-sm">
+                    {undeclared.length}
+                  </p>
                 </div>
               </div>
             </div>
@@ -399,7 +406,6 @@ const Accueil = () => {
             ) : (
               ''
             )}
-
             {success ? (
               <div className="flex items-center justify-center gap-2">
                 <Icon
@@ -413,7 +419,6 @@ const Accueil = () => {
             ) : (
               ''
             )}
-
             {error ? (
               <div className="flex items-center justify-center gap-2">
                 <Icon
@@ -427,6 +432,7 @@ const Accueil = () => {
             ) : (
               ''
             )}
+            a
           </div>
         )}
       </div>
