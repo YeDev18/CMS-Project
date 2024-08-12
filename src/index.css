@@ -177,6 +177,12 @@
   .flex-between {
     @apply flex justify-between items-center;
   }
+  .flex-start {
+    @apply flex justify-start items-center;
+  }
+  .flex-column {
+    @apply flex flex-col justify-between items-center py-4 px-2;
+  }
 
   .dropdown {
   }

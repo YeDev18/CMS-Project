@@ -27,6 +27,9 @@ function App() {
             <Route index element={<Connection />} />
             <Route path="/inscription" element={<Register />} />
           </Route>
+          <Route path="/" element={<Home />}>
+            <Route path="/accueil" element={<Accueil />} />
+          </Route>
           <Route element={<ProtectRoutes />}>
             <Route path="/" element={<Home />}>
               <Route path="/accueil" element={<Accueil />} />
