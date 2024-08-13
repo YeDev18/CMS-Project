@@ -209,4 +209,21 @@
     /* background-color: #009fe3; */
     width: 10rem;
   }
+  .animateElement {
+    animation: FadInk 0.3s cubic-bezier(0.58, 0.47, 1, 1);
+  }
+
+  @keyframes FadInk {
+    0% {
+      transform: scale(0.25);
+    }
+
+    50% {
+      transform: scale(0.5);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
 }

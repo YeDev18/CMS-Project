@@ -70,10 +70,19 @@ module.exports = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
+        'fadIn-': {
+          from: {
+            transform: 'scale(0.25)',
+          },
+          to: {
+            transform: 'scale(1)',
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'fadIn-up': 'fadIn- 0.3s cubic-bezier(.58,.47,1,1)',
       },
     },
   },

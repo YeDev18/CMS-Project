@@ -9,7 +9,7 @@ type Lib = {
 const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   const [selectedFile1, setSelectedFile1] = useState<any>(null);
   const [selectedFile2, setSelectedFile2] = useState<any>(null);
-  const [selectedFile3, setSelectedFile3] = useState<any>(null);
+  //   const [selectedFile3, setSelectedFile3] = useState<any>(null);
 
   // const handleCompare = () => {
   //   fetchDataDtci();
@@ -92,13 +92,13 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   };
 
   return (
-    <div className=" absolute inset-y-0 w-full flex-center">
+    <div className=" absolute inset-y-0 w-full flex-center animate-fadIn-up ">
       <div
         className=" absolute bg-[#7B7B7B] bg-opacity-10 w-full h-full rounded-md z-1"
         onClick={onClick}
       ></div>
 
-      <div className="w-[25rem] bg-white rounded-md static z-10 h-1/3 flex-column">
+      <div className="w-[25%] min-w-[25rem] bg-white rounded-md static z-10 h-1/3 flex-column">
         <button
           className=" relative w-full bg-slate-600 text-xl"
           onClick={onClick}
@@ -161,18 +161,13 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
                 onChange={handleFileChange2}
               />
             </div>
-            <p>
-              {libelle === 'VOYAGES'
-                ? selectedFile2?.name
-                : selectedFile3?.name}
-            </p>
+            <p>{libelle === 'VOYAGES' ? selectedFile2?.name : 'Name'}</p>
             {selectedFile2 && (
               <button onClick={() => setSelectedFile2(null)}>
                 <Icon icon="gridicons:trash" className="text-grayBlack" />
               </button>
             )}
           </div>
-          <div className="w-full"></div>
         </div>
         <button className="bg-firstBlue w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold">
           Comparez
