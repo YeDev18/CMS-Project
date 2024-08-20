@@ -6,6 +6,8 @@ import { AllMonths, headerTable, Year } from '../Data';
 import Libelle from '../ui/Libelle';
 
 const DeclarationConforme = () => {
+  const server = useServer();
+  const overlay = useServer().overlay;
   const conform = useServer().conform;
   console.log(conform);
 
@@ -42,7 +44,7 @@ const DeclarationConforme = () => {
   });
 
   const handleChange = (val: any) => {
-    setModal(true);
+    server.showOverlay();
     setDate3({
       ...data3,
       idInstance: val.id,
@@ -300,12 +302,8 @@ const DeclarationConforme = () => {
         </table>
       </div>
       {renderPaginationControls()}
-      {modal ? (
-        <div className="absolute inset-y-0 w-full h-full justify-center items-center ">
-          <div
-            className="absolute bg-black opacity-15 rounded-md w-full h-full z-[1]"
-            onClick={() => setModal(false)}
-          ></div>
+      {overlay ? (
+        <div className="absolute inset-y-2/4 w-full h-fit justify-center z-50 items-center animate-fadIn-up ">
           <div className="w-96 h-fit absolute z-[2] inset-1/2 flex flex-col justify-center items-center gap-2 bg-firstColors -translate-x-2/4  -translate-y-2/4 shadow-sm shadow-slate-100 rounded-sm p-6">
             <div className="flex flex-col gap-1 w-full px-2">
               <label htmlFor="" className="text-gray-500 font-semibold">
@@ -399,7 +397,7 @@ const DeclarationConforme = () => {
 
             <button
               className="absolute right-4 top-2"
-              onClick={() => setModal(false)}
+              onClick={() => server?.showOverlay()}
             >
               <Icon
                 icon="majesticons:close"

@@ -17,11 +17,15 @@ type Context = {
   undeclared: [];
   notConform: [];
   conform: [];
+  initialize: boolean;
+  overlay: boolean;
+  showOverlay: () => void;
+  toInitialize: () => void;
 };
 type Props = {
   children: ReactNode;
 };
-const SeverContext = createContext<any>(null);
+const SeverContext = createContext<Context | any>(null);
 
 const ServerProvider: FC<Props> = ({ children }) => {
   const token = useAuth()?.token;
@@ -33,6 +37,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const [notConform, setNotConform] = useState<[]>([]);
   const [undeclared, setUndeclared] = useState<[]>([]);
   const [initialize, setInitialize] = useState(false);
+  const [overlay, setOverlay] = useState(false);
 
   const getData = () => {
     const routes = [
@@ -59,6 +64,12 @@ const ServerProvider: FC<Props> = ({ children }) => {
         }
       )
     );
+  };
+  const showOverlay = () => {
+    setOverlay(!overlay);
+  };
+  const toInitialize = () => {
+    setInitialize(!initialize);
   };
 
   useEffect(() => {
@@ -99,7 +110,10 @@ const ServerProvider: FC<Props> = ({ children }) => {
         undeclared,
         notConform,
         conform,
-        setInitialize,
+        overlay,
+        initialize,
+        showOverlay,
+        toInitialize,
       }}
     >
       {children}

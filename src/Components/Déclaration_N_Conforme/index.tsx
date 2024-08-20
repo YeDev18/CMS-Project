@@ -8,8 +8,10 @@ import { AllMonths, headerTable, Year } from '../Data';
 import Libelle from '../ui/Libelle';
 
 const DeclaratioNConforme = () => {
+  const server = useServer();
   const notConform = useServer().notConform;
   const user = useServer().user;
+  const overlay = useServer().overlay;
   const direction = useNavigate();
 
   const [formValue, setFormValue] = useState({
@@ -24,6 +26,7 @@ const DeclaratioNConforme = () => {
 
   const handleChangeCheck = () => {
     setTags(!tags);
+    server?.toInitialize();
   };
 
   const [current, setCurrent] = useState(1);
@@ -64,7 +67,8 @@ const DeclaratioNConforme = () => {
       .then(res => {
         alert('Data Suucess');
         direction('/nom_conforme');
-        window.location.reload();
+        server?.toInitialize();
+        setForm(false);
       })
       .catch(error => console.log(error));
   };
@@ -157,13 +161,15 @@ const DeclaratioNConforme = () => {
       .then(res => {
         alert('Data Suucess');
         direction('/nom_conforme');
-        window.location.reload();
+        server?.toInitialize();
+        setForm(false);
       })
-      .catch(error => console.log(error));
+      .catch(error => (console.log(error), alert(error)));
   };
 
   const handleChange = (val: any) => {
     setForm(true);
+    server.showOverlay();
     setData3({
       ...data3,
 
@@ -367,13 +373,9 @@ const DeclaratioNConforme = () => {
       </div>
 
       {renderPaginationControls()}
-      {form ? (
-        <div className="absolute inset-y-0 w-full h-full  justify-center items-center">
-          <div
-            className=" absolute bg-black opacity-15 rounded-md w-full h-full z-[1]"
-            onClick={() => setForm(false)}
-          ></div>
-          <div className="w-[40rem] h-fit  absolute z-[2] top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 rounded">
+      {overlay ? (
+        <div className="absolute inset-y-2/4 w-full h-fit z-[40] justify-center items-center animate-fadIn-up">
+          <div className="w-[40rem] h-fit  absolute  top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 rounded">
             <div className="flex gap-2 justify-between py-6 flex-col bg-firstColors rounded-sm items-center h-full">
               <div className="flex justify-center items-center gap-4 w-full px-12">
                 <h3 className="w-[16rem] p-2 rounded-sm bg-cyan-200 text-lg text-gray-800 font-semibold">
@@ -624,7 +626,7 @@ const DeclaratioNConforme = () => {
                 width="1.5em"
                 height="1.5em"
                 className="text-grayBlack: '#000000',"
-                onClick={() => setForm(!form)}
+                onClick={() => server.showOverlay()}
               />
             </button>
           </div>

@@ -1,6 +1,8 @@
 import url from '@/api';
+import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import { FC, useState } from 'react';
+
 type Lib = {
   libelle: string;
   onClick: () => void;
@@ -9,38 +11,29 @@ type Lib = {
 const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   const [selectedFile1, setSelectedFile1] = useState<any>(null);
   const [selectedFile2, setSelectedFile2] = useState<any>(null);
+  const [dataFinal, setDataFinal] = useState<any>(null);
+  const server = useServer();
   //   const [selectedFile3, setSelectedFile3] = useState<any>(null);
 
-  // const handleCompare = () => {
-  //   fetchDataDtci();
-  //   fetchDataTM();
-
-  //   setIsLoading(true);
-  //   setTimeout(() => {
-  //     setIsLoading(false);
-  //   }, 2500);
-
-  //   api
-  //     .get('/api/compare-declaration-status')
-  //     .then(res => res.data)
-  //     .then(data => {
-  //       setDat(data);
-  //       setSuccess(true);
-  //       setTimeout(() => {
-  //         setSuccess(false);
-  //         window.location.reload();
-  //       }, 3000);
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //       setError(true);
-  //       setTimeout(() => {
-  //         setError(false);
-  //       }, 3000);
-  //     });
-
-  //   setSelected(true);
-  // };
+  const handleCompare = () => {
+    fetchDataDTCI();
+    fetchDataTrafic();
+    setTimeout(() => {
+      url
+        .get('/api/compare-declaration-status')
+        .then(res => res.data)
+        .then(data => {
+          setDataFinal(data);
+          console.log(dataFinal);
+          setTimeout(() => {
+            server?.toInitialize();
+          }, 2000);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }, 5000);
+  };
 
   const handleFileChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -93,12 +86,7 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
 
   return (
     <div className=" absolute inset-y-0 w-full flex-center animate-fadIn-up ">
-      <div
-        className=" absolute bg-[#7B7B7B] bg-opacity-10 w-full h-full rounded-md z-1"
-        onClick={onClick}
-      ></div>
-
-      <div className="w-[25%] min-w-[25rem] bg-white rounded-md static z-10 h-1/3 flex-column">
+      <div className="w-[25%] min-w-[25rem] bg-white rounded-md static z-30 h-1/3 flex-column">
         <button
           className=" relative w-full bg-slate-600 text-xl"
           onClick={onClick}
@@ -169,7 +157,10 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
             )}
           </div>
         </div>
-        <button className="bg-firstBlue w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold">
+        <button
+          className="bg-firstBlue w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold "
+          onClick={handleCompare}
+        >
           Comparez
         </button>
       </div>

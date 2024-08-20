@@ -3,7 +3,7 @@ import axios from 'axios';
 // const user = useAuth();
 
 const url = axios.create({
-  baseURL: 'https://dj-declaration.onrender.com',
+  baseURL: 'http://localhost:8000',
 });
 
 /** Intercepteur token */

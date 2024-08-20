@@ -7,17 +7,19 @@ import { Component1 } from './Component';
 import SelectedFile from './SelectedFile';
 
 const Accueil = () => {
-  const navire = useServer().navire;
-  const consignataire = useServer().consignataire;
-  const conform = useServer().conform;
-  const notConform = useServer().notConform;
-  const undeclared = useServer().undeclared;
+  const navire = useServer()?.navire;
+  const consignataire = useServer()?.consignataire;
+  const conform = useServer()?.conform;
+  const notConform = useServer()?.notConform;
+  const undeclared = useServer()?.undeclared;
+  const overlay = useServer()?.overlay;
+  const server = useServer();
 
   const [show, setShow] = useState(false);
   const [lib, setLib] = useState('');
 
   const handleSelected = (lib: string) => {
-    return <SelectedFile libelle={lib} onClick={() => setShow(false)} />;
+    return <SelectedFile libelle={lib} onClick={() => server?.showOverlay()} />;
   };
 
   function Days(date: Date, day: number) {
@@ -52,7 +54,7 @@ const Accueil = () => {
               icon1="lucide:ship"
               icon2="mingcute:arrow-up-fill"
               name="Navires"
-              number={navire.length}
+              number={navire?.length}
               route="/navire"
             />
             <Component1
@@ -60,7 +62,7 @@ const Accueil = () => {
               icon1="lucide:contact"
               icon2="mingcute:arrow-up-fill"
               name="Consignataires"
-              number={consignataire.length}
+              number={consignataire?.length}
               route="/consignataire"
             />
           </div>
@@ -84,7 +86,9 @@ const Accueil = () => {
               <div className="mx-4 flex-center w-fit border rounded-md px-2 py-3 gap-2">
                 <button
                   className="bg-firstBlue text-xl rounded-md text-firstColors p-2 w-fit"
-                  onClick={() => (setShow(true), setLib('VOYAGES'))}
+                  onClick={() => (
+                    setShow(true), server?.showOverlay(), setLib('VOYAGES')
+                  )}
                 >
                   <Icon icon="octicon:feed-plus-16" />
                 </button>
@@ -98,19 +102,19 @@ const Accueil = () => {
                     className="drop-shadow-sm"
                   />
                   <p className="font-medium  drop-shadow-sm">
-                    {conform.length}
+                    {conform?.length}
                   </p>
                 </div>
                 <div className="flex-center border-r-2 w-full gap-2 text-xl text-[#f59069] ">
                   <Icon icon="charm:notes-cross" className="drop-shadow-sm" />
                   <p className="font-medium  drop-shadow-sm">
-                    {notConform.length}
+                    {notConform?.length}
                   </p>
                 </div>
                 <div className="flex-center w-full gap-2 text-xl  text-[#f0352b]">
                   <Icon icon="ph:x-circle" className="drop-shadow-sm " />
                   <p className="font-medium drop-shadow-sm">
-                    {undeclared.length}
+                    {undeclared?.length}
                   </p>
                 </div>
               </div>
@@ -190,7 +194,7 @@ const Accueil = () => {
         </div>
       </div>
 
-      {show ? handleSelected(lib) : ''}
+      {overlay ? handleSelected(lib) : ''}
     </div>
   );
 };
