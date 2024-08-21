@@ -1,3 +1,4 @@
+import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import { FormEvent, useState } from 'react';
 import { useAuth } from '../../Context/AuthProvider';
@@ -8,10 +9,12 @@ const Connection = () => {
   const [password, setPassword] = useState<string>('');
   const auth = useAuth();
   const error = useAuth()?.error;
+  const server = useServer();
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (email !== '' && password !== '') {
-      auth?.LoginAction(email, password);
+      await auth?.LoginAction(email, password);
+      server?.showUserInitialize();
     }
   };
 

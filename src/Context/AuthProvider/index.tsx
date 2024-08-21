@@ -2,6 +2,7 @@ import url from '@/api';
 import { jwtDecode } from 'jwt-decode';
 import { FC, ReactNode, createContext, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useServer } from '../ServerProvider';
 type Context = {
   token: string;
   name: string;
@@ -33,6 +34,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
   const [error, setError] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
   const [user, setUser] = useState<any>();
+  const server = useServer();
 
   const [token, setToken] = useState(localStorage.getItem('site') || '');
   const navigate = useNavigate();
@@ -89,6 +91,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
       setToken(response.data.jwt);
       localStorage.setItem('site', response.data.jwt);
       setSuccess(true);
+      server?.showUserInitialize();
       navigate('/accueil');
       const decode: any = jwtDecode(response.data.jwt);
       setUser(decode.id);
@@ -108,6 +111,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
       const response = await url.post('/api/logout');
       navigate('/');
       localStorage.removeItem('site');
+      server?.showUserInitialize();
     } catch (error) {
       console.error('Erreur:', error);
     }

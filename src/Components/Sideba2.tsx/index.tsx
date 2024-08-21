@@ -10,7 +10,8 @@ const Sideba2 = () => {
   const active = useRef<HTMLButtonElement>(null);
   const [activeIndex, setActiveIndex] = useState<number>();
   const auth = useAuth();
-  const me = useServer()?.user;
+  const me = useServer().user;
+  const server = useServer();
   const handleClick = () => {
     setDropdown(!dropdown);
   };
@@ -93,8 +94,11 @@ const Sideba2 = () => {
         ))}
       </div>
       <div className="flex justify-between">
-        <p className="font-medium">{me?.name}</p>
-        <button className="text-grayBlack" onClick={() => auth?.logout()}>
+        <p className="font-medium">{me.name}</p>
+        <button
+          className="text-grayBlack"
+          onClick={() => (auth?.logout(), server?.showUserInitialize())}
+        >
           <Icon icon="mdi:logout" width="1.5em" height="1.5em" />
         </button>
       </div>

@@ -19,8 +19,10 @@ type Context = {
   conform: [];
   initialize: boolean;
   overlay: boolean;
+  userInitialize: boolean;
   showOverlay: () => void;
   toInitialize: () => void;
+  showUserInitialize: () => void;
 };
 type Props = {
   children: ReactNode;
@@ -37,6 +39,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const [notConform, setNotConform] = useState<[]>([]);
   const [undeclared, setUndeclared] = useState<[]>([]);
   const [initialize, setInitialize] = useState(false);
+  const [userInitialize, setUserInitialize] = useState(false);
   const [overlay, setOverlay] = useState(false);
 
   const getData = () => {
@@ -68,6 +71,9 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const showOverlay = () => {
     setOverlay(!overlay);
   };
+  const showUserInitialize = () => {
+    setUserInitialize(!userInitialize);
+  };
   const toInitialize = () => {
     setInitialize(!initialize);
   };
@@ -84,7 +90,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
         },
       })
       .then(res => res.data)
-      .then(data => setUser(data))
+      .then(data => (setUser(data), console.log(data, userInitialize)))
       .catch(error => {
         if (error.response) {
           // La requête a été faite et le serveur a répondu avec un code d'état qui tombe hors de la plage de 2xx
@@ -99,7 +105,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
           console.error('Erreur:', error.message);
         }
       });
-  }, []);
+  }, [userInitialize]);
 
   return (
     <SeverContext.Provider
@@ -112,8 +118,10 @@ const ServerProvider: FC<Props> = ({ children }) => {
         conform,
         overlay,
         initialize,
+        userInitialize,
         showOverlay,
         toInitialize,
+        showUserInitialize,
       }}
     >
       {children}

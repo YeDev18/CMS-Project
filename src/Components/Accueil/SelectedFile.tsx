@@ -15,24 +15,26 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   const server = useServer();
   //   const [selectedFile3, setSelectedFile3] = useState<any>(null);
 
-  const handleCompare = () => {
-    fetchDataDTCI();
-    fetchDataTrafic();
-    setTimeout(() => {
-      url
-        .get('/api/compare-declaration-status')
-        .then(res => res.data)
-        .then(data => {
-          setDataFinal(data);
-          console.log(dataFinal);
-          setTimeout(() => {
-            server?.toInitialize();
-          }, 2000);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }, 5000);
+  const handleCompare = async () => {
+    await fetchDataDTCI();
+    await fetchDataTrafic();
+
+    // setTimeout(() => {
+    url
+      .get('/api/compare-declaration-status')
+      .then(res => res.data)
+      .then(data => {
+        setDataFinal(data);
+        console.log(dataFinal);
+        // setTimeout(() => {
+        server?.toInitialize();
+        // }, 100);
+        server?.showOverlay();
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    // }, 3000);
   };
 
   const handleFileChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,8 +87,8 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   };
 
   return (
-    <div className=" absolute inset-y-0 w-full flex-center animate-fadIn-up ">
-      <div className="w-[25%] min-w-[25rem] bg-white rounded-md static z-30 h-1/3 flex-column">
+    <div className=" absolute inset-y-0 w-full flex-center animate-fadIn-up z-30 ">
+      <div className="w-[30%] min-w-[25rem] bg-white rounded-md static  flex-column px-4 shadow">
         <button
           className=" relative w-full bg-slate-600 text-xl"
           onClick={onClick}
@@ -97,8 +99,55 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
           />
         </button>
         <h3 className="font-bold text-xl">{libelle}</h3>
-        <div className="w-full flex-column gap-4">
-          <div className="w-full h-14 rounded-md border border-shadowColors  flex-between p-2 gap-3">
+        <p className="text-neutral-900/60 font-semibold">
+          Televersez les fichiers Excel{' '}
+        </p>
+        <div className="h-48 w-full m-3 border-2 rounded border-dashed flex justify-evenly items-center border-zinc-200 ">
+          <div className="bg-firstBlue w-32  h-3/4 p-1 rounded flex flex-col shadow items-center">
+            <label
+              htmlFor="fileDT"
+              className="flex-start text-[#EEEEEC] text-sm font-medium gap-1 cursor-pointer"
+            >
+              {' '}
+              <Icon icon="solar:download-bold" width="4rem" height="4rem" />
+            </label>
+            <input
+              className="hidden"
+              accept=".xlsx, .xls"
+              type="file"
+              id="fileDT"
+              onChange={handleFileChange1}
+            />
+            <p className="font-semibold text-[#EEEEEC]">DTCI</p>
+            <p className=" text-[#EEEEEC] text-sm text-center">
+              Televersez fichier en .xlsx
+            </p>
+          </div>
+          <div className="bg-firstBlue w-32  h-3/4 p-1 rounded flex flex-col shadow items-center">
+            <label
+              htmlFor="fileDT"
+              className="flex-start text-[#EEEEEC] text-sm font-medium gap-1 cursor-pointer"
+            >
+              {' '}
+              <Icon icon="solar:download-bold" width="4rem" height="4rem" />
+            </label>
+            <input
+              className="hidden"
+              accept=".xlsx, .xls"
+              type="file"
+              id="fileDT"
+              onChange={handleFileChange1}
+            />
+            <p className="font-semibold text-[#EEEEEC]">TM</p>
+            <p className=" text-[#EEEEEC] text-sm text-center">
+              {' '}
+              Televersez fichier en .xlsx
+            </p>
+          </div>
+        </div>
+        <div className="w-full flex-column h-32 bg-slate-200/20 rounded-sm flex justify-center items-center flex-col gap-4">
+          <p className=" text-base text-slate-400 font-normal">Aucun Fichier</p>
+          {/* <div className="w-full h-14 rounded-md border border-shadowColors  flex-between p-2 gap-3">
             <div className="bg-firstBlue w-32 p-1 rounded">
               <label
                 htmlFor="fileDT"
@@ -126,8 +175,8 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
                 <Icon icon="gridicons:trash" className="text-grayBlack" />
               </button>
             )}
-          </div>
-          <div className="w-full h-14 rounded-md border border-shadowColors flex-between p-2 gap-3">
+          </div> */}
+          {/* <div className="w-full h-14 rounded-md border border-shadowColors flex-between p-2 gap-3">
             <div className="bg-firstBlue w-32 p-1 rounded">
               <label
                 htmlFor="fileEx"
@@ -155,14 +204,22 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
                 <Icon icon="gridicons:trash" className="text-grayBlack" />
               </button>
             )}
-          </div>
+          </div> */}
         </div>
-        <button
-          className="bg-firstBlue w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold "
-          onClick={handleCompare}
-        >
-          Comparez
-        </button>
+        <div className="flex justify-between gap-4 w-full py-4">
+          <button
+            className=" border border-grayBlack w-40 rounded-md text-grayBlack h-12 cursor-pointer font-semibold "
+            onClick={onClick}
+          >
+            Quittez
+          </button>
+          <button
+            className="bg-firstBlue w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold "
+            onClick={handleCompare}
+          >
+            Comparez
+          </button>
+        </div>
       </div>
     </div>
   );

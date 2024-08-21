@@ -52,8 +52,6 @@ const DeclaratioNConforme = () => {
     observation: '',
   });
 
-  const [form, setForm] = useState(false);
-
   const goToNextPage = () => {
     setCurrent(prevPage => prevPage + 1);
   };
@@ -68,7 +66,7 @@ const DeclaratioNConforme = () => {
         alert('Data Suucess');
         direction('/nom_conforme');
         server?.toInitialize();
-        setForm(false);
+        server?.showOverlay();
       })
       .catch(error => console.log(error));
   };
@@ -162,13 +160,12 @@ const DeclaratioNConforme = () => {
         alert('Data Suucess');
         direction('/nom_conforme');
         server?.toInitialize();
-        setForm(false);
+        server?.showOverlay();
       })
       .catch(error => (console.log(error), alert(error)));
   };
 
   const handleChange = (val: any) => {
-    setForm(true);
     server.showOverlay();
     setData3({
       ...data3,
