@@ -62,37 +62,35 @@ const Consignataire = () => {
     : Consignataire;
   return (
     <div className=" flex flex-col gap-6 text-grayBlack w-full ">
-      <div className="flex justify-between w-full">
-        <div className="flex gap-4">
-          <p className="rounded-md shadow-sm  p-2 inline-flex items-center bg-firstBlue text-firstColors">
-            {' '}
-            <Icon
-              icon="lucide:contact"
-              width="1em"
-              height="1em"
-              style={{ color: 'rgb(255, 255, 255)' }}
-              className="mr-2"
-            />
-            Consignatires :{' '}
-            <span className="font-semibold pl-1"> {data.length}</span>
-          </p>
-          <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
-            <label htmlFor="">
-              <Icon icon="mdi:search" width="1.5em" height="1.5em" />
-            </label>
-            <input
-              type="text"
-              placeholder="Consignataire"
-              onChange={(e: any) => {
-                setSearchValue(e.target.value);
-              }}
-              className="border w-48 outline-none p-1 rounded-sm text-sm font-medium"
-            />
-          </div>
+      <div className="flex justify-start gap-3 w-full h-10">
+        <p className="rounded-md shadow-sm  p-2 inline-flex items-center bg-firstBlue text-firstColors">
+          {' '}
+          <Icon
+            icon="lucide:contact"
+            width="1em"
+            height="1em"
+            style={{ color: 'rgb(255, 255, 255)' }}
+            className="mr-2"
+          />
+          Consignatires :{' '}
+          <span className="font-semibold pl-1"> {data.length}</span>
+        </p>
+        <div className="rounded-md shadow-sm shadow-slate-200 p-2 inline-flex gap-4 items-center">
+          <label htmlFor="">
+            <Icon icon="mdi:search" width="1.5em" height="1.5em" />
+          </label>
+          <input
+            type="text"
+            placeholder="Consignataire"
+            onChange={(e: any) => {
+              setSearchValue(e.target.value);
+            }}
+            className=" border-b w-36 outline-none pb-1 text-sm  h-fit font-medium"
+          />
         </div>
 
         <button
-          className="rounded-md shadow-sm p-2 inline-flex items-center bg-firstBlue text-firstColors"
+          className="rounded-md shadow-sm shadow-slate-200 p-2 inline-flex items-center bg-[#0e5c2f] text-firstColors"
           type="button"
           onClick={() => exportToExcel()}
         >
@@ -106,7 +104,7 @@ const Consignataire = () => {
           Export en csv
         </button>
       </div>
-      <table className="w-full pb-6">
+      <table className="w-full lg:w-3/4 pb-6">
         <thead>
           <tr className="flex justify-start  py-4 px-4  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
             {headersConsignataires.map((item, index) => {

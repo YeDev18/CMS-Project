@@ -82,7 +82,7 @@ module.exports = {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'fadIn-up': 'fadIn- 0.3s cubic-bezier(.58,.47,1,1)',
+        'fadIn-up': 'fadIn- 0.3s cubic-bezier(0,0,.33,.95)',
       },
     },
   },

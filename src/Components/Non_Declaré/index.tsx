@@ -81,30 +81,30 @@ const NonDeclaration = () => {
   };
 
   return (
-    <div className="w-screen flex flex-col gap-4   ">
-      <div className="flex justify-between flex-wrap w-full gap-y-4 pb-6">
-        <div className="flex gap-4">
-          <Libelle
-            icon="ph:x-circle"
-            libelle="Nom declares"
-            color="#F0352B"
-            number={undeclared.length}
-          />
-          <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
-            <form action="" className="flex gap-3  items-center justify-center">
-              <label htmlFor="">
-                <Icon
-                  icon="lucide:calendar-days"
-                  width="1.5em"
-                  height="1.5em"
-                  style={{ color: '#0a0a0a' }}
-                  className="mr-2"
-                />
-              </label>
+    <div className="w-full relative h-full flex flex-col gap-6  ">
+      <div className="flex justify-start gap-2 flex-wrap gap-y-4 w-full">
+        <Libelle
+          icon="ph:x-circle"
+          libelle="Nom declares"
+          color="#F0352B"
+          number={undeclared.length}
+        />
+        <div className="rounded-md shadow-sm shadow-slate-200 p-2 inline-flex gap-4 items-center w-fit h-10">
+          <form action="" className="flex items-center justify-center">
+            <label htmlFor="">
+              <Icon
+                icon="lucide:calendar-days"
+                width="1.2em"
+                height="1.2em"
+                style={{ color: '#0a0a0a' }}
+                className="mr-2"
+              />
+            </label>
+            <div className="w-fit h-fit border p rounded-sm whitespace-nowrap ">
               <select
                 name="months"
                 id=""
-                className="bg-none outline-4 bg-firstColors"
+                className="bg-none border-none bg-firstColors"
                 onChange={e => {
                   setFormValue({
                     ...formValue,
@@ -118,11 +118,10 @@ const NonDeclaration = () => {
                   </option>
                 ))}
               </select>
-              <span className="border border-borderColor h-4"></span>
               <select
                 name="years"
                 id=""
-                className="bg-none outline-none bg-firstColors"
+                className="bg-none border-none bg-firstColors"
                 onChange={e => {
                   setFormValue({
                     ...formValue,
@@ -136,35 +135,48 @@ const NonDeclaration = () => {
                   </option>
                 ))}
               </select>
-            </form>
-          </div>
-          <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
-            <label htmlFor="">
-              <Icon icon="mdi:search" width="1.5em" height="1.5em" />
-            </label>
-            <input
-              type="number"
-              placeholder="IMO"
-              className="border w-32 outline-none p-1 rounded-sm text-sm font-medium"
-              onChange={(e: any) => {
-                setSearchValue(e.target.value);
-              }}
-            />
-          </div>
+            </div>
+          </form>
+        </div>
+        <div className="rounded-md shadow-sm shadow-slate-200 p-2 inline-flex gap-2 items-center h-10 ">
+          <label htmlFor="">
+            <Icon icon="mdi:search" width="1.1em" height="1.1em" />
+          </label>
+          <input
+            type="number"
+            placeholder="IMO"
+            className=" border-b w-28 outline-none pb-1 text-sm  h-fit font-medium"
+            onChange={(e: any) => {
+              setSearchValue(e.target.value);
+            }}
+          />
         </div>
         <button
-          className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex items-center"
+          className="rounded-md  whitespace-nowrap shadow-sm shadow-slate-200 p-2 inline-flex items-center bg-[#0e5c2f] text-firstColors text-sm h-10 "
           onClick={() => exportToExcel()}
         >
           <Icon
             icon="material-symbols:download"
-            width="1em"
-            height="1em"
-            style={{ color: '#313131' }}
+            width="1.2em"
+            height="1.2em"
+            style={{ color: 'rgb(255, 255, 255)' }}
             className="mr-2"
           />
           Export en csv
         </button>
+        {!(MonthsYears === '-') || searchValue ? (
+          <div className="rounded-md bg-[#F0352B]  shadow-sm shadow-slate-200 p-2 inline-flex gap-1 items-center h-10 text-firstColors">
+            <Icon
+              icon="ph:x-circle"
+              width="1.2em"
+              height="1.2em"
+              className="mr-2"
+            />
+            Quantite : {dataFinal.length}
+          </div>
+        ) : (
+          ''
+        )}
       </div>
       <div className="w-full h-full overflow-x-auto  pr-2 relative">
         <table className="w-full pb-6">

@@ -68,9 +68,9 @@ const Navire = () => {
 
   return (
     <div className=" flex flex-col gap-6 text-grayBlack w-full ">
-      <div className="flex justify-between w-full">
-        <div className="flex gap-4">
-          <p className="rounded-md shadow-sm  p-2 inline-flex items-center bg-firstBlue text-firstColors">
+      <div className="flex justify-start gap-3 flex-wrap gap-y-4 w-full pb-3">
+        <div>
+          <p className="rounded-md shadow-sm shadow-slate-200 p-2 inline-flex items-center bg-firstBlue text-firstColors">
             {' '}
             <Icon
               icon="lucide:ship"
@@ -82,31 +82,32 @@ const Navire = () => {
             Navires :{' '}
             <span className="font-semibold pl-1"> {Navire.length}</span>
           </p>
-          <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
-            <label htmlFor="">
-              <Icon icon="mdi:search" width="1.5em" height="1.5em" />
-            </label>
-            <input
-              type="Number"
-              placeholder="IMO"
-              onChange={(e: any) => {
-                setSearchValue(e.target.value);
-              }}
-              className="border w-48 outline-none p-1 rounded-sm text-sm font-medium"
-            />
-            <input
-              type="text"
-              placeholder="NAVIRE"
-              onChange={(e: any) => {
-                setSearchNavire(e.target.value);
-              }}
-              className="border w-48 outline-none p-1 rounded-sm text-sm font-medium"
-            />
-          </div>
+        </div>
+
+        <div className="rounded-md shadow-sm shadow-slate-200 p-2 inline-flex gap-2 items-center h-10">
+          <label htmlFor="">
+            <Icon icon="mdi:search" width="1.2em" height="1.2em" />
+          </label>
+          <input
+            type="Number"
+            placeholder="IMO"
+            onChange={(e: any) => {
+              setSearchValue(e.target.value);
+            }}
+            className=" border-b w-28 outline-none pb-1 text-sm  h-fit font-medium"
+          />
+          <input
+            type="text"
+            placeholder="NAVIRE"
+            onChange={(e: any) => {
+              setSearchNavire(e.target.value);
+            }}
+            className=" border-b w-38 outline-none pb-1 text-sm  h-fit font-medium"
+          />
         </div>
 
         <button
-          className="rounded-md shadow-sm p-2 inline-flex items-center bg-firstBlue text-firstColors"
+          className="rounded-md shadow-sm shadow-slate-200 p-2 inline-flex items-center bg-[#0e5c2f] text-firstColors"
           type="button"
           onClick={() => exportToExcel()}
         >
@@ -120,37 +121,34 @@ const Navire = () => {
           Export en csv
         </button>
       </div>
-      <table className="w-full pb-6">
+      <table className="w-full lg:w-2/3 pb-6">
         <thead>
-          <tr className="flex justify-start  py-4 px-4  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
+          <tr className="grid grid-cols-3 py-4 px-2 w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
             {headersNavire.map((item, index) => {
               return (
-                <th
-                  className=" text-start font-semibold lg:w-28 xl:w-72 headerFirst"
-                  key={index}
-                >
+                <th className=" text-start font-semibold" key={index}>
                   {item}
                 </th>
               );
             })}
           </tr>
         </thead>
-        <table>
+        <tbody>
           {FinalData.slice(startIndex, endIndex).map(
             (val: any, index: number) => {
               return (
                 <tr
                   key={index}
-                  className="flex justify-start p-4  w-full border-b-2 border-slate-50 "
+                  className="grid grid-cols-3 py-4 px-2  w-full border-b-2 border-slate-50 "
                 >
-                  <td className="text-start w-32">{index + 1}</td>
-                  <td className="text-start w-72">{val.imo}</td>
-                  <td className="text-start w-72">{val.nom}</td>
+                  <td className="text-start ">{index + 1}</td>
+                  <td className="text-start">{val.imo}</td>
+                  <td className="text-start ">{val.nom}</td>
                 </tr>
               );
             }
           )}
-        </table>
+        </tbody>
       </table>
       {renderPaginationControls()}
     </div>

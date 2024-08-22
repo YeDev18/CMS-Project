@@ -152,6 +152,9 @@
     outline: none;
     cursor: pointer;
   }
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
   option {
     background-color: #eeeeee;
     color: #000000 !important;
@@ -168,7 +171,7 @@
     @apply grid grid-cols-5 py-4 px-2;
   }
   .gridArray6 {
-    @apply grid grid-cols-7 py-4 px-2;
+    @apply grid grid-cols-6 py-4 px-2;
   }
   .flex-center {
     @apply flex justify-center items-center;

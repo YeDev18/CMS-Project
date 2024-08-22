@@ -94,7 +94,7 @@ const Sideba2 = () => {
         ))}
       </div>
       <div className="flex justify-between">
-        <p className="font-medium">{me.name}</p>
+        <p className="font-medium whitespace-nowrap text-sm">{me.name}</p>
         <button
           className="text-grayBlack"
           onClick={() => (auth?.logout(), server?.showUserInitialize())}

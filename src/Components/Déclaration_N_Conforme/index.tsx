@@ -51,6 +51,13 @@ const DeclaratioNConforme = () => {
     dateTM: '',
     observation: '',
   });
+  const AddUpdate = () => {
+    setObservation({
+      ...observation,
+      observation: 'Mise a jour',
+    });
+    console.log(observation);
+  };
 
   const goToNextPage = () => {
     setCurrent(prevPage => prevPage + 1);
@@ -148,8 +155,10 @@ const DeclaratioNConforme = () => {
     id: any,
     nom_navire_dtci: any,
     date_mouvement: any,
-    consignataire_dtci: any
+    consignataire_dtci: any,
+    observation: any
   ) => {
+    !observation && AddUpdate();
     url
       .put(`api/update-soumission-dtci-and-status/${id}/`, {
         nom_navire_dtci,
@@ -192,30 +201,31 @@ const DeclaratioNConforme = () => {
   };
 
   return (
-    <div className="w-full h-full relative flex flex-col gap-2 ">
-      <div className="flex justify-between flex-wrap gap-y-4 w-full pb-6">
-        <div className="flex gap-4">
-          <Libelle
-            icon="charm:notes-cross"
-            libelle="Non Conformes"
-            color="#F59069"
-            number={notConform.length}
-          />
-          <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
-            <form action="" className="flex gap-2  items-center justify-center">
-              <label htmlFor="">
-                <Icon
-                  icon="lucide:calendar-days"
-                  width="1.5em"
-                  height="1.5em"
-                  style={{ color: '#0a0a0a' }}
-                  className="mr-2"
-                />
-              </label>
+    <div className="w-full h-full relative flex flex-col gap-6 ">
+      <div className="flex justify-start gap-2 flex-wrap w-full">
+        {/* <div className="flex gap-4"> */}
+        <Libelle
+          icon="charm:notes-cross"
+          libelle="Non Conformes"
+          color="#F59069"
+          number={notConform.length}
+        />
+        <div className="rounded-md shadow-sm shadow-slate-200 p-2 inline-flex gap-4 items-center w-fit h-10">
+          <form action="" className="flex items-center justify-center">
+            <label htmlFor="">
+              <Icon
+                icon="lucide:calendar-days"
+                width="1.2em"
+                height="1.2em"
+                style={{ color: '#0a0a0a' }}
+                className="mr-2"
+              />
+            </label>
+            <div className="w-fit h-fit border p rounded-sm whitespace-nowrap ">
               <select
                 name="months"
                 id=""
-                className="bg-none outline-4 bg-firstColors"
+                className="bg-none border-none bg-firstColors"
                 onChange={e => {
                   setFormValue({
                     ...formValue,
@@ -229,11 +239,11 @@ const DeclaratioNConforme = () => {
                   </option>
                 ))}
               </select>
-              <span className="border border-borderColor h-4"></span>
+              {/* <span className="border border-borderColor h-4"></span> */}
               <select
                 name="years"
                 id=""
-                className="bg-none outline-none bg-firstColors"
+                className="bg-none border-none bg-firstColors"
                 onChange={e => {
                   setFormValue({
                     ...formValue,
@@ -247,48 +257,64 @@ const DeclaratioNConforme = () => {
                   </option>
                 ))}
               </select>
-            </form>
-          </div>
-          <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-2 items-center">
-            <label htmlFor="">
-              <Icon icon="mdi:search" width="1.5em" height="1.5em" />
+            </div>
+          </form>
+        </div>
+        <div className="rounded-md shadow-sm shadow-slate-200 p-2 inline-flex gap-2 items-center h-10 ">
+          <label htmlFor="">
+            <Icon icon="mdi:search" width="1.1em" height="1.1em" />
+          </label>
+          <input
+            type="number"
+            placeholder="IMO"
+            className=" border-b w-28 outline-none pb-1 text-sm  h-fit font-medium"
+            onChange={(e: any) => {
+              setSearchValue(e.target.value);
+            }}
+          />
+          <span className="border border-borderColor h-4"></span>
+          <div className="flex  justify-center items-center h-fit">
+            <label htmlFor="" className="font-semibold text-sm">
+              Tags
             </label>
             <input
-              type="number"
+              type="checkbox"
+              checked={tags}
+              onChange={handleChangeCheck}
               placeholder="IMO"
-              className="border w-32 outline-none p-1 rounded-sm text-sm font-medium"
-              onChange={(e: any) => {
-                setSearchValue(e.target.value);
-              }}
+              className="border outline-none p-1 rounded-sm text-2xl w-8 h-4 font-medium"
             />
-            <span className="border border-borderColor h-4"></span>
-            <div className="flex  justify-center items-center">
-              <label htmlFor="" className="font-semibold">
-                Tags
-              </label>
-              <input
-                type="checkbox"
-                checked={tags}
-                onChange={handleChangeCheck}
-                placeholder="IMO"
-                className="border outline-none p-1 rounded-sm text-2xl w-8 h-4 font-medium"
-              />
-            </div>
           </div>
         </div>
         <button
-          className="rounded-md shadow-sm whitespace-nowrap shadow-shadowColors p-2 inline-flex items-center"
+          className="rounded-md  whitespace-nowrap shadow-sm shadow-slate-200 p-2 inline-flex items-center bg-[#0e5c2f] text-firstColors text-sm h-10 "
           onClick={() => exportToExcel()}
         >
           <Icon
             icon="material-symbols:download"
-            width="1em"
-            height="1em"
-            style={{ color: '#313131' }}
+            width="1.2em"
+            height="1.2em"
+            style={{ color: 'rgb(255, 255, 255)' }}
             className="mr-2"
           />
           Export en csv
         </button>
+        {!(MonthsYears === '-') || searchValue || tags ? (
+          <div
+            className="rounded-md bg-[#F59069] shadow-sm shadow-slate-200 p-2 inline-flex gap-1 items-center h-10 text-firstColors "
+            onClick={() => exportToExcel()}
+          >
+            <Icon
+              icon="charm:notes-cross"
+              width="1.2em"
+              height="1.2em"
+              className="mr-2"
+            />
+            Quantite : {dataFinalChecked.length}
+          </div>
+        ) : (
+          ''
+        )}
       </div>
       <div className="w-full h-full overflow-x-auto  pr-2 relative">
         <table className="w-full">
@@ -352,15 +378,12 @@ const DeclaratioNConforme = () => {
                         </button>
                       ) : (
                         <button
-                          className="bg-[#F59069] text-firstColors px-2 py-1 font-medium rounded-md text-sm"
+                          className="bg-[#F59069]  text-firstColors px-2 font-medium rounded-md text-sm"
                           onClick={() => handleChange(val)}
                         >
                           Mettre á jour
                         </button>
                       )}
-                    </td>
-                    <td className="text-start line-clamp-2 lg:w-28 xl:w-fit text-sm xl:text-base  ">
-                      {val.observation}
                     </td>
                   </tr>
                 </tbody>
@@ -572,7 +595,7 @@ const DeclaratioNConforme = () => {
                     </textarea>
                   </div>
                   <button
-                    className="bg-firstBlue  w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold flex items-center justify-center"
+                    className="bg-firstBlue  w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold flex items-center justify-center transition ease-in-out delay-150 hover:scale-105 "
                     onClick={() => {
                       handleSubmit(data3.idInstance, observation);
                     }}
@@ -596,18 +619,29 @@ const DeclaratioNConforme = () => {
                       </textarea>
                     </div>
                   ) : (
-                    ''
+                    <div className="flex flex-col gap-1  w-[33rem]">
+                      <label htmlFor="" className="text-gray-500 font-semibold">
+                        Observation
+                      </label>
+                      <textarea
+                        className=" border p-2 rounded-sm bg-firstColors text-sm h-32"
+                        value={data3.observation}
+                      >
+                        {data3.observation}
+                      </textarea>
+                    </div>
                   )}
 
                   <button
                     // to={`/update/${data3.idInstance}`}
-                    className="bg-firstBlue mt-4  w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold flex items-center justify-center"
+                    className="bg-firstBlue mt-4  w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold flex items-center justify-center transition ease-in-out delay-150 hover:scale-105 "
                     onClick={() =>
                       handleUpdateSubmit(
                         data3.idSoumission,
                         data3.nonDTCI,
                         data3.dateDTCI.split('-').reverse().join('-'),
-                        data3.consignataireDTCI
+                        data3.consignataireDTCI,
+                        data3.observation
                       )
                     }
                   >

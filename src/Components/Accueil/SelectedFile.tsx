@@ -13,6 +13,7 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   const [selectedFile2, setSelectedFile2] = useState<any>(null);
   const [dataFinal, setDataFinal] = useState<any>(null);
   const server = useServer();
+
   //   const [selectedFile3, setSelectedFile3] = useState<any>(null);
 
   const handleCompare = async () => {
@@ -125,7 +126,7 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
           </div>
           <div className="bg-firstBlue w-32  h-3/4 p-1 rounded flex flex-col shadow items-center">
             <label
-              htmlFor="fileDT"
+              htmlFor="fileTM"
               className="flex-start text-[#EEEEEC] text-sm font-medium gap-1 cursor-pointer"
             >
               {' '}
@@ -135,8 +136,8 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
               className="hidden"
               accept=".xlsx, .xls"
               type="file"
-              id="fileDT"
-              onChange={handleFileChange1}
+              id="fileTM"
+              onChange={handleFileChange2}
             />
             <p className="font-semibold text-[#EEEEEC]">TM</p>
             <p className=" text-[#EEEEEC] text-sm text-center">
@@ -146,7 +147,68 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
           </div>
         </div>
         <div className="w-full flex-column h-32 bg-slate-200/20 rounded-sm flex justify-center items-center flex-col gap-4">
-          <p className=" text-base text-slate-400 font-normal">Aucun Fichier</p>
+          {/* <p className=" text-base text-slate-400 font-normal">Aucun Fichier</p> */}
+          {!(selectedFile1 || selectedFile2) ? (
+            <p className=" text-base text-slate-400 font-normal">
+              Aucun Fichier
+            </p>
+          ) : (
+            ''
+          )}
+          {selectedFile1 && (
+            <div className="flex justify-between items-center w-full border p-3 rounded-md shadow-sm">
+              <div className="flex justify-center items-center gap-2 text-base">
+                <Icon
+                  icon="mdi:file-excel-outline"
+                  width="1.7em"
+                  height="1.7em"
+                />
+                <p> {selectedFile1?.name} </p>
+              </div>
+              {selectedFile1 && (
+                <div className="flex items-center gap-2">
+                  <p className="opacity-60">
+                    {Math.trunc(selectedFile1?.size / 1024)} Ko
+                  </p>
+                  <button onClick={() => setSelectedFile1(null)}>
+                    <Icon
+                      icon="gridicons:trash"
+                      className="text-grayBlack"
+                      width="1.5em"
+                      height="1.5em"
+                    />
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+          {selectedFile2 && (
+            <div className="flex justify-between items-center w-full border p-3 rounded-md shadow-sm">
+              <div className="flex justify-center items-center gap-2 text-base">
+                <Icon
+                  icon="mdi:file-excel-outline"
+                  width="1.7em"
+                  height="1.7em"
+                />
+                <p> {selectedFile2?.name} </p>
+              </div>
+              {selectedFile2 && (
+                <div className="flex items-center gap-2">
+                  <p className="opacity-60">
+                    {Math.trunc(selectedFile2?.size / 1024)} Ko
+                  </p>
+                  <button onClick={() => setSelectedFile2(null)}>
+                    <Icon
+                      icon="gridicons:trash"
+                      className="text-grayBlack"
+                      width="1.5em"
+                      height="1.5em"
+                    />
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
           {/* <div className="w-full h-14 rounded-md border border-shadowColors  flex-between p-2 gap-3">
             <div className="bg-firstBlue w-32 p-1 rounded">
               <label
@@ -208,13 +270,13 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
         </div>
         <div className="flex justify-between gap-4 w-full py-4">
           <button
-            className=" border border-grayBlack w-40 rounded-md text-grayBlack h-12 cursor-pointer font-semibold "
+            className=" border border-grayBlack transition ease-in-out delay-150 w-40 rounded-md text-grayBlack h-12 cursor-pointer font-semibold hover:scale-105 "
             onClick={onClick}
           >
             Quittez
           </button>
           <button
-            className="bg-firstBlue w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold "
+            className="bg-firstBlue w-40 transition ease-in-out delay-150 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold hover:scale-105 "
             onClick={handleCompare}
           >
             Comparez
