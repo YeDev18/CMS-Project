@@ -176,6 +176,7 @@ const DeclaratioNConforme = () => {
 
   const handleChange = (val: any) => {
     server.showOverlay();
+    !data3.observation && AddUpdate();
     setData3({
       ...data3,
 

@@ -12,30 +12,42 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   const [selectedFile1, setSelectedFile1] = useState<any>(null);
   const [selectedFile2, setSelectedFile2] = useState<any>(null);
   const [dataFinal, setDataFinal] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [success, setSuccess] = useState<boolean>(false);
+  const [error, setError] = useState<boolean | number>(0);
   const server = useServer();
-
-  //   const [selectedFile3, setSelectedFile3] = useState<any>(null);
 
   const handleCompare = async () => {
     await fetchDataDTCI();
     await fetchDataTrafic();
+    getData();
+    console.log(error);
+  };
 
-    // setTimeout(() => {
-    url
-      .get('/api/compare-declaration-status')
-      .then(res => res.data)
-      .then(data => {
-        setDataFinal(data);
-        console.log(dataFinal);
-        // setTimeout(() => {
-        server?.toInitialize();
-        // }, 100);
-        server?.showOverlay();
-      })
-      .catch(error => {
-        console.log(error);
-      });
-    // }, 3000);
+  const getData = () => {
+    error === false &&
+      url
+        .get('/api/compare-declaration-status')
+        .then(res => res.data)
+        .then(data => {
+          setLoading(true);
+          setDataFinal(data);
+          console.log(dataFinal);
+          setLoading(false);
+          setSuccess(true);
+          // setTimeout(() => {
+          //   setSucess(true);
+          // }, 100);
+          // setTimeout(() => {
+          server?.toInitialize();
+          // }, 100);
+          // server?.showOverlay();
+          console.log('e suis bons');
+        })
+        .catch(error => {
+          // setError(true);
+          console.log(error);
+        });
   };
 
   const handleFileChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,38 +65,39 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   const fetchDataDTCI = async () => {
     const formData = new FormData();
     formData.append('file', selectedFile1);
-    try {
-      console.log('Sending DTCI data:', formData);
-      const response = await url.post('/api/upload_dtci_file', formData, {
+
+    console.log('Sending DTCI data:', formData);
+    const response = await url
+      .post('/api/upload_dtci_file', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+      })
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        console.log(error);
+        setError(true);
       });
-    } catch (error: any) {
-      if (error.response) {
-        console.log('Error response:', error.response.data);
-      } else {
-        console.log('Error:', error.message);
-      }
-    }
   };
   const fetchDataTrafic = async () => {
     const formData = new FormData();
     formData.append('file', selectedFile2);
-    try {
-      console.log('Sending Trafic Maritime data:', formData);
-      const response = await url.post('/api/upload_trafic_file/', formData, {
+
+    console.log('Sending Trafic Maritime data:', formData);
+    const response = await url
+      .post('/api/upload_trafic_file/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
+      })
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        console.log(error);
       });
-    } catch (error: any) {
-      if (error.response) {
-        console.log('Error response:', error.response.data);
-      } else {
-        console.log('Error:', error.message);
-      }
-    }
   };
 
   return (
@@ -146,8 +159,7 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
             </p>
           </div>
         </div>
-        <div className="w-full flex-column h-32 bg-slate-200/20 rounded-sm flex justify-center items-center flex-col gap-4">
-          {/* <p className=" text-base text-slate-400 font-normal">Aucun Fichier</p> */}
+        <div className=" relative w-full flex-column h-32 bg-slate-200/20 rounded-sm flex justify-center items-center flex-col gap-4">
           {!(selectedFile1 || selectedFile2) ? (
             <p className=" text-base text-slate-400 font-normal">
               Aucun Fichier
@@ -209,64 +221,47 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
               )}
             </div>
           )}
-          {/* <div className="w-full h-14 rounded-md border border-shadowColors  flex-between p-2 gap-3">
-            <div className="bg-firstBlue w-32 p-1 rounded">
-              <label
-                htmlFor="fileDT"
-                className="flex-start text-[#EEEEEC] text-sm font-medium gap-1"
-              >
-                {' '}
-                <Icon
-                  icon="mdi:cloud-upload-outline"
-                  width="1.8rem"
-                  height="1.8rem"
-                />
-                Fichier DTCI
-              </label>
-              <input
-                className="hidden"
-                accept=".xlsx, .xls"
-                type="file"
-                id="fileDT"
-                onChange={handleFileChange1}
-              />
+
+          {loading || success || error ? (
+            <div className="absolute size-full bg-grayBlack/70 inset-0 rounded-sm shadow-sm flex flex-col justify-center items-center">
+              {loading && (
+                <div className="flex justify-center items-center gap-2">
+                  <Icon
+                    icon="eos-icons:loading"
+                    className="text-firstColors text-4xl"
+                  />
+                  <h2 className="font-bold text-xl text-firstColors">
+                    Analyse des données
+                  </h2>
+                </div>
+              )}
+
+              {success && (
+                <div className="flex justify-center items-center gap-2">
+                  <Icon
+                    icon="gg:check-o"
+                    className="text-firstColors text-4xl"
+                  />
+                  <h2 className="font-bold text-xl text-firstColors">
+                    Comparaison Reussie
+                  </h2>
+                </div>
+              )}
+              {error && (
+                <div className="flex justify-center items-center gap-2">
+                  <Icon
+                    icon="carbon:close-outline"
+                    className="text-firstColors text-4xl"
+                  />
+                  <h2 className="font-bold text-xl text-firstColors">
+                    Comparaison Echoué
+                  </h2>
+                </div>
+              )}
             </div>
-            <p> {selectedFile1?.name} </p>
-            {selectedFile1 && (
-              <button onClick={() => setSelectedFile1(null)}>
-                <Icon icon="gridicons:trash" className="text-grayBlack" />
-              </button>
-            )}
-          </div> */}
-          {/* <div className="w-full h-14 rounded-md border border-shadowColors flex-between p-2 gap-3">
-            <div className="bg-firstBlue w-32 p-1 rounded">
-              <label
-                htmlFor="fileEx"
-                className="flex-start text-[#EEEEEC] text-sm font-medium gap-1"
-              >
-                {' '}
-                <Icon
-                  icon="mdi:cloud-upload-outline"
-                  width="1.8rem"
-                  height="1.8rem"
-                />
-                {libelle === 'VOYAGES' ? 'Fichier TM' : 'Fichier PAA'}
-              </label>
-              <input
-                className="hidden"
-                accept=".xlsx, .xls"
-                type="file"
-                id="fileEx"
-                onChange={handleFileChange2}
-              />
-            </div>
-            <p>{libelle === 'VOYAGES' ? selectedFile2?.name : 'Name'}</p>
-            {selectedFile2 && (
-              <button onClick={() => setSelectedFile2(null)}>
-                <Icon icon="gridicons:trash" className="text-grayBlack" />
-              </button>
-            )}
-          </div> */}
+          ) : (
+            ''
+          )}
         </div>
         <div className="flex justify-between gap-4 w-full py-4">
           <button

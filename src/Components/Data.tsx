@@ -57,9 +57,9 @@ export const MenuItems = [
     ],
   },
   {
-    lib: 'Tonnes',
+    lib: 'Tonnages',
     icon: 'lucide:anvil',
-    route: '/tonnes',
+    route: '/tonnages',
   },
 ];
 

@@ -16,6 +16,7 @@ import {
   Periode,
   RCLayout,
   Register,
+  Tonnages,
   Update,
 } from './Pages';
 
@@ -38,6 +39,7 @@ function App() {
                 <Route path="/consignataire" element={<Consignataire />} />
                 <Route path="/navire" element={<Navire />} />
                 <Route path="/periode" element={<Periode />} />
+                <Route path="/tonnages" element={<Tonnages />} />
 
                 <Route
                   path="/declaration_conforme"
