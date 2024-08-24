@@ -17,7 +17,7 @@ const Sideba2 = () => {
   };
   const handleConsole = (index: number) => {
     setActiveIndex(prevIndex => (prevIndex === index ? prevIndex : index));
-    console.log(activeIndex, index);
+    // console.log(activeIndex, index);
     // console.log(index);
   };
   return (

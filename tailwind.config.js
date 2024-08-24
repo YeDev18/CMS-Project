@@ -78,11 +78,24 @@ module.exports = {
             transform: 'scale(1)',
           },
         },
+        'notification-In': {
+          '0%': { transform: 'translateX(100%)' },
+          '20%, 80%': { transform: 'translateX(50%)' },
+          '40%, 60%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(120%)' },
+        },
+        wiggle: {
+          '0%, 100%': { transform: 'rotate(-3deg)' },
+          '50%': { transform: 'rotate(3deg)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'fadIn-up': 'fadIn- 0.3s cubic-bezier(0,0,.33,.95)',
+        'notification-In':
+          'notification-In 3.5s cubic-bezier(0.58, 0.47, 1, 1)',
+        wiggle: 'wiggle 1s ease-in-out infinite',
       },
     },
   },

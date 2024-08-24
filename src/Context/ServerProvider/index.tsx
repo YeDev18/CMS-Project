@@ -20,9 +20,23 @@ type Context = {
   initialize: boolean;
   overlay: boolean;
   userInitialize: boolean;
+  error: boolean;
+  success: boolean;
+  loading: boolean;
+  notification: boolean;
   showOverlay: () => void;
   toInitialize: () => void;
   showUserInitialize: () => void;
+  showLoading: () => void;
+  showSuccess: () => void;
+  showError1: () => void;
+  showError2: () => void;
+  showSuccess1: () => void;
+  showSuccess2: () => void;
+  showSuccessError: () => void;
+  showshowLoadingFinish: () => void;
+  showNotification: () => void;
+  showNotificationFinish: () => void;
 };
 type Props = {
   children: ReactNode;
@@ -41,6 +55,11 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const [initialize, setInitialize] = useState(false);
   const [userInitialize, setUserInitialize] = useState(false);
   const [overlay, setOverlay] = useState(false);
+  const [error1, setError1] = useState(false);
+  const [error2, setError2] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState(false);
 
   const getData = () => {
     const routes = [
@@ -68,6 +87,36 @@ const ServerProvider: FC<Props> = ({ children }) => {
       )
     );
   };
+  const showNotification = () => {
+    setNotification(true);
+  };
+  const showNotificationFinish = () => {
+    setNotification(false);
+  };
+  const showError1 = () => {
+    setError1(true);
+  };
+  const showError2 = () => {
+    setError2(true);
+  };
+  const showSuccess1 = () => {
+    setError1(false);
+  };
+  const showSuccess2 = () => {
+    setError2(false);
+  };
+  const showSuccess = () => {
+    setSuccess(true);
+  };
+  const showSuccessError = () => {
+    setSuccess(false);
+  };
+  const showLoading = () => {
+    setLoading(true);
+  };
+  const showLoadingFinish = () => {
+    setLoading(false);
+  };
   const showOverlay = () => {
     setOverlay(!overlay);
   };
@@ -90,7 +139,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
         },
       })
       .then(res => res.data)
-      .then(data => (setUser(data), console.log(data, userInitialize)))
+      .then(data => setUser(data))
       .catch(error => {
         if (error.response) {
           // La requête a été faite et le serveur a répondu avec un code d'état qui tombe hors de la plage de 2xx
@@ -117,11 +166,26 @@ const ServerProvider: FC<Props> = ({ children }) => {
         notConform,
         conform,
         overlay,
+        loading,
+        success,
+        error1,
+        error2,
         initialize,
         userInitialize,
         showOverlay,
         toInitialize,
         showUserInitialize,
+        showError1,
+        showError2,
+        showSuccess1,
+        showSuccess2,
+        showSuccess,
+        showLoading,
+        showSuccessError,
+        showLoadingFinish,
+        showNotification,
+        showNotificationFinish,
+        notification,
       }}
     >
       {children}

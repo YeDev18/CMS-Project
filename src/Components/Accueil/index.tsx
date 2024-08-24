@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Chart } from './Chart';
 import { Component1 } from './Component';
+import Notification from './Notification';
 import SelectedFile from './SelectedFile';
 
 const Accueil = () => {
@@ -14,8 +15,6 @@ const Accueil = () => {
   const undeclared = useServer()?.undeclared;
   const overlay = useServer()?.overlay;
   const server = useServer();
-
-  const [show, setShow] = useState(false);
   const [lib, setLib] = useState('');
 
   const handleSelected = (lib: string) => {
@@ -86,9 +85,7 @@ const Accueil = () => {
               <div className="mx-4 flex-center w-fit border rounded-md px-2 py-3 gap-2">
                 <button
                   className="bg-firstBlue text-xl rounded-md text-firstColors p-2 w-fit"
-                  onClick={() => (
-                    setShow(true), server?.showOverlay(), setLib('VOYAGES')
-                  )}
+                  onClick={() => (server?.showOverlay(), setLib('VOYAGES'))}
                 >
                   <Icon icon="octicon:feed-plus-16" />
                 </button>
@@ -140,7 +137,7 @@ const Accueil = () => {
               <div className="mx-4 flex-center w-fit border rounded-md px-2 py-3 gap-2">
                 <button
                   className="bg-firstBlue text-xl rounded-md text-firstColors p-2 w-fit"
-                  onClick={() => (setShow(true), setLib('TONNAGES'))}
+                  onClick={() => setLib('TONNAGES')}
                 >
                   <Icon icon="octicon:feed-plus-16" />
                 </button>
@@ -193,6 +190,44 @@ const Accueil = () => {
           </div>
         </div>
       </div>
+
+      {server.notification ? (
+        <>
+          {!server.error1 && !server.error2 && server.loading ? (
+            <Notification
+              icon={'eos-icons:loading'}
+              notification={' Analyse des données'}
+              bottom={2}
+            />
+          ) : (
+            ''
+          )}
+
+          {server.error1 || server.error2 ? (
+            <Notification
+              icon={'carbon:close-outline'}
+              notification={'Comparaison Echoue'}
+              bottom={48}
+            />
+          ) : (
+            ''
+          )}
+
+          <>
+            {!server.error1 && !server.error2 && server.success ? (
+              <Notification
+                icon={'gg:check-o'}
+                notification={'Comparaison reussie'}
+                bottom={24}
+              />
+            ) : (
+              ''
+            )}
+          </>
+        </>
+      ) : (
+        ''
+      )}
 
       {overlay ? handleSelected(lib) : ''}
     </div>

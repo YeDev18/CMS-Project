@@ -11,43 +11,32 @@ type Lib = {
 const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   const [selectedFile1, setSelectedFile1] = useState<any>(null);
   const [selectedFile2, setSelectedFile2] = useState<any>(null);
-  const [dataFinal, setDataFinal] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [success, setSuccess] = useState<boolean>(false);
-  const [error, setError] = useState<boolean | number>(0);
   const server = useServer();
 
   const handleCompare = async () => {
     await fetchDataDTCI();
     await fetchDataTrafic();
     getData();
-    console.log(error);
+    server.showNotification();
+    server?.showOverlay();
+    setTimeout(() => {
+      server.showNotificationFinish();
+    }, 2500);
   };
 
-  const getData = () => {
-    error === false &&
-      url
-        .get('/api/compare-declaration-status')
-        .then(res => res.data)
-        .then(data => {
-          setLoading(true);
-          setDataFinal(data);
-          console.log(dataFinal);
-          setLoading(false);
-          setSuccess(true);
-          // setTimeout(() => {
-          //   setSucess(true);
-          // }, 100);
-          // setTimeout(() => {
-          server?.toInitialize();
-          // }, 100);
-          // server?.showOverlay();
-          console.log('e suis bons');
-        })
-        .catch(error => {
-          // setError(true);
-          console.log(error);
-        });
+  const getData = async () => {
+    server.showLoading();
+    url
+      .get('/api/compare-declaration-status')
+      .then(res => res.data)
+      .then(data => {
+        server.showLoadingFinish();
+        server.showSuccess();
+        server?.toInitialize();
+      })
+      .catch(error => {
+        server.showSuccessError();
+      });
   };
 
   const handleFileChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,13 +49,10 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
     if (!file) return;
     setSelectedFile2(file);
   };
-  console.log(selectedFile1, selectedFile2);
 
   const fetchDataDTCI = async () => {
     const formData = new FormData();
     formData.append('file', selectedFile1);
-
-    console.log('Sending DTCI data:', formData);
     const response = await url
       .post('/api/upload_dtci_file', formData, {
         headers: {
@@ -74,18 +60,15 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
         },
       })
       .then(response => {
-        console.log(response);
+        server.showSuccess1();
       })
       .catch(error => {
-        console.log(error);
-        setError(true);
+        server.showError1();
       });
   };
   const fetchDataTrafic = async () => {
     const formData = new FormData();
     formData.append('file', selectedFile2);
-
-    console.log('Sending Trafic Maritime data:', formData);
     const response = await url
       .post('/api/upload_trafic_file/', formData, {
         headers: {
@@ -93,10 +76,10 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
         },
       })
       .then(response => {
-        console.log(response);
+        server.showSuccess2();
       })
       .catch(error => {
-        console.log(error);
+        server.showError2();
       });
   };
 
@@ -159,7 +142,7 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
             </p>
           </div>
         </div>
-        <div className=" relative w-full flex-column h-32 bg-slate-200/20 rounded-sm flex justify-center items-center flex-col gap-4">
+        <div className=" relative w-full flex-column h-40 bg-slate-200/20 rounded-sm flex justify-center items-center flex-col gap-4">
           {!(selectedFile1 || selectedFile2) ? (
             <p className=" text-base text-slate-400 font-normal">
               Aucun Fichier
@@ -175,7 +158,10 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
                   width="1.7em"
                   height="1.7em"
                 />
-                <p> {selectedFile1?.name} </p>
+                <div className="flex flex-col justify-center items-start">
+                  <p> {selectedFile1?.name} </p>
+                  <p className="text-xs text-grayBlack/60">Fichier DTCI</p>
+                </div>
               </div>
               {selectedFile1 && (
                 <div className="flex items-center gap-2">
@@ -195,72 +181,38 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
             </div>
           )}
           {selectedFile2 && (
-            <div className="flex justify-between items-center w-full border p-3 rounded-md shadow-sm">
-              <div className="flex justify-center items-center gap-2 text-base">
-                <Icon
-                  icon="mdi:file-excel-outline"
-                  width="1.7em"
-                  height="1.7em"
-                />
-                <p> {selectedFile2?.name} </p>
+            <>
+              <div className="flex justify-between items-center w-full border p-3 rounded-md shadow-sm">
+                <div className="flex justify-center items-center gap-2 text-base">
+                  <Icon
+                    icon="mdi:file-excel-outline"
+                    width="1.7em"
+                    height="1.7em"
+                  />
+                  <div className="flex flex-col justify-center items-start">
+                    <p> {selectedFile2?.name} </p>
+                    <p className="text-xs text-grayBlack/60">
+                      Fichier Trafic Maritime
+                    </p>
+                  </div>
+                </div>
+                {selectedFile2 && (
+                  <div className="flex items-center gap-2">
+                    <p className="opacity-60">
+                      {Math.trunc(selectedFile2?.size / 1024)} Ko
+                    </p>
+                    <button onClick={() => setSelectedFile2(null)}>
+                      <Icon
+                        icon="gridicons:trash"
+                        className="text-grayBlack"
+                        width="1.5em"
+                        height="1.5em"
+                      />
+                    </button>
+                  </div>
+                )}
               </div>
-              {selectedFile2 && (
-                <div className="flex items-center gap-2">
-                  <p className="opacity-60">
-                    {Math.trunc(selectedFile2?.size / 1024)} Ko
-                  </p>
-                  <button onClick={() => setSelectedFile2(null)}>
-                    <Icon
-                      icon="gridicons:trash"
-                      className="text-grayBlack"
-                      width="1.5em"
-                      height="1.5em"
-                    />
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-
-          {loading || success || error ? (
-            <div className="absolute size-full bg-grayBlack/70 inset-0 rounded-sm shadow-sm flex flex-col justify-center items-center">
-              {loading && (
-                <div className="flex justify-center items-center gap-2">
-                  <Icon
-                    icon="eos-icons:loading"
-                    className="text-firstColors text-4xl"
-                  />
-                  <h2 className="font-bold text-xl text-firstColors">
-                    Analyse des données
-                  </h2>
-                </div>
-              )}
-
-              {success && (
-                <div className="flex justify-center items-center gap-2">
-                  <Icon
-                    icon="gg:check-o"
-                    className="text-firstColors text-4xl"
-                  />
-                  <h2 className="font-bold text-xl text-firstColors">
-                    Comparaison Reussie
-                  </h2>
-                </div>
-              )}
-              {error && (
-                <div className="flex justify-center items-center gap-2">
-                  <Icon
-                    icon="carbon:close-outline"
-                    className="text-firstColors text-4xl"
-                  />
-                  <h2 className="font-bold text-xl text-firstColors">
-                    Comparaison Echoué
-                  </h2>
-                </div>
-              )}
-            </div>
-          ) : (
-            ''
+            </>
           )}
         </div>
         <div className="flex justify-between gap-4 w-full py-4">

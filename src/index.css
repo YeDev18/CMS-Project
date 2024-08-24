@@ -213,20 +213,28 @@
     width: 10rem;
   }
   .animateElement {
-    animation: FadInk 0.3s cubic-bezier(0.58, 0.47, 1, 1);
+    animation: FadInk 2.5s cubic-bezier(0.58, 0.47, 1, 1);
   }
 
   @keyframes FadInk {
     0% {
-      transform: scale(0.25);
+      transform: translateX(100%);
+    }
+    20% {
+      transform: translateX(0%);
+    }
+    40% {
+      transform: translateX(0%);
+    }
+    60% {
+      transform: translateX(0%);
     }
 
-    50% {
-      transform: scale(0.5);
+    80% {
+      transform: translateX(50%);
     }
-
     100% {
-      transform: scale(1);
+      transform: translateX(120%);
     }
   }
 }
