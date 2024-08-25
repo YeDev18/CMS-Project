@@ -24,6 +24,7 @@ type Context = {
   success: boolean;
   loading: boolean;
   notification: boolean;
+  setting: boolean;
   showOverlay: () => void;
   toInitialize: () => void;
   showUserInitialize: () => void;
@@ -37,6 +38,8 @@ type Context = {
   showshowLoadingFinish: () => void;
   showNotification: () => void;
   showNotificationFinish: () => void;
+  showSetting: () => void;
+  showSettingFinish: () => void;
 };
 type Props = {
   children: ReactNode;
@@ -60,6 +63,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState(false);
+  const [setting, setSetting] = useState(false);
 
   const getData = () => {
     const routes = [
@@ -86,6 +90,12 @@ const ServerProvider: FC<Props> = ({ children }) => {
         }
       )
     );
+  };
+  const showSetting = () => {
+    setSetting(true);
+  };
+  const showSettingFinish = () => {
+    setSetting(false);
   };
   const showNotification = () => {
     setNotification(true);
@@ -170,6 +180,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
         success,
         error1,
         error2,
+        setting,
         initialize,
         userInitialize,
         showOverlay,
@@ -185,6 +196,8 @@ const ServerProvider: FC<Props> = ({ children }) => {
         showLoadingFinish,
         showNotification,
         showNotificationFinish,
+        showSetting,
+        showSettingFinish,
         notification,
       }}
     >

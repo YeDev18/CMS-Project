@@ -68,7 +68,6 @@ const AuthProvider: FC<Props> = ({ children }) => {
       localStorage.setItem('site', response.data.token);
       navigate('/');
     } catch (err: any) {
-      // setError(err.response?.data?.error || 'Login failed');
       console.log(error);
     }
   };

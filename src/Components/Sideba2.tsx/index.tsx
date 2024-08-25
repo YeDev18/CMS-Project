@@ -93,13 +93,16 @@ const Sideba2 = () => {
           </div>
         ))}
       </div>
-      <div className="flex justify-between">
-        <p className="font-medium whitespace-nowrap text-sm">{me.name}</p>
+      <div className="flex justify-end">
         <button
           className="text-grayBlack"
-          onClick={() => (auth?.logout(), server?.showUserInitialize())}
+          onClick={() => (server.showSetting(), server?.showUserInitialize())}
         >
-          <Icon icon="mdi:logout" width="1.5em" height="1.5em" />
+          <Icon
+            icon="fluent:more-vertical-16-filled"
+            width="1.5em"
+            height="1.5em"
+          />
         </button>
       </div>
     </div>
