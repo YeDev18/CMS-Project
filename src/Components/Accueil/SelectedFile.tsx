@@ -14,6 +14,7 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   const server = useServer();
 
   const handleCompare = async () => {
+    server.showLoading();
     await fetchDataDTCI();
     await fetchDataTrafic();
     getData();
@@ -25,7 +26,6 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   };
 
   const getData = async () => {
-    server.showLoading();
     url
       .get('/api/compare-declaration-status')
       .then(res => res.data)

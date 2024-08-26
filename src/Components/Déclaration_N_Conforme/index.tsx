@@ -23,6 +23,7 @@ const DeclaratioNConforme = () => {
     observation: '',
   });
   const [tags, setTags] = useState<boolean>(false);
+  const [notification, setNotification] = useState<boolean>(false);
 
   const handleChangeCheck = () => {
     setTags(!tags);
@@ -53,7 +54,7 @@ const DeclaratioNConforme = () => {
   });
   const AddUpdate = () => {
     setObservation({
-      ...observation,
+      ...data3,
       observation: 'Mise a jour',
     });
     console.log(observation);
@@ -67,13 +68,16 @@ const DeclaratioNConforme = () => {
   };
 
   const handleSubmit = (id: any, data: any) => {
+    // !data && AddUpdate();
     url
       .put(`api/declarationstatus/${id}/add_observation/`, data)
       .then(res => {
-        alert('Data Suucess');
-        direction('/nom_conforme');
         server?.toInitialize();
-        server?.showOverlay();
+        setNotification(true);
+        setTimeout(() => {
+          setNotification(false);
+          server?.showOverlay();
+        }, 2000);
       })
       .catch(error => console.log(error));
   };
@@ -158,7 +162,14 @@ const DeclaratioNConforme = () => {
     consignataire_dtci: any,
     observation: any
   ) => {
-    !observation && AddUpdate();
+    // url
+    //   .put(`api/declarationstatus/${id}/add_observation/`, {
+    //     observation,
+    //   })
+    //   .then(res => {
+    //     alert('Observation Suucess');
+    //   })
+    //   .catch(error => (console.log(error), alert(error)));
     url
       .put(`api/update-soumission-dtci-and-status/${id}/`, {
         nom_navire_dtci,
@@ -166,17 +177,20 @@ const DeclaratioNConforme = () => {
         consignataire_dtci,
       })
       .then(res => {
-        alert('Data Suucess');
-        direction('/nom_conforme');
+        setNotification(true);
+        setTimeout(() => {
+          server?.showOverlay();
+          setNotification(false);
+        }, 2000);
+
         server?.toInitialize();
-        server?.showOverlay();
       })
       .catch(error => (console.log(error), alert(error)));
   };
 
   const handleChange = (val: any) => {
     server.showOverlay();
-    !data3.observation && AddUpdate();
+    // !data3.observation && AddUpdate();
     setData3({
       ...data3,
 
@@ -301,10 +315,7 @@ const DeclaratioNConforme = () => {
           Export en csv
         </button>
         {!(MonthsYears === '-') || searchValue || tags ? (
-          <div
-            className="rounded-md bg-[#F59069] shadow-sm shadow-slate-200 p-2 inline-flex gap-1 items-center h-10 text-firstColors "
-            onClick={() => exportToExcel()}
-          >
+          <div className="rounded-md bg-[#F59069] shadow-sm shadow-slate-200 p-2 inline-flex gap-1 items-center h-10 text-firstColors ">
             <Icon
               icon="charm:notes-cross"
               width="1.2em"
@@ -594,6 +605,17 @@ const DeclaratioNConforme = () => {
                     >
                       {data3.observation}
                     </textarea>
+                    <div
+                      className={`h-8 py-4 flex justify-start items-center   gap-1 text-[#ffffff]`}
+                    >
+                      <Icon
+                        icon="lets-icons:check-fill"
+                        className={`${notification && 'text-[#0e5c2f]'}`}
+                      />
+                      <p className={`${notification && 'text-[#0e5c2f]'}`}>
+                        Tags Accepté
+                      </p>
+                    </div>
                   </div>
                   <button
                     className="bg-firstBlue  w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold flex items-center justify-center transition ease-in-out delay-150 hover:scale-105 "
@@ -605,50 +627,38 @@ const DeclaratioNConforme = () => {
                   </button>
                 </>
               ) : (
-                <div className=" w-full flex flex-col justify-center items-center">
-                  {data3.observation ? (
+                data3.observation && (
+                  <div className=" w-full flex flex-col justify-center items-center">
                     <div className="flex flex-col gap-1  w-[33rem]">
                       <label htmlFor="" className="text-gray-500 font-semibold">
                         Observation
                       </label>
                       <textarea
                         disabled
-                        className=" border p-2 rounded-sm bg-firstColors text-sm h-32"
+                        className="border outline-none p-2 h-32"
                         value={data3.observation}
                       >
                         {data3.observation}
                       </textarea>
                     </div>
-                  ) : (
-                    <div className="flex flex-col gap-1  w-[33rem]">
-                      <label htmlFor="" className="text-gray-500 font-semibold">
-                        Observation
-                      </label>
-                      <textarea
-                        className=" border p-2 rounded-sm bg-firstColors text-sm h-32"
-                        value={data3.observation}
-                      >
-                        {data3.observation}
-                      </textarea>
-                    </div>
-                  )}
 
-                  <button
-                    // to={`/update/${data3.idInstance}`}
-                    className="bg-firstBlue mt-4  w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold flex items-center justify-center transition ease-in-out delay-150 hover:scale-105 "
-                    onClick={() =>
-                      handleUpdateSubmit(
-                        data3.idSoumission,
-                        data3.nonDTCI,
-                        data3.dateDTCI.split('-').reverse().join('-'),
-                        data3.consignataireDTCI,
-                        data3.observation
-                      )
-                    }
-                  >
-                    UPDATE
-                  </button>
-                </div>
+                    <button
+                      // to={`/update/${data3.idInstance}`}
+                      className="bg-firstBlue mt-4  w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold flex items-center justify-center transition ease-in-out delay-150 hover:scale-105 "
+                      onClick={() =>
+                        handleUpdateSubmit(
+                          data3.idSoumission,
+                          data3.nonDTCI,
+                          data3.dateDTCI.split('-').reverse().join('-'),
+                          data3.consignataireDTCI,
+                          data3.observation
+                        )
+                      }
+                    >
+                      UPDATE
+                    </button>
+                  </div>
+                )
               )}
             </div>
 

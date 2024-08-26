@@ -41,7 +41,7 @@ const DeclarationConforme = () => {
     tonage: '',
     observation: '',
   });
-
+  const [tags, setTags] = useState<boolean>(false);
   const handleChange = (val: any) => {
     server.showOverlay();
     setDate3({
@@ -69,6 +69,10 @@ const DeclarationConforme = () => {
           : val.soumission_dtci.etd_dtci.split('-').reverse().join('-'),
     });
   };
+  const handleChangeCheck = () => {
+    setTags(!tags);
+    server?.toInitialize();
+  };
 
   const goToNextPage = () => {
     setCurrent(prevPage => prevPage + 1);
@@ -77,7 +81,7 @@ const DeclarationConforme = () => {
     setCurrent(prevPage => prevPage - 1);
   };
   const renderPaginationControls = () => {
-    const totalPages = Math.ceil(dataFinal.length / itemsPerPage);
+    const totalPages = Math.ceil(dataFinalChecked.length / itemsPerPage);
     return (
       <div className="flex justify-end pb-5">
         <button
@@ -115,8 +119,11 @@ const DeclarationConforme = () => {
         val.soumission_dtci.imo_dtci.toString().includes(searchValue)
       )
     : Final;
+  const dataFinalChecked = tags
+    ? dataFinal.filter((val: any) => val.observation)
+    : dataFinal;
 
-  const modifiedData = dataFinal.map((item: any, index: number) => ({
+  const modifiedData = dataFinalChecked.map((item: any, index: number) => ({
     Id: index,
     DateDeclaration: item?.soumission_dtci.date_declaration_dtci
       .split('-')
@@ -220,6 +227,19 @@ const DeclarationConforme = () => {
               setSearchValue(e.target.value);
             }}
           />
+          <span className="border border-borderColor h-4"></span>
+          <div className="flex  justify-center items-center h-fit">
+            <label htmlFor="" className="font-semibold text-sm">
+              Mise a jour
+            </label>
+            <input
+              type="checkbox"
+              checked={tags}
+              onChange={handleChangeCheck}
+              placeholder="IMO"
+              className="border outline-none p-1 rounded-sm text-2xl w-8 h-4 font-medium"
+            />
+          </div>
         </div>
 
         <button
@@ -235,8 +255,8 @@ const DeclarationConforme = () => {
           />
           Export en csv
         </button>
-        {!(MonthsYears === '-') || searchValue ? (
-          <div className="rounded-md bg-[#2563eb]  shadow-sm shadow-slate-200 p-2 inline-flex gap-1 items-center h-10 text-firstColors">
+        {!(MonthsYears === '-') || searchValue || tags ? (
+          <div className="rounded-md bg-[#2563eb]  shadow-sm shadow-slate-200 p-2 inline-flex gap-1 items-center h-10 text-firstColors ">
             <Icon
               icon="charm:notes-cross"
               width="1.2em"
@@ -266,7 +286,7 @@ const DeclarationConforme = () => {
             </tr>
           </thead>
           <tbody>
-            {dataFinal
+            {dataFinalChecked
               .slice(startIndex, endIndex)
               .map((val: any, index: number) => {
                 return (
@@ -405,6 +425,12 @@ const DeclarationConforme = () => {
                 className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
                 value={data3.numVoyage}
               />
+            </div>
+            <div className="flex flex-col gap-1 w-full px-2 ">
+              <label htmlFor="" className="text-gray-500 font-semibold">
+                Observation
+              </label>
+
               <input
                 disabled
                 type="text"

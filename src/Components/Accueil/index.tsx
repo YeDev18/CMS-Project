@@ -71,7 +71,10 @@ const Accueil = () => {
                 <h3 className="font-bold text-[1.25rem] text-[#272A2D]">
                   VOYAGES
                 </h3>
-                <div className=" bg-firstBlue  w-fit p-1 rounded-md text-2xl cursor-pointer">
+                <Link
+                  to="/declaration_conforme"
+                  className=" bg-firstBlue  w-fit p-1 rounded-md text-2xl cursor-pointer"
+                >
                   <Icon
                     icon="mingcute:arrow-up-fill"
                     width="1.2rem"
@@ -79,7 +82,7 @@ const Accueil = () => {
                     style={{ color: '#EEEEEC' }}
                     className="rotate-45"
                   />
-                </div>
+                </Link>
               </div>
 
               <div className="mx-4 flex-center w-fit border rounded-md px-2 py-3 gap-2">
