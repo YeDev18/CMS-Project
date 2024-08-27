@@ -2,7 +2,6 @@ import url from '@/api';
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 import { AllMonths, headerTable, Year } from '../Data';
 import Libelle from '../ui/Libelle';
@@ -12,8 +11,6 @@ const DeclaratioNConforme = () => {
   const notConform = useServer().notConform;
   const user = useServer().user;
   const overlay = useServer().overlay;
-  const direction = useNavigate();
-
   const [formValue, setFormValue] = useState({
     months: '',
     years: '',
@@ -23,20 +20,19 @@ const DeclaratioNConforme = () => {
     observation: '',
   });
   const [tags, setTags] = useState<boolean>(false);
-  const [notification, setNotification] = useState<boolean>(false);
-
+  const [notificationTags, setNotificationTags] = useState<boolean>(false);
+  const [notificationUpdate, setNotificationUpdate] = useState<
+    boolean | number
+  >(0);
   const handleChangeCheck = () => {
     setTags(!tags);
     server?.toInitialize();
   };
-
   const [current, setCurrent] = useState(1);
-
   const itemsPerPage = 10;
   const startIndex = (current - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const MonthsYears = formValue.years + '-' + formValue.months;
-
   const [data3, setData3] = useState({
     idInstance: '',
     idSoumission: '',
@@ -52,13 +48,6 @@ const DeclaratioNConforme = () => {
     dateTM: '',
     observation: '',
   });
-  const AddUpdate = () => {
-    setObservation({
-      ...data3,
-      observation: 'Mise a jour',
-    });
-    console.log(observation);
-  };
 
   const goToNextPage = () => {
     setCurrent(prevPage => prevPage + 1);
@@ -68,18 +57,47 @@ const DeclaratioNConforme = () => {
   };
 
   const handleSubmit = (id: any, data: any) => {
-    // !data && AddUpdate();
     url
       .put(`api/declarationstatus/${id}/add_observation/`, data)
       .then(res => {
         server?.toInitialize();
-        setNotification(true);
+        setNotificationTags(true);
         setTimeout(() => {
-          setNotification(false);
+          setNotificationTags(false);
           server?.showOverlay();
         }, 2000);
       })
       .catch(error => console.log(error));
+  };
+  const handleUpdateSubmit = (
+    id: any,
+    nom_navire_dtci: any,
+    date_mouvement: any,
+    consignataire_dtci: any,
+    observation: any
+  ) => {
+    url
+      .put(`api/update-soumission-dtci-and-status/${id}/`, {
+        nom_navire_dtci,
+        date_mouvement,
+        consignataire_dtci,
+      })
+      .then(res => {
+        setNotificationUpdate(true);
+        setTimeout(() => {
+          server?.showOverlay();
+          setNotificationUpdate(0);
+        }, 2000);
+
+        server?.toInitialize();
+      })
+      .catch(error => {
+        setNotificationUpdate(false);
+        setTimeout(() => {
+          setNotificationUpdate(0);
+        }, 2000);
+        console.log(error);
+      });
   };
 
   const Filter = useMemo(() => {
@@ -155,39 +173,6 @@ const DeclaratioNConforme = () => {
     );
   };
 
-  const handleUpdateSubmit = (
-    id: any,
-    nom_navire_dtci: any,
-    date_mouvement: any,
-    consignataire_dtci: any,
-    observation: any
-  ) => {
-    // url
-    //   .put(`api/declarationstatus/${id}/add_observation/`, {
-    //     observation,
-    //   })
-    //   .then(res => {
-    //     alert('Observation Suucess');
-    //   })
-    //   .catch(error => (console.log(error), alert(error)));
-    url
-      .put(`api/update-soumission-dtci-and-status/${id}/`, {
-        nom_navire_dtci,
-        date_mouvement,
-        consignataire_dtci,
-      })
-      .then(res => {
-        setNotification(true);
-        setTimeout(() => {
-          server?.showOverlay();
-          setNotification(false);
-        }, 2000);
-
-        server?.toInitialize();
-      })
-      .catch(error => (console.log(error), alert(error)));
-  };
-
   const handleChange = (val: any) => {
     server.showOverlay();
     // !data3.observation && AddUpdate();
@@ -218,7 +203,6 @@ const DeclaratioNConforme = () => {
   return (
     <div className="w-full h-full relative flex flex-col gap-6 ">
       <div className="flex justify-start gap-2 flex-wrap w-full">
-        {/* <div className="flex gap-4"> */}
         <Libelle
           icon="charm:notes-cross"
           libelle="Non Conformes"
@@ -405,6 +389,8 @@ const DeclaratioNConforme = () => {
       </div>
 
       {renderPaginationControls()}
+
+      {/* OVERLAY----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------      */}
       {overlay ? (
         <div className="absolute inset-y-2/4 w-full h-fit z-[40] justify-center items-center animate-fadIn-up">
           <div className="w-[40rem] h-fit  absolute  top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 rounded">
@@ -605,25 +591,27 @@ const DeclaratioNConforme = () => {
                     >
                       {data3.observation}
                     </textarea>
+
                     <div
                       className={`h-8 py-4 flex justify-start items-center   gap-1 text-[#ffffff]`}
                     >
                       <Icon
                         icon="lets-icons:check-fill"
-                        className={`${notification && 'text-[#0e5c2f]'}`}
+                        className={`${notificationTags && 'text-[#0e5c2f]'}`}
                       />
-                      <p className={`${notification && 'text-[#0e5c2f]'}`}>
-                        Tags Accepté
+                      <p className={`${notificationTags && 'text-[#0e5c2f]'}`}>
+                        Observation Accepté
                       </p>
                     </div>
                   </div>
+
                   <button
                     className="bg-firstBlue  w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold flex items-center justify-center transition ease-in-out delay-150 hover:scale-105 "
                     onClick={() => {
                       handleSubmit(data3.idInstance, observation);
                     }}
                   >
-                    TAGS
+                    Observation
                   </button>
                 </>
               ) : (
@@ -640,6 +628,41 @@ const DeclaratioNConforme = () => {
                       >
                         {data3.observation}
                       </textarea>
+                      <div
+                        className={`h-8 py-4 flex justify-between items-center   gap-1 text-[#ffffff]`}
+                      >
+                        {' '}
+                        <div className="flex justify-start items-center  gap-1 ">
+                          <Icon
+                            icon="lets-icons:check-fill"
+                            className={`${
+                              notificationUpdate && 'text-[#0e5c2f]'
+                            }`}
+                          />
+                          <p
+                            className={`${
+                              notificationUpdate && 'text-[#0e5c2f]'
+                            }`}
+                          >
+                            Modification reussie
+                          </p>
+                        </div>
+                        <div className="flex justify-end items-center  gap-1 ">
+                          <Icon
+                            icon="lets-icons:check-fill"
+                            className={`${
+                              notificationUpdate === false && 'text-[#6E2920]'
+                            }`}
+                          />
+                          <p
+                            className={`${
+                              notificationUpdate === false && 'text-[#6E2920]'
+                            }`}
+                          >
+                            Modification echoue
+                          </p>
+                        </div>
+                      </div>
                     </div>
 
                     <button

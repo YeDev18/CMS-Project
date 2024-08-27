@@ -263,7 +263,7 @@ const DeclarationConforme = () => {
               height="1.2em"
               className="mr-2"
             />
-            Quantite : {dataFinal.length}
+            Quantite : {dataFinalChecked.length}
           </div>
         ) : (
           ''
@@ -334,6 +334,8 @@ const DeclarationConforme = () => {
         </table>
       </div>
       {renderPaginationControls()}
+
+      {/* OVERLAY----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------      */}
       {overlay ? (
         <div className="absolute inset-y-2/4 w-full h-fit justify-center z-50 items-center animate-fadIn-up ">
           <div className="w-96 h-fit absolute z-[2] inset-1/2 flex flex-col justify-center items-center gap-2 bg-firstColors -translate-x-2/4  -translate-y-2/4 shadow-sm shadow-slate-100 rounded-sm p-6">
@@ -424,18 +426,6 @@ const DeclarationConforme = () => {
                 type="text"
                 className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
                 value={data3.numVoyage}
-              />
-            </div>
-            <div className="flex flex-col gap-1 w-full px-2 ">
-              <label htmlFor="" className="text-gray-500 font-semibold">
-                Observation
-              </label>
-
-              <input
-                disabled
-                type="text"
-                className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
-                value={data3.observation}
               />
             </div>
 

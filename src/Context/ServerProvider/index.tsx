@@ -17,23 +17,28 @@ type Context = {
   undeclared: [];
   notConform: [];
   conform: [];
+  tonnages: [];
   initialize: boolean;
   overlay: boolean;
   userInitialize: boolean;
   error: boolean;
-  success: boolean;
-  loading: boolean;
-  notification: boolean;
+  success: boolean | 0;
+  loading: boolean | 0;
+  notification: boolean | 0;
   setting: boolean;
   showOverlay: () => void;
   toInitialize: () => void;
   showUserInitialize: () => void;
   showLoading: () => void;
   showSuccess: () => void;
+  showSuccess1: () => void;
+  showNotSuccess1: () => void;
+  showSuccess2: () => void;
+  showNotSuccess2: () => void;
   showError1: () => void;
   showError2: () => void;
-  showSuccess1: () => void;
-  showSuccess2: () => void;
+  showNotError1: () => void;
+  showNotError2: () => void;
   showSuccessError: () => void;
   showshowLoadingFinish: () => void;
   showNotification: () => void;
@@ -55,15 +60,18 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const [conform, setConform] = useState<[]>([]);
   const [notConform, setNotConform] = useState<[]>([]);
   const [undeclared, setUndeclared] = useState<[]>([]);
+  const [tonnages, setTonnages] = useState<[]>([]);
   const [initialize, setInitialize] = useState(false);
   const [userInitialize, setUserInitialize] = useState(false);
   const [overlay, setOverlay] = useState(false);
-  const [error1, setError1] = useState(false);
-  const [error2, setError2] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [notification, setNotification] = useState(false);
-  const [setting, setSetting] = useState(false);
+  const [error1, setError1] = useState<boolean>(false);
+  const [error2, setError2] = useState<boolean>(false);
+  const [success1, setSuccess1] = useState<boolean>(false);
+  const [success2, setSuccess2] = useState<boolean>(false);
+  const [success, setSuccess] = useState<boolean | 0>(0);
+  const [loading, setLoading] = useState<boolean | 0>(0);
+  const [notification, setNotification] = useState<boolean | 0>(0);
+  const [setting, setSetting] = useState<boolean | 0>(0);
 
   const getData = () => {
     const routes = [
@@ -72,6 +80,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
       'api/non-declare',
       'api/declare-non-conforme',
       'api/declare-conforme',
+      'api/control-tonnage-status',
     ];
     axios.all(routes.map(route => url.get(route))).then(
       axios.spread(
@@ -80,13 +89,15 @@ const ServerProvider: FC<Props> = ({ children }) => {
           { data: navire },
           { data: nonDeclare },
           { data: declareNConforme },
-          { data: declareConforme }
+          { data: declareConforme },
+          { data: tonnages }
         ) => {
           setNavire(navire);
           setConsignataire(consignataire);
           setConform(declareConforme);
           setUndeclared(nonDeclare);
           setNotConform(declareNConforme);
+          setTonnages(tonnages);
         }
       )
     );
@@ -106,13 +117,13 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const showError1 = () => {
     setError1(true);
   };
+  const showNotError1 = () => {
+    setError1(false);
+  };
   const showError2 = () => {
     setError2(true);
   };
-  const showSuccess1 = () => {
-    setError1(false);
-  };
-  const showSuccess2 = () => {
+  const showNotError2 = () => {
     setError2(false);
   };
   const showSuccess = () => {
@@ -121,8 +132,21 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const showSuccessError = () => {
     setSuccess(false);
   };
+  const showSuccess1 = () => {
+    setSuccess1(true);
+  };
+  const showNotSuccess1 = () => {
+    setSuccess1(false);
+  };
+  const showSuccess2 = () => {
+    setSuccess2(true);
+  };
+  const showNotSuccess2 = () => {
+    setSuccess2(false);
+  };
   const showLoading = () => {
     setLoading(true);
+    console.log(loading);
   };
   const showLoadingFinish = () => {
     setLoading(false);
@@ -134,11 +158,19 @@ const ServerProvider: FC<Props> = ({ children }) => {
     setUserInitialize(!userInitialize);
   };
   const toInitialize = () => {
-    setInitialize(!initialize);
+    setError1(false),
+      setError2(false),
+      setSuccess1(false),
+      setSuccess2(false),
+      setError2(false),
+      setSuccess(0),
+      setLoading(0),
+      setInitialize(!initialize);
   };
 
   useEffect(() => {
     getData();
+    console.log(error1, error2);
   }, [initialize]);
   useEffect(() => {
     url
@@ -175,9 +207,12 @@ const ServerProvider: FC<Props> = ({ children }) => {
         undeclared,
         notConform,
         conform,
+        tonnages,
         overlay,
         loading,
         success,
+        success1,
+        success2,
         error1,
         error2,
         setting,
@@ -188,8 +223,8 @@ const ServerProvider: FC<Props> = ({ children }) => {
         showUserInitialize,
         showError1,
         showError2,
-        showSuccess1,
-        showSuccess2,
+        showNotError1,
+        showNotError2,
         showSuccess,
         showLoading,
         showSuccessError,
@@ -199,6 +234,10 @@ const ServerProvider: FC<Props> = ({ children }) => {
         showSetting,
         showSettingFinish,
         notification,
+        showSuccess1,
+        showNotSuccess1,
+        showSuccess2,
+        showNotSuccess2,
       }}
     >
       {children}

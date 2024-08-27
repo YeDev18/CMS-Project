@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Chart } from './Chart';
 import { Component1 } from './Component';
-import Notification from './Notification';
 import SelectedFile from './SelectedFile';
 
 const Accueil = () => {
@@ -17,7 +16,10 @@ const Accueil = () => {
   const server = useServer();
   const [lib, setLib] = useState('');
 
-  const handleSelected = (lib: string) => {
+  const handleSelectedCompare = (lib: string) => {
+    return <SelectedFile libelle={lib} onClick={() => server?.showOverlay()} />;
+  };
+  const handleSelectedTonnages = (lib: string) => {
     return <SelectedFile libelle={lib} onClick={() => server?.showOverlay()} />;
   };
 
@@ -140,7 +142,7 @@ const Accueil = () => {
               <div className="mx-4 flex-center w-fit border rounded-md px-2 py-3 gap-2">
                 <button
                   className="bg-firstBlue text-xl rounded-md text-firstColors p-2 w-fit"
-                  onClick={() => setLib('TONNAGES')}
+                  onClick={() => (server?.showOverlay(), setLib('TONNAGES'))}
                 >
                   <Icon icon="octicon:feed-plus-16" />
                 </button>
@@ -194,45 +196,7 @@ const Accueil = () => {
         </div>
       </div>
 
-      {server.notification ? (
-        <>
-          {!server.error1 && !server.error2 && server.loading ? (
-            <Notification
-              icon={'eos-icons:loading'}
-              notification={' Analyse des données'}
-              bottom={2}
-            />
-          ) : (
-            ''
-          )}
-
-          {server.error1 || server.error2 ? (
-            <Notification
-              icon={'carbon:close-outline'}
-              notification={'Comparaison Echoue'}
-              bottom={48}
-            />
-          ) : (
-            ''
-          )}
-
-          <>
-            {!server.error1 && !server.error2 && server.success ? (
-              <Notification
-                icon={'gg:check-o'}
-                notification={'Comparaison reussie'}
-                bottom={24}
-              />
-            ) : (
-              ''
-            )}
-          </>
-        </>
-      ) : (
-        ''
-      )}
-
-      {overlay ? handleSelected(lib) : ''}
+      {overlay ? handleSelectedCompare(lib) : ''}
     </div>
   );
 };

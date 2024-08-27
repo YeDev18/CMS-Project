@@ -2,6 +2,7 @@ import url from '@/api';
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import { FC, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type Lib = {
   libelle: string;
@@ -12,31 +13,35 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   const [selectedFile1, setSelectedFile1] = useState<any>(null);
   const [selectedFile2, setSelectedFile2] = useState<any>(null);
   const server = useServer();
+  const direction = useNavigate();
 
   const handleCompare = async () => {
-    server.showLoading();
+    // server?.showOverlay();
+    // await server?.showNotification();
+    server?.showLoading();
     await fetchDataDTCI();
     await fetchDataTrafic();
-    getData();
-    server.showNotification();
-    server?.showOverlay();
-    setTimeout(() => {
-      server.showNotificationFinish();
-    }, 2500);
+    await getData();
+
+    // await server?.showSettingFinish();
   };
 
   const getData = async () => {
-    url
+    await url
       .get('/api/compare-declaration-status')
       .then(res => res.data)
       .then(data => {
-        server.showLoadingFinish();
-        server.showSuccess();
-        server?.toInitialize();
+        server?.showLoadingFinish();
+        server?.showSuccess();
       })
       .catch(error => {
         server.showSuccessError();
       });
+
+    setTimeout(() => {
+      server?.toInitialize();
+      server?.showOverlay();
+    }, 4000);
   };
 
   const handleFileChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -51,6 +56,7 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   };
 
   const fetchDataDTCI = async () => {
+    // server.showNotification();
     const formData = new FormData();
     formData.append('file', selectedFile1);
     const response = await url
@@ -60,10 +66,12 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
         },
       })
       .then(response => {
-        server.showSuccess1();
+        server?.showSuccess1();
+        server.showNotError1();
       })
       .catch(error => {
         server.showError1();
+        server?.showLoadingFinish();
       });
   };
   const fetchDataTrafic = async () => {
@@ -76,10 +84,12 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
         },
       })
       .then(response => {
-        server.showSuccess2();
+        server?.showSuccess2();
+        server?.showNotError2();
       })
       .catch(error => {
-        server.showError2();
+        server?.showError2();
+        server?.showLoadingFinish();
       });
   };
 
@@ -213,6 +223,52 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
                 )}
               </div>
             </>
+          )}
+        </div>
+        <div className=" w-full text-black  py-3 flex h-10 flex-col justify-between">
+          {server?.loading === true && (
+            <div
+              className={`flex justify-center bg-[#009fe3] items-center gap-1 py-1 px-2 rounded-sm font-semibold w-fit`}
+            >
+              <Icon
+                icon="eos-icons:loading"
+                className="text-[#ffffff] "
+                width="1.2em"
+                height="1.2em"
+              />
+              <p className="text-[#ffffff] text-sm">Chargement</p>
+            </div>
+          )}
+
+          {server.success1 === true &&
+            server.success2 === true &&
+            server.success === true && (
+              <div
+                className={`flex justify-center items-center gap-1 bg-[#0e5c2f]  py-1 px-2 rounded-sm font-semibold`}
+              >
+                <p className="text-[#ffffff] text-sm">Reussite</p>
+                <Icon
+                  icon="gg:check-o"
+                  width="1.1em"
+                  height="1.1em"
+                  className="text-[#ffffff]"
+                />
+              </div>
+            )}
+          {server.error1 == true || server.error2 == true ? (
+            <div
+              className={`flex text-right justify-center items-center gap-1 bg-[#750b0b] p-1 rounded-sm font-semibold w-fit`}
+            >
+              <p className="text-[#ffffff] text-sm">Echec</p>
+              <Icon
+                icon="carbon:close-outline"
+                width="1.2em"
+                height="1.2em"
+                className="text-[#ffffff]"
+              />
+            </div>
+          ) : (
+            ' '
           )}
         </div>
         <div className="flex justify-between gap-4 w-full py-4">
