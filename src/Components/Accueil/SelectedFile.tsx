@@ -26,6 +26,12 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
     // await server?.showSettingFinish();
   };
 
+  const handleTonnage = async () => {
+    await fetchTonnagesDtci();
+    await fetchTonnagesPPA();
+    await getTonnagesDtci();
+  };
+
   const getData = async () => {
     await url
       .get('/api/compare-declaration-status')
@@ -33,6 +39,24 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
       .then(data => {
         server?.showLoadingFinish();
         server?.showSuccess();
+      })
+      .catch(error => {
+        server.showSuccessError();
+      });
+
+    setTimeout(() => {
+      server?.toInitialize();
+      server?.showOverlay();
+    }, 4000);
+  };
+  const getTonnagesDtci = async () => {
+    await url
+      .get('/api/control-tonnage-status')
+      .then(res => res.data)
+      .then(data => {
+        server?.showLoadingFinish();
+        server?.showSuccess();
+        console.log(data);
       })
       .catch(error => {
         server.showSuccessError();
@@ -55,8 +79,47 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
     setSelectedFile2(file);
   };
 
+  ////DONNEES TONNAGES ////////////////////////////////////////////////
+  const fetchTonnagesDtci = async () => {
+    const formData = new FormData();
+    formData.append('file', selectedFile1);
+    const response = await url
+      .post('/api/upload_tonnageDT_file/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then(response => {
+        server?.showSuccess1();
+        server.showNotError1();
+      })
+      .catch(error => {
+        server.showError1();
+        server?.showLoadingFinish();
+      });
+  };
+
+  const fetchTonnagesPPA = async () => {
+    const formData = new FormData();
+    formData.append('file', selectedFile2);
+    const response = await url
+      .post('/api/upload_port_file/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then(response => {
+        server?.showSuccess2();
+        server.showNotError2();
+      })
+      .catch(error => {
+        server.showError2();
+        server?.showLoadingFinish();
+      });
+  };
+
+  ////DONNEES DECLARATION ////////////////////////////////////////////////
   const fetchDataDTCI = async () => {
-    // server.showNotification();
     const formData = new FormData();
     formData.append('file', selectedFile1);
     const response = await url
@@ -145,7 +208,11 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
               id="fileTM"
               onChange={handleFileChange2}
             />
-            <p className="font-semibold text-[#EEEEEC]">TM</p>
+            {libelle === 'VOYAGES' ? (
+              <p className="font-semibold text-[#EEEEEC]">TM</p>
+            ) : (
+              <p className="font-semibold text-[#EEEEEC]">PAA</p>
+            )}
             <p className=" text-[#EEEEEC] text-sm text-center">
               {' '}
               Televersez fichier en .xlsx
@@ -228,7 +295,7 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
         <div className=" w-full text-black  py-3 flex h-10 flex-col justify-between">
           {server?.loading === true && (
             <div
-              className={`flex justify-center bg-[#009fe3] items-center gap-1 py-1 px-2 rounded-sm font-semibold w-fit`}
+              className={`flex justify-center bg-[#009fe3] items-center gap-1 py-1 px-2 rounded-sm font-semibold`}
             >
               <Icon
                 icon="eos-icons:loading"
@@ -257,7 +324,7 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
             )}
           {server.error1 == true || server.error2 == true ? (
             <div
-              className={`flex text-right justify-center items-center gap-1 bg-[#750b0b] p-1 rounded-sm font-semibold w-fit`}
+              className={`flex text-right justify-center items-center gap-1 bg-[#750b0b] p-1 rounded-sm font-semibold`}
             >
               <p className="text-[#ffffff] text-sm">Echec</p>
               <Icon
@@ -280,7 +347,7 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
           </button>
           <button
             className="bg-firstBlue w-40 transition ease-in-out delay-150 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold hover:scale-105 "
-            onClick={handleCompare}
+            onClick={libelle === 'VOYAGES' ? handleCompare : handleTonnage}
           >
             Comparez
           </button>

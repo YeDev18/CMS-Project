@@ -171,7 +171,10 @@
     @apply grid grid-cols-5 py-4 px-2;
   }
   .gridArray6 {
-    @apply grid grid-cols-6 py-4 px-2;
+    @apply flex justify-start items-center py-4 px-2;
+  }
+  .gridArray8 {
+    @apply grid grid-cols-8 py-4 px-2;
   }
   .flex-center {
     @apply flex justify-center items-center;
@@ -195,6 +198,10 @@
   .word:not(.active) {
     color: #d45e77;
   }
+
+  .headerSecond {
+    width: 15rem;
+  }
   .headerFirst:first-child {
     /* background-color: #009fe3; */
     width: 8rem;
@@ -204,12 +211,13 @@
     /* background-color: #009fe3; */
     width: 8rem;
   }
-  .headerSecond:nth-child(2) {
+  .headerSecond:nth-child(3) {
     /* background-color: #009fe3; */
     width: 8rem;
   }
   .headerSecond:nth-child(4) {
     /* background-color: #009fe3; */
+
     width: 10rem;
   }
   .animateElement {

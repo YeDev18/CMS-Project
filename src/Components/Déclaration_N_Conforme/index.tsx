@@ -315,11 +315,11 @@ const DeclaratioNConforme = () => {
       <div className="w-full h-full overflow-x-auto  pr-2 relative">
         <table className="w-full">
           <thead>
-            <tr className="gridArray6  w-screen rounded-md shadow-sm shadow-testColors1 bg-slate-50 sticky top-0 ">
+            <tr className="gridArray6 w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 sticky top-0">
               {headerTable.map((item, index) => {
                 return (
                   <th
-                    className=" text-start font-semibold headerSecond "
+                    className="text-start font-semibold headerSecond "
                     key={index}
                   >
                     {item}
@@ -338,20 +338,21 @@ const DeclaratioNConforme = () => {
                     key={index}
                     className="gridArray6 w-full border-b-2 border-slate-50 "
                   >
-                    <td className="text-start lg:w-32 text-sm xl:text-base">
+                    <td className="text-start text-sm xl:text-base headerSecond">
                       {index + 1}
                     </td>
-                    <td className="text-start lg:w-32 text-sm xl:text-base">
-                      {val.soumission_dtci.imo_dtci}
-                    </td>
-                    <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
+                    <td className="text-start  text-sm xl:text-sm headerSecond">
                       {val.soumission_dtci.nom_navire_dtci}
                     </td>
-                    <td className="text-start lg:w-40 text-sm xl:text-base">
+                    <td className="text-start  text-sm xl:text-base headerSecond">
+                      {val.soumission_dtci.imo_dtci}
+                    </td>
+
+                    <td className="text-start lg:w-40 text-sm xl:text-base headerSecond">
                       {val.soumission_dtci.mouvement_dtci}
                     </td>
 
-                    <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
+                    <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base headerSecond ">
                       {val.soumission_dtci.mouvement_dtci === 'Arrivée'
                         ? val.soumission_dtci.eta_dtci
                             .split('-')
@@ -363,7 +364,7 @@ const DeclaratioNConforme = () => {
                             .join('-')}
                     </td>
 
-                    <td className="text-end lg:w-28 xl:w-48 flex gap-3 ">
+                    <td className="text-end lg:w-28 xl:w-48 flex gap-3  headerSecond">
                       {!val.observation ? (
                         <button onClick={() => handleChange(val)}>
                           <Icon

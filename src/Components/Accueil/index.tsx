@@ -12,6 +12,9 @@ const Accueil = () => {
   const conform = useServer()?.conform;
   const notConform = useServer()?.notConform;
   const undeclared = useServer()?.undeclared;
+  const conformTonnages = useServer()?.conformTonnages;
+  const notConformTonnages = useServer()?.notConformTonnages;
+  const undeclaredTonnages = useServer()?.undeclaredTonnages;
   const overlay = useServer()?.overlay;
   const server = useServer();
   const [lib, setLib] = useState('');
@@ -149,20 +152,27 @@ const Accueil = () => {
                 <p className="text-md font-medium ">Comparaison Tonnages</p>
               </div>
 
-              <div className="grid grid-cols-2 w-full place-items-center h-10 bg-[#f7f7f8] rounded-b-md">
+              <div className="grid grid-cols-3 w-full place-items-center h-10 bg-[#f7f7f8] rounded-b-md">
                 <div className=" flex-center border-r-2 w-full gap-2 text-xl text-[#2563eb]">
                   <Icon
-                    icon="solar:graph-up-broken"
+                    icon="lucide:circle-check-big"
                     className="drop-shadow-sm"
                   />
-                  <p className="font-medium  drop-shadow-sm">12</p>
+                  <p className="font-medium  drop-shadow-sm">
+                    {conformTonnages?.length}
+                  </p>
                 </div>
-                <div className="flex-center w-full gap-2 text-xl text-[#f59069] ">
-                  <Icon
-                    icon="solar:graph-up-broken"
-                    className="drop-shadow-sm"
-                  />
-                  <p className="font-medium  drop-shadow-sm">13</p>
+                <div className="flex-center border-r-2 w-full gap-2 text-xl text-[#f59069] ">
+                  <Icon icon="charm:notes-cross" className="drop-shadow-sm" />
+                  <p className="font-medium  drop-shadow-sm">
+                    {notConformTonnages?.length}
+                  </p>
+                </div>
+                <div className="flex-center w-full gap-2 text-xl  text-[#f0352b]">
+                  <Icon icon="ph:x-circle" className="drop-shadow-sm " />
+                  <p className="font-medium drop-shadow-sm">
+                    {undeclaredTonnages?.length}
+                  </p>
                 </div>
               </div>
             </div>

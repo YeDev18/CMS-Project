@@ -40,6 +40,7 @@ const DeclarationConforme = () => {
     consignataire: '',
     tonage: '',
     observation: '',
+    dateTm: '',
   });
   const [tags, setTags] = useState<boolean>(false);
   const handleChange = (val: any) => {
@@ -67,6 +68,7 @@ const DeclarationConforme = () => {
         val.soumission_dtci.mouvement_dtci === 'Arrivée'
           ? val.soumission_dtci.eta_dtci.split('-').reverse().join('-')
           : val.soumission_dtci.etd_dtci.split('-').reverse().join('-'),
+      dateTm: val.trafic_maritime.date_trafic,
     });
   };
   const handleChangeCheck = () => {
@@ -294,20 +296,20 @@ const DeclarationConforme = () => {
                     key={index}
                     className="gridArray6 w-full border-b-2 border-slate-50 "
                   >
-                    <td className="text-start lg:w-32 text-sm xl:text-base">
+                    <td className="text-start text-sm xl:text-base headerSecond">
                       {index + 1}
                     </td>
-                    <td className="text-start lg:w-32 text-sm xl:text-base">
-                      {val.soumission_dtci.imo_dtci}
-                    </td>
-                    <td className="text-start lg:w-28 xl:w-52 whitespace-normal text-sm xl:text-sm">
+                    <td className="text-start whitespace-normal text-sm xl:text-sm headerSecond">
                       {val.soumission_dtci.nom_navire_dtci}
                     </td>
-                    <td className="text-start lg:w-40 text-sm xl:text-base">
+                    <td className="text-start text-sm xl:text-base headerSecond">
+                      {val.soumission_dtci.imo_dtci}
+                    </td>
+                    <td className="text-start lg:w-40 text-sm xl:text-base headerSecond">
                       {val.soumission_dtci.mouvement_dtci}
                     </td>
 
-                    <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
+                    <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base headerSecond">
                       {val.soumission_dtci.mouvement_dtci === 'Arrivée'
                         ? val.soumission_dtci.eta_dtci
                             .split('-')
@@ -427,6 +429,12 @@ const DeclarationConforme = () => {
                 className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
                 value={data3.numVoyage}
               />
+              {/* <input
+                disabled
+                type="text"
+                className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                value={data3.dateTm}
+              /> */}
             </div>
 
             <button

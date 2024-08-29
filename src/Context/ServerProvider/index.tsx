@@ -17,6 +17,9 @@ type Context = {
   undeclared: [];
   notConform: [];
   conform: [];
+  conformTonnages: [];
+  notConformTonnages: [];
+  undeclaredTonnages: [];
   tonnages: [];
   initialize: boolean;
   overlay: boolean;
@@ -60,6 +63,9 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const [conform, setConform] = useState<[]>([]);
   const [notConform, setNotConform] = useState<[]>([]);
   const [undeclared, setUndeclared] = useState<[]>([]);
+  const [conformTonnages, setConformTonnages] = useState<[]>([]);
+  const [notConformTonnages, setNotConformTonnages] = useState<[]>([]);
+  const [undeclaredTonnages, setUndeclaredTonnages] = useState<[]>([]);
   const [tonnages, setTonnages] = useState<[]>([]);
   const [initialize, setInitialize] = useState(false);
   const [userInitialize, setUserInitialize] = useState(false);
@@ -71,7 +77,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const [success, setSuccess] = useState<boolean | 0>(0);
   const [loading, setLoading] = useState<boolean | 0>(0);
   const [notification, setNotification] = useState<boolean | 0>(0);
-  const [setting, setSetting] = useState<boolean | 0>(0);
+  const [setting, setSetting] = useState<boolean | 0>(false);
 
   const getData = () => {
     const routes = [
@@ -80,7 +86,10 @@ const ServerProvider: FC<Props> = ({ children }) => {
       'api/non-declare',
       'api/declare-non-conforme',
       'api/declare-conforme',
-      'api/control-tonnage-status',
+      'api/calcul-difference-tonnage/',
+      'api/declare-conforme-tonnage',
+      'api/declare-non-conforme-tonnage',
+      'api/non-declare-tonnage',
     ];
     axios.all(routes.map(route => url.get(route))).then(
       axios.spread(
@@ -90,7 +99,10 @@ const ServerProvider: FC<Props> = ({ children }) => {
           { data: nonDeclare },
           { data: declareNConforme },
           { data: declareConforme },
-          { data: tonnages }
+          { data: tonnages },
+          { data: conformTonnages },
+          { data: notConformTonnages },
+          { data: undeclaredTonnages }
         ) => {
           setNavire(navire);
           setConsignataire(consignataire);
@@ -98,6 +110,10 @@ const ServerProvider: FC<Props> = ({ children }) => {
           setUndeclared(nonDeclare);
           setNotConform(declareNConforme);
           setTonnages(tonnages);
+          setConformTonnages(conformTonnages);
+          setNotConformTonnages(notConformTonnages);
+          setUndeclaredTonnages(undeclaredTonnages);
+          console.log(declareConforme);
         }
       )
     );
@@ -207,6 +223,9 @@ const ServerProvider: FC<Props> = ({ children }) => {
         undeclared,
         notConform,
         conform,
+        conformTonnages,
+        notConformTonnages,
+        undeclaredTonnages,
         tonnages,
         overlay,
         loading,

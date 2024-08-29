@@ -1,4 +1,4 @@
-import logo from '../../assets/images/logo.png';
+import logo from '../../assets/images/Logo-CMS-1.png';
 import Sideba2 from '../Sideba2.tsx';
 
 // type Item = {
@@ -9,7 +9,7 @@ import Sideba2 from '../Sideba2.tsx';
 // };
 const NavHeader = () => (
   <header>
-    <div className="lg:w-24 xl:w-48">
+    <div className="w-16 lg:w-24 xl:w-48">
       <img className="w-full h-full flex" src={logo} alt="Logo" />
     </div>
   </header>

@@ -73,9 +73,19 @@ export const Libs = [
     lib: 'TM',
   },
 ];
-export const headersNavire = ['#', 'IMO', 'Navires DTCI'];
+export const headersNavire = ['#', 'IMO', 'Navires'];
 export const headersConsignataires = ['#', 'Consignataires DTCI'];
-export const headerTable = ['#', 'IMO', 'Nom', 'Mouvement', 'Date'];
+export const headerTable = ['#', 'Nom', 'IMO', 'Mouvement', 'Date'];
+export const headerTableTonnes = [
+  '#',
+  'IMO',
+  'Nom',
+  'Date',
+  'Tonnages DTCI',
+  'Tonnages Port',
+  'Ecart',
+  'Statuts',
+];
 
 export const ItemsPeriode = [
   {

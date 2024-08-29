@@ -207,11 +207,11 @@ const NonDeclaration = () => {
                     <td className="text-start  text-sm xl:text-base">
                       {index + 1}
                     </td>
-                    <td className="text-start  text-sm xl:text-base">
-                      {val.trafic_maritime.imo_trafic}
-                    </td>
                     <td className="text-start  text-sm xl:text-sm whitespace-normal">
                       {val.trafic_maritime.nom_navire_trafic}
+                    </td>
+                    <td className="text-start  text-sm xl:text-base">
+                      {val.trafic_maritime.imo_trafic}
                     </td>
                     <td className="text-start text-sm xl:text-base">
                       {val.trafic_maritime.mouvement_trafic}
