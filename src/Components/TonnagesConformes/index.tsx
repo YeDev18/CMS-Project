@@ -2,12 +2,9 @@ import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import { AllMonths, headerTableTonnes, Year } from '../Data';
 import Libelle from '../ui/Libelle';
-
-const Tonages = () => {
-  // const [tonnes, setTonnes] = useState<[]>();
+const T_Conforme = () => {
   const server = useServer();
   const tonnes = server?.tonnages;
-
   return (
     <div className="w-full h-full relative flex flex-col gap-6 ">
       <div className="flex justify-start gap-2 flex-wrap w-full">
@@ -188,4 +185,4 @@ const Tonages = () => {
   );
 };
 
-export default Tonages;
+export default T_Conforme;

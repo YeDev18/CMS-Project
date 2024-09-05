@@ -4,7 +4,7 @@ import { FC, ReactNode, createContext, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useServer } from '../ServerProvider';
 type Context = {
-  token: string;
+  token: string | null;
   name: string;
   email: string;
   role: string;
@@ -36,7 +36,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
   const [user, setUser] = useState<any>();
   const server = useServer();
 
-  const [token, setToken] = useState(localStorage.getItem('site') || '');
+  const [token, setToken] = useState(null);
   const navigate = useNavigate();
 
   const RegisterAction = async (
@@ -65,7 +65,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
       setEmail(response.data.email);
       setRole(response.data.role);
       // setSucces(`register successful:`);
-      localStorage.setItem('site', response.data.token);
+      // setToken(response.data.token);
       navigate('/');
     } catch (err: any) {
       console.log(error);
@@ -88,7 +88,8 @@ const AuthProvider: FC<Props> = ({ children }) => {
       );
 
       setToken(response.data.jwt);
-      localStorage.setItem('site', response.data.jwt);
+      localStorage.setItem('site', 'Tom');
+      // localStorage.setItem('site', response.data.jwt);
       setSuccess(true);
       server?.showUserInitialize();
       navigate('/accueil');
@@ -99,9 +100,9 @@ const AuthProvider: FC<Props> = ({ children }) => {
       setTimeout(() => {
         setError(false);
       }, 3000);
-      setTimeout(() => {
-        localStorage.removeItem('site');
-      }, 36000);
+      // setTimeout(() => {
+      //   localStorage.removeItem('site');
+      // }, 36000);
       console.log(err);
     }
   };

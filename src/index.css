@@ -174,7 +174,7 @@
     @apply flex justify-start items-center py-4 px-2;
   }
   .gridArray8 {
-    @apply grid grid-cols-8 py-4 px-2;
+    @apply flex justify-start items-center py-2 px-2;
   }
   .flex-center {
     @apply flex justify-center items-center;
@@ -222,6 +222,18 @@
   }
   .animateElement {
     animation: FadInk 2.5s cubic-bezier(0.58, 0.47, 1, 1);
+  }
+
+  .headerThird {
+    width: 10em;
+  }
+  .headerThird:nth-child(1) {
+    /* background-color: #009fe3; */
+    width: 8rem;
+  }
+  .headerThird:nth-child(2) {
+    /* background-color: #009fe3; */
+    width: 16rem;
   }
 
   @keyframes FadInk {

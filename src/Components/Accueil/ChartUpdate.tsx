@@ -17,41 +17,52 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
-const chartData = [
-  { browser: 'chrome', visitors: 275, fill: 'var(--color-chrome)' },
-  { browser: 'safari', visitors: 200, fill: 'var(--color-safari)' },
-  { browser: 'firefox', visitors: 187, fill: 'var(--color-firefox)' },
-  { browser: 'edge', visitors: 173, fill: 'var(--color-edge)' },
-  { browser: 'other', visitors: 90, fill: 'var(--color-other)' },
-];
-
-const chartConfig = {
-  visitors: {
-    label: 'Visitors',
-  },
-  chrome: {
-    label: 'Chrome',
-    color: 'hsl(var(--chart-1))',
-  },
-  safari: {
-    label: 'Safari',
-    color: 'hsl(var(--chart-2))',
-  },
-  firefox: {
-    label: 'Firefox',
-    color: 'hsl(var(--chart-3))',
-  },
-  edge: {
-    label: 'Edge',
-    color: 'hsl(var(--chart-4))',
-  },
-  other: {
-    label: 'Other',
-    color: 'hsl(var(--chart-5))',
-  },
-} satisfies ChartConfig;
+import { useServer } from '@/Context/ServerProvider';
 
 export function ChartUpdate() {
+  const conform = useServer().conform;
+  const notConform = useServer().notConform;
+  const undeclared = useServer().undeclared;
+
+  const chartData = [
+    {
+      browser: 'Conformes',
+      visitors: conform.length,
+      fill: 'var(--color-chrome)',
+    },
+    {
+      browser: 'safari',
+      visitors: notConform.length,
+      fill: 'var(--color-Non_conformes)',
+    },
+    {
+      browser: 'firefox',
+      visitors: undeclared.length,
+      fill: 'var(--color-Non_declares)',
+    },
+  ];
+
+  const chartConfig = {
+    visitors: {
+      label: 'Navires',
+    },
+    chrome: {
+      label: 'Chrome',
+      color: 'hsl(var(--chart-1))',
+    },
+    Conformes: {
+      label: 'Conformes',
+      color: 'hsl(var(--chart-1))',
+    },
+    Non_conformes: {
+      label: 'Non_Conformes',
+      color: '#F59069',
+    },
+    Non_declares: {
+      label: 'Non_Declare',
+      color: '#F0352B',
+    },
+  } satisfies ChartConfig;
   return (
     <Card className="flex flex-col">
       <CardHeader className="items-center pb-0">

@@ -49,11 +49,11 @@ export function Chart() {
       color: 'hsl(var(--chart-1))',
     },
     Non_conformes: {
-      label: 'Non_Conformes',
+      label: 'Non Conformes',
       color: '#F59069',
     },
     Non_declares: {
-      label: 'Non_Declare',
+      label: 'Non Declare',
       color: '#F0352B',
     },
   } satisfies ChartConfig;
@@ -71,7 +71,7 @@ export function Chart() {
           config={chartConfig}
           className="mx-auto aspect-square max-h-[400px]"
         >
-          <PieChart>
+          <PieChart className="flex">
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}

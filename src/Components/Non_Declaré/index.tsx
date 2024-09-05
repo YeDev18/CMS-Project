@@ -13,11 +13,25 @@ const NonDeclaration = () => {
   });
 
   const MonthsYears = formValue.years + '-' + formValue.months;
+  const server = useServer();
+  const [portA, setPortA] = useState<boolean>(false);
+  const [portSP, setPortSP] = useState<boolean>(false);
 
   const [current, setCurrent] = useState(1);
   const itemsPerPage = 10;
   const startIndex = (current - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
+
+  const handleChangePortA = () => {
+    setPortA(!portA);
+    setPortSP(false);
+    server?.toInitialize();
+  };
+  const handleChangePortSP = () => {
+    setPortSP(!portSP);
+    setPortA(false);
+    server?.toInitialize();
+  };
 
   const goToNextPage = () => {
     setCurrent(prevPage => prevPage + 1);
@@ -27,7 +41,7 @@ const NonDeclaration = () => {
   };
 
   const renderPaginationControls = () => {
-    const totalPages = Math.ceil(dataFinal.length / itemsPerPage);
+    const totalPages = Math.ceil(FinalData.length / itemsPerPage);
     return (
       <div className="flex justify-end pb-5">
         <button
@@ -37,7 +51,7 @@ const NonDeclaration = () => {
         >
           <Icon icon="ep:arrow-left-bold" />
         </button>
-        <div className="px-2 w-16 text-center">
+        <div className="px-2 w-24 text-center">
           <span className="font-medium text-borderColor">{current}</span> /{' '}
           <span className="text-borderColor">{totalPages}</span>
         </div>
@@ -65,12 +79,26 @@ const NonDeclaration = () => {
       )
     : Final;
 
-  const modifiedData = dataFinal.map((item: any, index: number) => ({
+  let FinalData = dataFinal;
+  if (portA) {
+    FinalData = dataFinal.filter(
+      (val: any) => val.trafic_maritime.port_trafic === 'ABIDJAN'
+    );
+  } else if (portSP) {
+    FinalData = dataFinal.filter(
+      (val: any) => val.trafic_maritime.port_trafic === 'SAN PEDRO'
+    );
+  } else {
+    console.log('');
+  }
+
+  const modifiedData = FinalData.map((item: any, index: number) => ({
     Id: index,
     Imo: item?.trafic_maritime?.imo_trafic,
     Navire: item?.trafic_maritime?.nom_navire_trafic,
     Mouvement: item?.trafic_maritime.mouvement_trafic,
     Date: item?.trafic_maritime?.date_trafic.split('-').reverse().join('-'),
+    Port: item?.trafic_maritime?.port_trafic,
   }));
 
   const exportToExcel = () => {
@@ -150,6 +178,31 @@ const NonDeclaration = () => {
               setSearchValue(e.target.value);
             }}
           />
+          <span className="border border-borderColor h-4"></span>
+          <div className="flex  justify-center items-center h-fit">
+            <label htmlFor="" className="font-semibold text-sm">
+              Port A
+            </label>
+            <input
+              type="checkbox"
+              checked={portA}
+              onChange={handleChangePortA}
+              placeholder="IMO"
+              className="border outline-none p-1 rounded-sm text-2xl w-8 h-4 font-medium"
+            />
+          </div>
+          <div className="flex  justify-center items-center h-fit">
+            <label htmlFor="" className="font-semibold text-sm">
+              Port SP
+            </label>
+            <input
+              type="checkbox"
+              checked={portSP}
+              onChange={handleChangePortSP}
+              placeholder="IMO"
+              className="border outline-none p-1 rounded-sm text-2xl w-8 h-4 font-medium"
+            />
+          </div>
         </div>
         <button
           className="rounded-md  whitespace-nowrap shadow-sm shadow-slate-200 p-2 inline-flex items-center bg-[#0e5c2f] text-firstColors text-sm h-10 "
@@ -164,7 +217,7 @@ const NonDeclaration = () => {
           />
           Export en csv
         </button>
-        {!(MonthsYears === '-') || searchValue ? (
+        {!(MonthsYears === '-') || searchValue || portA || portSP ? (
           <div className="rounded-md bg-[#F0352B]  shadow-sm shadow-slate-200 p-2 inline-flex gap-1 items-center h-10 text-firstColors">
             <Icon
               icon="ph:x-circle"
@@ -172,7 +225,7 @@ const NonDeclaration = () => {
               height="1.2em"
               className="mr-2"
             />
-            Quantite : {dataFinal.length}
+            Quantite : {FinalData.length}
           </div>
         ) : (
           ''
@@ -196,9 +249,8 @@ const NonDeclaration = () => {
           </thead>
 
           <tbody>
-            {dataFinal
-              .slice(startIndex, endIndex)
-              .map((val: any, index: number) => {
+            {FinalData.slice(startIndex, endIndex).map(
+              (val: any, index: number) => {
                 return (
                   <tr
                     key={index}
@@ -225,7 +277,8 @@ const NonDeclaration = () => {
                     </td>
                   </tr>
                 );
-              })}
+              }
+            )}
           </tbody>
         </table>
       </div>

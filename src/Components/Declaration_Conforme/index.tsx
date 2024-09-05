@@ -9,7 +9,6 @@ const DeclarationConforme = () => {
   const server = useServer();
   const overlay = useServer().overlay;
   const conform = useServer().conform;
-  console.log(conform);
 
   const Data3: any = [];
 
@@ -42,7 +41,9 @@ const DeclarationConforme = () => {
     observation: '',
     dateTm: '',
   });
-  const [tags, setTags] = useState<boolean>(false);
+  const [update, setUpdate] = useState<boolean>(false);
+  const [portA, setPortA] = useState<boolean>(false);
+  const [portSP, setPortSP] = useState<boolean>(false);
   const handleChange = (val: any) => {
     server.showOverlay();
     setDate3({
@@ -72,7 +73,17 @@ const DeclarationConforme = () => {
     });
   };
   const handleChangeCheck = () => {
-    setTags(!tags);
+    setUpdate(!update);
+    server?.toInitialize();
+  };
+  const handleChangePortA = () => {
+    setPortA(!portA);
+    setPortSP(false);
+    server?.toInitialize();
+  };
+  const handleChangePortSP = () => {
+    setPortSP(!portSP);
+    setPortA(false);
     server?.toInitialize();
   };
 
@@ -83,7 +94,7 @@ const DeclarationConforme = () => {
     setCurrent(prevPage => prevPage - 1);
   };
   const renderPaginationControls = () => {
-    const totalPages = Math.ceil(dataFinalChecked.length / itemsPerPage);
+    const totalPages = Math.ceil(FinalData.length / itemsPerPage);
     return (
       <div className="flex justify-end pb-5">
         <button
@@ -93,7 +104,7 @@ const DeclarationConforme = () => {
         >
           <Icon icon="ep:arrow-left-bold" />
         </button>
-        <div className="px-2 w-16 text-center">
+        <div className="px-2 w-24 text-center">
           <span className="font-medium text-borderColor">{current}</span> /{' '}
           <span className="text-borderColor">{totalPages}</span>
         </div>
@@ -121,11 +132,24 @@ const DeclarationConforme = () => {
         val.soumission_dtci.imo_dtci.toString().includes(searchValue)
       )
     : Final;
-  const dataFinalChecked = tags
+  const dataFinalChecked = update
     ? dataFinal.filter((val: any) => val.observation)
     : dataFinal;
 
-  const modifiedData = dataFinalChecked.map((item: any, index: number) => ({
+  let FinalData = dataFinalChecked;
+  if (portA) {
+    FinalData = dataFinalChecked.filter(
+      (val: any) => val.trafic_maritime.port_trafic === 'ABIDJAN'
+    );
+  } else if (portSP) {
+    FinalData = dataFinalChecked.filter(
+      (val: any) => val.trafic_maritime.port_trafic === 'SAN PEDRO'
+    );
+  } else {
+    console.log('');
+  }
+
+  const modifiedData = FinalData.map((item: any, index: number) => ({
     Id: index,
     DateDeclaration: item?.soumission_dtci.date_declaration_dtci
       .split('-')
@@ -236,9 +260,33 @@ const DeclarationConforme = () => {
             </label>
             <input
               type="checkbox"
-              checked={tags}
+              checked={update}
               onChange={handleChangeCheck}
-              placeholder="IMO"
+              placeholder=""
+              className="border outline-none p-1 rounded-sm text-2xl w-8 h-4 font-medium"
+            />
+          </div>
+          <div className="flex  justify-center items-center h-fit">
+            <label htmlFor="" className="font-semibold text-sm">
+              Port A
+            </label>
+            <input
+              type="checkbox"
+              checked={portA}
+              onChange={handleChangePortA}
+              placeholder=""
+              className="border outline-none p-1 rounded-sm text-2xl w-8 h-4 font-medium"
+            />
+          </div>
+          <div className="flex  justify-center items-center h-fit">
+            <label htmlFor="" className="font-semibold text-sm">
+              Port SP
+            </label>
+            <input
+              type="checkbox"
+              checked={portSP}
+              onChange={handleChangePortSP}
+              placeholder="MO"
               className="border outline-none p-1 rounded-sm text-2xl w-8 h-4 font-medium"
             />
           </div>
@@ -257,7 +305,7 @@ const DeclarationConforme = () => {
           />
           Export en csv
         </button>
-        {!(MonthsYears === '-') || searchValue || tags ? (
+        {!(MonthsYears === '-') || searchValue || update || portSP || portA ? (
           <div className="rounded-md bg-[#2563eb]  shadow-sm shadow-slate-200 p-2 inline-flex gap-1 items-center h-10 text-firstColors ">
             <Icon
               icon="charm:notes-cross"
@@ -265,20 +313,20 @@ const DeclarationConforme = () => {
               height="1.2em"
               className="mr-2"
             />
-            Quantite : {dataFinalChecked.length}
+            Quantite : {FinalData.length}
           </div>
         ) : (
           ''
         )}
       </div>
-      <div className="w-full h-full overflow-x-auto  pr-2 relative">
+      <div className="w-full h-full overflow-x-auto pr-2 relative">
         <table className="w-full pb-6">
           <thead>
             <tr className="gridArray6 w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
               {headerTable.map((item, index) => {
                 return (
                   <th
-                    className=" text-start font-semibold lg:w-28 xl:w-52 headerSecond"
+                    className=" text-start font-semibold headerSecond"
                     key={index}
                   >
                     {item}
@@ -288,9 +336,8 @@ const DeclarationConforme = () => {
             </tr>
           </thead>
           <tbody>
-            {dataFinalChecked
-              .slice(startIndex, endIndex)
-              .map((val: any, index: number) => {
+            {FinalData.slice(startIndex, endIndex).map(
+              (val: any, index: number) => {
                 return (
                   <tr
                     key={index}
@@ -331,7 +378,8 @@ const DeclarationConforme = () => {
                     </td>
                   </tr>
                 );
-              })}
+              }
+            )}
           </tbody>
         </table>
       </div>

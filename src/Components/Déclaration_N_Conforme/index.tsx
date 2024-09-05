@@ -24,8 +24,22 @@ const DeclaratioNConforme = () => {
   const [notificationUpdate, setNotificationUpdate] = useState<
     boolean | number
   >(0);
+
+  const [portA, setPortA] = useState<boolean>(false);
+  const [portSP, setPortSP] = useState<boolean>(false);
   const handleChangeCheck = () => {
     setTags(!tags);
+    server?.toInitialize();
+  };
+
+  const handleChangePortA = () => {
+    setPortA(!portA);
+    setPortSP(false);
+    server?.toInitialize();
+  };
+  const handleChangePortSP = () => {
+    setPortSP(!portSP);
+    setPortA(false);
     server?.toInitialize();
   };
   const [current, setCurrent] = useState(1);
@@ -118,7 +132,20 @@ const DeclaratioNConforme = () => {
     ? dataFinal.filter((val: any) => val.observation)
     : dataFinal;
 
-  const modifiedData = dataFinalChecked.map((item: any, index: number) => ({
+  let FinalData = dataFinalChecked;
+  if (portA) {
+    FinalData = dataFinalChecked.filter(
+      (val: any) => val.trafic_maritime.port_trafic === 'ABIDJAN'
+    );
+  } else if (portSP) {
+    FinalData = dataFinalChecked.filter(
+      (val: any) => val.trafic_maritime.port_trafic === 'SAN PEDRO'
+    );
+  } else {
+    console.log('');
+  }
+
+  const modifiedData = FinalData.map((item: any, index: number) => ({
     Id: index,
     DateDeclaration: item?.soumission_dtci.date_declaration_dtci
       .split('-')
@@ -148,7 +175,7 @@ const DeclaratioNConforme = () => {
     XLSX.writeFile(wb, `Decalaration non conforme.xlsx`);
   };
   const renderPaginationControls = () => {
-    const totalPages = Math.ceil(dataFinalChecked.length / itemsPerPage);
+    const totalPages = Math.ceil(FinalData.length / itemsPerPage);
     return (
       <div className="flex justify-end pb-5">
         <button
@@ -158,7 +185,7 @@ const DeclaratioNConforme = () => {
         >
           <Icon icon="ep:arrow-left-bold" />
         </button>
-        <div className="px-2 w-fit text-center">
+        <div className="px-2 w-24 text-center">
           <span className="font-medium text-borderColor">{current}</span> /{' '}
           <span className="text-borderColor">{totalPages}</span>
         </div>
@@ -284,6 +311,30 @@ const DeclaratioNConforme = () => {
               className="border outline-none p-1 rounded-sm text-2xl w-8 h-4 font-medium"
             />
           </div>
+          <div className="flex  justify-center items-center h-fit">
+            <label htmlFor="" className="font-semibold text-sm">
+              Port A
+            </label>
+            <input
+              type="checkbox"
+              checked={portA}
+              onChange={handleChangePortA}
+              placeholder="IMO"
+              className="border outline-none p-1 rounded-sm text-2xl w-8 h-4 font-medium"
+            />
+          </div>
+          <div className="flex  justify-center items-center h-fit">
+            <label htmlFor="" className="font-semibold text-sm">
+              Port SP
+            </label>
+            <input
+              type="checkbox"
+              checked={portSP}
+              onChange={handleChangePortSP}
+              placeholder="IMO"
+              className="border outline-none p-1 rounded-sm text-2xl w-8 h-4 font-medium"
+            />
+          </div>
         </div>
         <button
           className="rounded-md  whitespace-nowrap shadow-sm shadow-slate-200 p-2 inline-flex items-center bg-[#0e5c2f] text-firstColors text-sm h-10 "
@@ -298,7 +349,7 @@ const DeclaratioNConforme = () => {
           />
           Export en csv
         </button>
-        {!(MonthsYears === '-') || searchValue || tags ? (
+        {!(MonthsYears === '-') || searchValue || tags || portA || portSP ? (
           <div className="rounded-md bg-[#F59069] shadow-sm shadow-slate-200 p-2 inline-flex gap-1 items-center h-10 text-firstColors ">
             <Icon
               icon="charm:notes-cross"
@@ -306,20 +357,20 @@ const DeclaratioNConforme = () => {
               height="1.2em"
               className="mr-2"
             />
-            Quantite : {dataFinalChecked.length}
+            Quantite : {FinalData.length}
           </div>
         ) : (
           ''
         )}
       </div>
-      <div className="w-full h-full overflow-x-auto  pr-2 relative">
+      <div className="w-full h-full  overflow-x-auto  pr-2 relative">
         <table className="w-full">
           <thead>
             <tr className="gridArray6 w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 sticky top-0">
               {headerTable.map((item, index) => {
                 return (
                   <th
-                    className="text-start font-semibold headerSecond "
+                    className="text-start  font-semibold headerSecond "
                     key={index}
                   >
                     {item}
@@ -329,9 +380,8 @@ const DeclaratioNConforme = () => {
             </tr>
           </thead>
 
-          {dataFinalChecked
-            .slice(startIndex, endIndex)
-            .map((val: any, index: number) => {
+          {FinalData.slice(startIndex, endIndex).map(
+            (val: any, index: number) => {
               return (
                 <tbody>
                   <tr
@@ -385,7 +435,8 @@ const DeclaratioNConforme = () => {
                   </tr>
                 </tbody>
               );
-            })}
+            }
+          )}
         </table>
       </div>
 

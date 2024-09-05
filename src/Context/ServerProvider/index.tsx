@@ -8,6 +8,7 @@ import {
   useEffect,
   useState,
 } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '../AuthProvider';
 
 type Context = {
@@ -21,6 +22,7 @@ type Context = {
   notConformTonnages: [];
   undeclaredTonnages: [];
   tonnages: [];
+  pathname: string;
   initialize: boolean;
   overlay: boolean;
   userInitialize: boolean;
@@ -56,6 +58,8 @@ const SeverContext = createContext<Context | any>(null);
 
 const ServerProvider: FC<Props> = ({ children }) => {
   const token = useAuth()?.token;
+  const { pathname } = useLocation();
+  console.log(pathname);
 
   const [user, setUser] = useState<[]>([]);
   const [navire, setNavire] = useState<[]>([]);
@@ -96,7 +100,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
         (
           { data: consignataire },
           { data: navire },
-          { data: nonDeclare },
+          { data: undeclared },
           { data: declareNConforme },
           { data: declareConforme },
           { data: tonnages },
@@ -107,13 +111,12 @@ const ServerProvider: FC<Props> = ({ children }) => {
           setNavire(navire);
           setConsignataire(consignataire);
           setConform(declareConforme);
-          setUndeclared(nonDeclare);
+          setUndeclared(undeclared);
           setNotConform(declareNConforme);
           setTonnages(tonnages);
           setConformTonnages(conformTonnages);
           setNotConformTonnages(notConformTonnages);
           setUndeclaredTonnages(undeclaredTonnages);
-          console.log(declareConforme);
         }
       )
     );
@@ -182,6 +185,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
       setSuccess(0),
       setLoading(0),
       setInitialize(!initialize);
+    token;
   };
 
   useEffect(() => {
@@ -257,6 +261,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
         showNotSuccess1,
         showSuccess2,
         showNotSuccess2,
+        pathname,
       }}
     >
       {children}

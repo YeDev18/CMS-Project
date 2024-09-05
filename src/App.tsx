@@ -16,6 +16,9 @@ import {
   Periode,
   RCLayout,
   Register,
+  T_Conforme,
+  T_NonConforme,
+  T_NonDeclare,
   Tonnages,
   Update,
 } from './Pages';
@@ -39,6 +42,15 @@ function App() {
                 <Route path="/consignataire" element={<Consignataire />} />
                 <Route path="/navire" element={<Navire />} />
                 <Route path="/periode" element={<Periode />} />
+                <Route path="/tonnages-conformes" element={<T_Conforme />} />
+                <Route
+                  path="/tonnages-non-conformes"
+                  element={<T_NonConforme />}
+                />
+                <Route
+                  path="/tonnages-non-declares"
+                  element={<T_NonDeclare />}
+                />
                 <Route path="/tonnages" element={<Tonnages />} />
 
                 <Route

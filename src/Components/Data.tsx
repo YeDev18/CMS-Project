@@ -60,6 +60,23 @@ export const MenuItems = [
     lib: 'Tonnages',
     icon: 'lucide:anvil',
     route: '/tonnages',
+    ite: [
+      {
+        lib: 'Conformes',
+        icon: 'lucide:circle-check-big',
+        route: '/tonnages-conformes',
+      },
+      {
+        lib: 'Non Conformes',
+        icon: 'charm:notes-cross',
+        route: '/tonnages-non-conformes',
+      },
+      {
+        lib: 'Non declares',
+        icon: 'ph:x-circle',
+        route: '/tonnages-non-declares',
+      },
+    ],
   },
 ];
 
@@ -78,8 +95,8 @@ export const headersConsignataires = ['#', 'Consignataires DTCI'];
 export const headerTable = ['#', 'Nom', 'IMO', 'Mouvement', 'Date'];
 export const headerTableTonnes = [
   '#',
-  'IMO',
   'Nom',
+  'IMO',
   'Date',
   'Tonnages DTCI',
   'Tonnages Port',

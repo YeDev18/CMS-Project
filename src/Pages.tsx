@@ -7,8 +7,11 @@ import Navire from './Components/Navire';
 import NonDeclaration from './Components/Non_Declaré';
 import Periode from './Components/Periode';
 import Register from './Components/Register';
-import Update from './Components/Update';
 import Tonnages from './Components/Tonnages';
+import T_Conforme from './Components/TonnagesConformes';
+import T_NonConforme from './Components/Tonnages_N_Conformes';
+import T_NonDeclare from './Components/Tonnages_N_Declare';
+import Update from './Components/Update';
 import Home from './Routes/Home';
 import NotFound from './Routes/NotFound';
 import RCLayout from './Routes/RCLayout';
@@ -26,6 +29,9 @@ export {
   Periode,
   RCLayout,
   Register,
-  Update,
+  T_Conforme,
+  T_NonConforme,
+  T_NonDeclare,
   Tonnages,
+  Update,
 };
