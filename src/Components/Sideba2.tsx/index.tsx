@@ -10,41 +10,54 @@ const Sideba2 = () => {
   const [activeIndex, setActiveIndex] = useState<number>();
   const auth = useAuth();
   const me = useServer().user;
-  console.log(useServer());
+  // console.log(document.cookie);
   const { pathname } = useServer();
   console.log(pathname);
   const server = useServer();
+
+  const cookie = document.cookie.split(' ');
+  console.log(cookie);
+  const cookiesMap = {};
+  let nameCookie = '';
+  let valueCookie = '';
+  cookie.forEach(cookie => {
+    const [name, value] = cookie.split('=');
+    // console.log(name, value);
+    nameCookie = name;
+    valueCookie = value;
+    // cookiesMap[name] = value;
+
+    // cookiesMap[name] = value;
+  });
+  console.log(nameCookie, valueCookie);
 
   const handleConsole = (index: number) => {
     setActiveIndex(prevIndex => (prevIndex === index ? prevIndex : index));
     console.log(activeIndex);
   };
   return (
-    <div className="h-full w-full flex flex-col p-3">
+    <div className="h-full w-full flex flex-col p-2">
       <div className="w-full flex flex-col  gap-4  whitespace-nowrap  h-full ">
         {MenuItems.map((item, index) => (
-          <div key={index} className="w">
+          <div key={index} className="">
             {!item.ite && (
               <button
                 ref={active}
                 onClick={() => {
                   return handleConsole(index);
                 }}
-                className={`flex justify-center xl:justify-start gap-2 items-center h-12 w-full border transition-all ease delay-50  hover:bg-firstBlue hover:text-firstColors rounded-lg px-3 ${
+                className={`flex justify-start gap-2 items-center h-10 w-full border border-[#000]/5 transition-all ease delay-50  hover:bg-firstBlue hover:text-firstColors rounded-md ${
                   pathname === item.route ? 'bg-firstBlue text-firstColors' : ''
                 }`}
               >
-                <Icon
-                  icon={item.icon}
-                  width="1.8em"
-                  height="1.8em"
-                  className={``}
-                />
                 <Link
                   to={item.route}
-                  className="p-2 w-full text-start hidden xl:flex"
+                  className="p-2 w-full text-start flex items-center gap-2 text-sm xl:text-base"
+                  onClick={() => server.showResponsive()}
                 >
-                  {item.lib}
+                  <Icon icon={item.icon} className="w-6 h-6" />
+
+                  <span>{item.lib}</span>
                 </Link>
               </button>
             )}
@@ -52,20 +65,17 @@ const Sideba2 = () => {
               <>
                 <button
                   onClick={() => handleConsole(index)}
-                  className={`flex justify-center xl:justify-between gap-2 items-center h-12 w-full border transition-all ease delay-150  hover:bg-firstBlue hover:text-firstColors rounded-lg px-3 ${
+                  className={`flex justify-between xl:justify-between gap-2 items-center h-12 w-full border transition-all ease delay-150  hover:bg-firstBlue hover:text-firstColors rounded-lg px-3 ${
                     activeIndex === index ? 'bg-firstBlue text-firstColors' : ''
                   }`}
                 >
-                  <div className="flex items-center justify-center gap-3  ">
-                    <Icon icon={item.icon} width="1.8em" height="1.8em" />
-                    <button className="hidden xl:flex">{item.lib}</button>
+                  <div className=" gap-3  ">
+                    <button className=" flex gap-2 text-start  items-center justify-center text-sm xl:text-base w-full">
+                      <Icon icon={item.icon} className="w-6 h-6" />
+                      <span>{item.lib}</span>
+                    </button>
                   </div>
-                  <Icon
-                    icon="gridicons:dropdown"
-                    width="1.3em"
-                    height="1.3em"
-                    className="hidden xl:flex"
-                  />
+                  <Icon icon="gridicons:dropdown" className="w-6 h-6" />
                 </button>
                 {item.ite && (
                   <ul className="flex flex-col pl-2 gap-2 ">
@@ -79,11 +89,12 @@ const Sideba2 = () => {
                               : ''
                           }`}
                         >
-                          <Icon icon={good.icon} />
                           <Link
                             to={good.route}
-                            className="hidden w-full xl:flex"
+                            className="w-full text-start flex gap-2 items-center text-sm xl:text-base"
+                            onClick={() => server.showResponsive()}
                           >
+                            <Icon icon={good.icon} className="w-4 h-4" />
                             {good.lib}
                           </Link>
                         </button>

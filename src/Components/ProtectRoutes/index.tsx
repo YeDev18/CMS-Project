@@ -1,15 +1,14 @@
 import { ReactNode } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../../Context/AuthProvider';
 type Props = {
   children: ReactNode;
 };
 const ProtectRoutes = () => {
   const user = useAuth();
-  // : <Navigate to="/" />
-  // user?.token ?
+
   {
-    return <Outlet />;
+    return user?.token ? <Outlet /> : <Navigate to="/" />;
   }
 };
 

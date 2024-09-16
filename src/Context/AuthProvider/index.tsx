@@ -35,9 +35,50 @@ const AuthProvider: FC<Props> = ({ children }) => {
   const [success, setSuccess] = useState<boolean>(false);
   const [user, setUser] = useState<any>();
   const server = useServer();
+  const cfr = server?.getCrsf;
+  console.log(cfr);
 
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem('site') || '');
   const navigate = useNavigate();
+  console.log(server?.getCsrf);
+
+  // const getCookies = (name: string) => {
+  //   let cookieValue = null;
+  //   if (document.cookie && document.cookie !== '') {
+  //     console.log(document.cookie);
+  //     const cookies = document.cookie.split(';');
+  //     for (let i = 0; i < cookies.length; i++) {
+  //       const cookie = cookies[i].trim();
+  //       // Vérifie si ce cookie commence par le nom recherché
+  //       if (cookie.substring(0, name.length + 1) === name + '=') {
+  //         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+  //         break;
+  //       }
+  //     }
+  //   }
+  //   return cookieValue;
+  // };
+
+  // console.log(document.cookie);
+
+  // const csrftoken = getCookies('csrftoken');
+  // console.log(csrftoken);
+
+  const cookie = document.cookie.split(' ');
+  console.log(cookie);
+  const cookiesMap = {};
+  let nameCookie = '';
+  let valueCookie = '';
+  cookie.forEach(cookie => {
+    const [name, value] = cookie.split('=');
+    // console.log(name, value);
+    nameCookie = name;
+    valueCookie = value;
+    // cookiesMap[name] = value;
+
+    // cookiesMap[name] = value;
+  });
+  console.log(nameCookie, valueCookie);
 
   const RegisterAction = async (
     name: Register,
@@ -65,7 +106,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
       setEmail(response.data.email);
       setRole(response.data.role);
       // setSucces(`register successful:`);
-      // setToken(response.data.token);
+      setToken(response.data.token);
       navigate('/');
     } catch (err: any) {
       console.log(error);
@@ -88,27 +129,37 @@ const AuthProvider: FC<Props> = ({ children }) => {
       );
 
       setToken(response.data.jwt);
-      localStorage.setItem('site', 'Tom');
-      // localStorage.setItem('site', response.data.jwt);
+      // localStorage.setItem('site', 'Tom');
+      localStorage.setItem('site', response.data.jwt);
       setSuccess(true);
       server?.showUserInitialize();
       navigate('/accueil');
       const decode: any = jwtDecode(response.data.jwt);
       setUser(decode.id);
+      // console.log(csrftoken);
     } catch (err: any) {
       setError(true);
       setTimeout(() => {
         setError(false);
       }, 3000);
-      // setTimeout(() => {
-      //   localStorage.removeItem('site');
-      // }, 36000);
+      setTimeout(() => {
+        localStorage.removeItem('site');
+      }, 36000);
       console.log(err);
     }
   };
   const logout = async () => {
     try {
-      const response = await url.post('/api/logout');
+      const response = await url.post(
+        '/api/logout',
+        {},
+
+        {
+          headers: {
+            'X-CSRFToken': server?.getCrsf.csrfToken, // Inclure le token CSRF
+          }, // S'assure que les cookies sont inclus dans la requête
+        }
+      );
       navigate('/');
       localStorage.removeItem('site');
       server?.showUserInitialize();

@@ -22,6 +22,7 @@ type Context = {
   notConformTonnages: [];
   undeclaredTonnages: [];
   tonnages: [];
+  getCsrf: [csrfToken: string];
   pathname: string;
   initialize: boolean;
   overlay: boolean;
@@ -31,6 +32,7 @@ type Context = {
   loading: boolean | 0;
   notification: boolean | 0;
   setting: boolean;
+  responsive: boolean;
   showOverlay: () => void;
   toInitialize: () => void;
   showUserInitialize: () => void;
@@ -45,11 +47,12 @@ type Context = {
   showNotError1: () => void;
   showNotError2: () => void;
   showSuccessError: () => void;
-  showshowLoadingFinish: () => void;
+  showLoadingFinish: () => void;
   showNotification: () => void;
   showNotificationFinish: () => void;
   showSetting: () => void;
   showSettingFinish: () => void;
+  showResponsive: () => void;
 };
 type Props = {
   children: ReactNode;
@@ -70,6 +73,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const [conformTonnages, setConformTonnages] = useState<[]>([]);
   const [notConformTonnages, setNotConformTonnages] = useState<[]>([]);
   const [undeclaredTonnages, setUndeclaredTonnages] = useState<[]>([]);
+  const [getCsrf, setGetCsrf] = useState<[csrfToken: string]>();
   const [tonnages, setTonnages] = useState<[]>([]);
   const [initialize, setInitialize] = useState(false);
   const [userInitialize, setUserInitialize] = useState(false);
@@ -82,6 +86,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const [loading, setLoading] = useState<boolean | 0>(0);
   const [notification, setNotification] = useState<boolean | 0>(0);
   const [setting, setSetting] = useState<boolean | 0>(false);
+  const [responsive, setResponsive] = useState<boolean>(false);
 
   const getData = () => {
     const routes = [
@@ -94,6 +99,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
       'api/declare-conforme-tonnage',
       'api/declare-non-conforme-tonnage',
       'api/non-declare-tonnage',
+      'api/get-csrf-token/',
     ];
     axios.all(routes.map(route => url.get(route))).then(
       axios.spread(
@@ -106,7 +112,8 @@ const ServerProvider: FC<Props> = ({ children }) => {
           { data: tonnages },
           { data: conformTonnages },
           { data: notConformTonnages },
-          { data: undeclaredTonnages }
+          { data: undeclaredTonnages },
+          { data: getCsrf }
         ) => {
           setNavire(navire);
           setConsignataire(consignataire);
@@ -117,10 +124,13 @@ const ServerProvider: FC<Props> = ({ children }) => {
           setConformTonnages(conformTonnages);
           setNotConformTonnages(notConformTonnages);
           setUndeclaredTonnages(undeclaredTonnages);
+          setGetCsrf(getCsrf);
         }
       )
     );
   };
+  console.log(getCsrf);
+  console.log(getCsrf);
   const showSetting = () => {
     setSetting(true);
   };
@@ -175,6 +185,9 @@ const ServerProvider: FC<Props> = ({ children }) => {
   };
   const showUserInitialize = () => {
     setUserInitialize(!userInitialize);
+  };
+  const showResponsive = () => {
+    setResponsive(!responsive);
   };
   const toInitialize = () => {
     setError1(false),
@@ -241,6 +254,8 @@ const ServerProvider: FC<Props> = ({ children }) => {
         setting,
         initialize,
         userInitialize,
+        responsive,
+        getCsrf,
         showOverlay,
         toInitialize,
         showUserInitialize,
@@ -261,6 +276,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
         showNotSuccess1,
         showSuccess2,
         showNotSuccess2,
+        showResponsive,
         pathname,
       }}
     >

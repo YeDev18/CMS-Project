@@ -70,7 +70,7 @@ const Accueil = () => {
               route="/consignataire"
             />
           </div>
-          <div className="w-full flex justify-start gap-4 items-center lg:w-3/5">
+          <div className="w-full flex flex-col md:flex-row justify-start gap-4 items-center lg:w-3/5">
             <div className="h-48 w-full lg:w-[50%]  flex flex-col justify-between bg-firstColors rounded-md shadow-sm shadow-shadowColors pt-4 ">
               <div className="flex-between  px-4">
                 <h3 className="font-bold text-[1.25rem] text-[#272A2D]">
@@ -186,7 +186,7 @@ const Accueil = () => {
             <h2 className="font-semibold text-xl">
               Tonages des differents navires
             </h2>
-            <div className=" w-full flex flex-row justify-between lg:flex-col gap-2">
+            <div className=" w-full flex  justify-between flex-col gap-2">
               <div className="flex flex-col gap-2">
                 <div className="w-80 h-8 bg-black opacity-5 rounded-md"></div>
                 <div className="w-80 h-8 bg-black opacity-5 rounded-md"></div>
