@@ -10,26 +10,20 @@ const Sideba2 = () => {
   const [activeIndex, setActiveIndex] = useState<number>();
   const auth = useAuth();
   const me = useServer().user;
-  // console.log(document.cookie);
   const { pathname } = useServer();
-  console.log(pathname);
   const server = useServer();
 
-  const cookie = document.cookie.split(' ');
-  console.log(cookie);
-  const cookiesMap = {};
-  let nameCookie = '';
-  let valueCookie = '';
-  cookie.forEach(cookie => {
-    const [name, value] = cookie.split('=');
-    // console.log(name, value);
-    nameCookie = name;
-    valueCookie = value;
-    // cookiesMap[name] = value;
-
-    // cookiesMap[name] = value;
-  });
-  console.log(nameCookie, valueCookie);
+  // const cookie = document.cookie.split(' ');
+  // console.log(cookie);
+  // const cookiesMap = {};
+  // let nameCookie = '';
+  // let valueCookie = '';
+  // cookie.forEach(cookie => {
+  //   const [name, value] = cookie.split('=');
+  //   nameCookie = name;
+  //   valueCookie = value;
+  // });
+  // console.log(nameCookie, valueCookie);
 
   const handleConsole = (index: number) => {
     setActiveIndex(prevIndex => (prevIndex === index ? prevIndex : index));

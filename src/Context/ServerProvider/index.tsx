@@ -22,7 +22,7 @@ type Context = {
   notConformTonnages: [];
   undeclaredTonnages: [];
   tonnages: [];
-  getCsrf: [csrfToken: string];
+  getCsrf: string | null;
   pathname: string;
   initialize: boolean;
   overlay: boolean;
@@ -62,7 +62,6 @@ const SeverContext = createContext<Context | any>(null);
 const ServerProvider: FC<Props> = ({ children }) => {
   const token = useAuth()?.token;
   const { pathname } = useLocation();
-  console.log(pathname);
 
   const [user, setUser] = useState<[]>([]);
   const [navire, setNavire] = useState<[]>([]);
@@ -73,7 +72,8 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const [conformTonnages, setConformTonnages] = useState<[]>([]);
   const [notConformTonnages, setNotConformTonnages] = useState<[]>([]);
   const [undeclaredTonnages, setUndeclaredTonnages] = useState<[]>([]);
-  const [getCsrf, setGetCsrf] = useState<[csrfToken: string]>();
+  const [getCsrf, setGetCsrf] = useState(localStorage.getItem('csrf') || '');
+  // const [crsf, setGetC]
   const [tonnages, setTonnages] = useState<[]>([]);
   const [initialize, setInitialize] = useState(false);
   const [userInitialize, setUserInitialize] = useState(false);
@@ -129,8 +129,8 @@ const ServerProvider: FC<Props> = ({ children }) => {
       )
     );
   };
-  console.log(getCsrf);
-  console.log(getCsrf);
+  // console.log(getCsrf);
+  // console.log(getCsrf);
   const showSetting = () => {
     setSetting(true);
   };
@@ -203,7 +203,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     getData();
-    console.log(error1, error2);
+    // console.log(error1, error2);
   }, [initialize]);
   useEffect(() => {
     url

@@ -1,3 +1,4 @@
+import { Viva } from '@/Context/AuthProvider';
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import { useMemo, useState } from 'react';
@@ -7,11 +8,14 @@ import Libelle from '../ui/Libelle';
 const T_Conforme = () => {
   const server = useServer();
   const tonnes = server?.tonnages;
-  console.log(tonnes);
+  const crd = server?.getCsrf;
+  console.log(crd);
   const [formValue, setFormValue] = useState({
     months: '',
     years: '',
   });
+  // <Viva />;s
+  console.log(server);
   const [correct, setCorrect] = useState<boolean>(false);
   const [incorrect, setIncorrect] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState();
