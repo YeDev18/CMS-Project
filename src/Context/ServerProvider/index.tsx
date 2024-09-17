@@ -103,6 +103,61 @@ const ServerProvider: FC<Props> = ({ children }) => {
   }
   const csrfToken = getCookie('csrftoken');
 
+  const get_declaration_board = () => {
+    const routes = [
+      'api/non-declare',
+      'api/declare-non-conforme',
+      'api/declare-conforme',
+    ];
+    axios.all(routes.map(route => url.get(route))).then(
+      axios.spread(
+        (
+          { data: undeclared },
+          { data: declareNConforme },
+          { data: declareConforme }
+        ) => {
+          setConform(declareConforme);
+          setUndeclared(undeclared);
+          setNotConform(declareNConforme);
+        }
+      )
+    );
+  };
+
+  const get_tonnages_board = () => {
+    const routes = [
+      'api/calcul-difference-tonnage/',
+      'api/declare-conforme-tonnage',
+      'api/declare-non-conforme-tonnage',
+      'api/non-declare-tonnage',
+    ];
+    axios.all(routes.map(route => url.get(route))).then(
+      axios.spread(
+        (
+          { data: tonnages },
+          { data: conformTonnages },
+          { data: notConformTonnages },
+          { data: undeclaredTonnages }
+        ) => {
+          setTonnages(tonnages);
+          setConformTonnages(conformTonnages);
+          setNotConformTonnages(notConformTonnages);
+          setUndeclaredTonnages(undeclaredTonnages);
+        }
+      )
+    );
+  };
+
+  const get_board_consignor = () => {
+    const routes = ['api/consignataire-dtci', 'api/navire-soumission-dtci'];
+    axios.all(routes.map(route => url.get(route))).then(
+      axios.spread(({ data: consignataire }, { data: navire }) => {
+        setNavire(navire);
+        setConsignataire(consignataire);
+      })
+    );
+  };
+
   const getData = () => {
     const routes = [
       'api/consignataire-dtci',
@@ -229,18 +284,6 @@ const ServerProvider: FC<Props> = ({ children }) => {
       .then(data => setUser(data))
       .catch(error => {
         console.error('Erreur:', error.message);
-        // if (error.response) {
-        //   //   // La requête a été faite et le serveur a répondu avec un code d'état qui tombe hors de la plage de 2xx
-        //   //   console.error('Erreur de réponse:', error.response.data);
-        //   //   console.error('Statut:', error.response.status);
-        //   //   console.error('En-têtes:', error.response.headers);
-        //   // } else if (error.request) {
-        //   //   // La requête a été faite mais aucune réponse n'a été reçue
-        //   //   console.error('Erreur de requête:', error.request);
-        //   // } else {
-        //   // Quelque chose s'est passé en configurant la requête qui a déclenché une erreur
-        //   console.error('Erreur:', error.message);
-        // }
       });
   }, [userInitialize]);
 
