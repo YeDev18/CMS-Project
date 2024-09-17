@@ -10,6 +10,7 @@ const DeclaratioNConforme = () => {
   const server = useServer();
   const notConform = useServer().notConform;
   const user = useServer().user;
+  const csrfToken = server?.csrfToken;
   const overlay = useServer().overlay;
   const [formValue, setFormValue] = useState({
     months: '',
@@ -91,11 +92,19 @@ const DeclaratioNConforme = () => {
     observation: any
   ) => {
     url
-      .put(`api/update-soumission-dtci-and-status/${id}/`, {
-        nom_navire_dtci,
-        date_mouvement,
-        consignataire_dtci,
-      })
+      .put(
+        `api/update-soumission-dtci-and-status/${id}/`,
+        {
+          nom_navire_dtci,
+          date_mouvement,
+          consignataire_dtci,
+        },
+        {
+          headers: {
+            'X-CSRFToken': csrfToken,
+          },
+        }
+      )
       .then(res => {
         setNotificationUpdate(true);
         setTimeout(() => {

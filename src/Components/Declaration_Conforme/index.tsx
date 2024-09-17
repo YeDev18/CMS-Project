@@ -54,6 +54,7 @@ const DeclarationConforme = () => {
     setPortA(false);
     setPortSP(false);
     setFormValue({ ...formValue, months: '', years: '' });
+    FinalData == Final;
     //     setSearchValue('dc');
   };
   const handleChange = (val: any) => {
@@ -158,7 +159,7 @@ const DeclarationConforme = () => {
       (val: any) => val.trafic_maritime.port_trafic === 'SAN PEDRO'
     );
   } else {
-    console.log('');
+    ('');
   }
 
   const modifiedData = FinalData.map((item: any, index: number) => ({

@@ -27,7 +27,6 @@ const Sideba2 = () => {
 
   const handleConsole = (index: number) => {
     setActiveIndex(prevIndex => (prevIndex === index ? prevIndex : index));
-    console.log(activeIndex);
   };
   return (
     <div className="h-full w-full flex flex-col p-2">

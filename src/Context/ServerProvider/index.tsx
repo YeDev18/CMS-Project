@@ -22,6 +22,7 @@ type Context = {
   notConformTonnages: [];
   undeclaredTonnages: [];
   tonnages: [];
+  csrfToken: string;
   getCsrf: string | null;
   pathname: string;
   initialize: boolean;
@@ -72,8 +73,6 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const [conformTonnages, setConformTonnages] = useState<[]>([]);
   const [notConformTonnages, setNotConformTonnages] = useState<[]>([]);
   const [undeclaredTonnages, setUndeclaredTonnages] = useState<[]>([]);
-  const [getCsrf, setGetCsrf] = useState(localStorage.getItem('csrf') || '');
-  // const [crsf, setGetC]
   const [tonnages, setTonnages] = useState<[]>([]);
   const [initialize, setInitialize] = useState(false);
   const [userInitialize, setUserInitialize] = useState(false);
@@ -87,6 +86,22 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const [notification, setNotification] = useState<boolean | 0>(0);
   const [setting, setSetting] = useState<boolean | 0>(false);
   const [responsive, setResponsive] = useState<boolean>(false);
+
+  function getCookie(name: any) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + '=') {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+  const csrfToken = getCookie('csrftoken');
 
   const getData = () => {
     const routes = [
@@ -112,8 +127,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
           { data: tonnages },
           { data: conformTonnages },
           { data: notConformTonnages },
-          { data: undeclaredTonnages },
-          { data: getCsrf }
+          { data: undeclaredTonnages }
         ) => {
           setNavire(navire);
           setConsignataire(consignataire);
@@ -124,13 +138,10 @@ const ServerProvider: FC<Props> = ({ children }) => {
           setConformTonnages(conformTonnages);
           setNotConformTonnages(notConformTonnages);
           setUndeclaredTonnages(undeclaredTonnages);
-          setGetCsrf(getCsrf);
         }
       )
     );
   };
-  // console.log(getCsrf);
-  // console.log(getCsrf);
   const showSetting = () => {
     setSetting(true);
   };
@@ -198,6 +209,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
       setSuccess(0),
       setLoading(0),
       setInitialize(!initialize);
+    // localStorage.setItem('csrf', crsf?.csrfToken);
     token;
   };
 
@@ -216,18 +228,19 @@ const ServerProvider: FC<Props> = ({ children }) => {
       .then(res => res.data)
       .then(data => setUser(data))
       .catch(error => {
-        if (error.response) {
-          // La requête a été faite et le serveur a répondu avec un code d'état qui tombe hors de la plage de 2xx
-          console.error('Erreur de réponse:', error.response.data);
-          console.error('Statut:', error.response.status);
-          console.error('En-têtes:', error.response.headers);
-        } else if (error.request) {
-          // La requête a été faite mais aucune réponse n'a été reçue
-          console.error('Erreur de requête:', error.request);
-        } else {
-          // Quelque chose s'est passé en configurant la requête qui a déclenché une erreur
-          console.error('Erreur:', error.message);
-        }
+        console.error('Erreur:', error.message);
+        // if (error.response) {
+        //   //   // La requête a été faite et le serveur a répondu avec un code d'état qui tombe hors de la plage de 2xx
+        //   //   console.error('Erreur de réponse:', error.response.data);
+        //   //   console.error('Statut:', error.response.status);
+        //   //   console.error('En-têtes:', error.response.headers);
+        //   // } else if (error.request) {
+        //   //   // La requête a été faite mais aucune réponse n'a été reçue
+        //   //   console.error('Erreur de requête:', error.request);
+        //   // } else {
+        //   // Quelque chose s'est passé en configurant la requête qui a déclenché une erreur
+        //   console.error('Erreur:', error.message);
+        // }
       });
   }, [userInitialize]);
 
@@ -244,6 +257,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
         notConformTonnages,
         undeclaredTonnages,
         tonnages,
+        csrfToken,
         overlay,
         loading,
         success,
@@ -255,7 +269,6 @@ const ServerProvider: FC<Props> = ({ children }) => {
         initialize,
         userInitialize,
         responsive,
-        getCsrf,
         showOverlay,
         toInitialize,
         showUserInitialize,

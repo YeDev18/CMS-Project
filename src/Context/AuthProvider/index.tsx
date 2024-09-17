@@ -43,6 +43,22 @@ const AuthProvider: FC<Props> = ({ children }) => {
   const server = useServer();
   const [token, setToken] = useState(localStorage.getItem('site') || '');
   const navigate = useNavigate();
+  function getCookie(name: any) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + '=') {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  const csrfToken = getCookie('csrftoken');
 
   const RegisterAction = async (
     name: Register,
@@ -112,9 +128,6 @@ const AuthProvider: FC<Props> = ({ children }) => {
       console.log(err);
     }
   };
-  const crd = server?.getCsrf;
-  console.log(crd);
-  console.log(server?.showUserInitialize());
   const logout = async () => {
     try {
       const response = await url.post(
@@ -123,8 +136,8 @@ const AuthProvider: FC<Props> = ({ children }) => {
 
         {
           headers: {
-            'X-CSRFToken': server?.getCrsf.csrfToken, // Inclure le token CSRF
-          }, // S'assure que les cookies sont inclus dans la requête
+            'X-CSRFToken': csrfToken,
+          },
         }
       );
       navigate('/');

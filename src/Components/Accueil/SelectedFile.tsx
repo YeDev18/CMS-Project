@@ -14,6 +14,25 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   const [selectedFile2, setSelectedFile2] = useState<any>(null);
   const server = useServer();
   const direction = useNavigate();
+  const csrf = server?.csrf?.csrfToken;
+  console.log(csrf);
+  function getCookie(name: any) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + '=') {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  const csrfToken = getCookie('csrftoken');
+  console.log(csrfToken);
 
   const handleCompare = async () => {
     // server?.showOverlay();
@@ -87,7 +106,9 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
       .post('/api/upload_tonnageDT_file/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'X-CSRFToken': csrfToken,
         },
+        withCredentials: true,
       })
       .then(response => {
         server?.showSuccess1();
@@ -106,7 +127,9 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
       .post('/api/upload_port_file/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'X-CSRFToken': csrfToken,
         },
+        withCredentials: true,
       })
       .then(response => {
         server?.showSuccess2();
@@ -126,7 +149,9 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
       .post('/api/upload_dtci_file', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'X-CSRFToken': csrfToken,
         },
+        withCredentials: true,
       })
       .then(response => {
         server?.showSuccess1();
@@ -144,7 +169,9 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
       .post('/api/upload_trafic_file/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'X-CSRFToken': csrfToken,
         },
+        withCredentials: true,
       })
       .then(response => {
         server?.showSuccess2();
