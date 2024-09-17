@@ -42,6 +42,7 @@ const DeclaratioNConforme = () => {
     setPortSP(!portSP);
     setPortA(false);
     server?.toInitialize();
+    server?.toInitialize();
   };
   const [current, setCurrent] = useState(1);
   const itemsPerPage = 10;
