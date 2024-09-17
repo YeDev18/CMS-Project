@@ -35,14 +35,10 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   console.log(csrfToken);
 
   const handleCompare = async () => {
-    // server?.showOverlay();
-    // await server?.showNotification();
     server?.showLoading();
     await fetchDataDTCI();
     await fetchDataTrafic();
     await getData();
-
-    // await server?.showSettingFinish();
   };
 
   const handleTonnage = async () => {
@@ -182,6 +178,11 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
         server?.showLoadingFinish();
       });
   };
+
+  // const { board_dtci, error, isLoading } = useQuery(
+  //   'board_dtci',
+  //   fetchDataDTCI
+  // );
 
   return (
     <div className=" absolute inset-y-0 w-full flex-center animate-fadIn-up z-30 ">
