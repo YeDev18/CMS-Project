@@ -1,10 +1,10 @@
-import SidebarR from '@/Components/SiderbarR';
+import SidebarResponsive from '@/Components/Aside/sidebar-responsive';
 import { useAuth } from '@/Context/AuthProvider';
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import { Outlet } from 'react-router-dom';
+import Sidebar from '../Components/Aside/Sidebar';
 import NavBar from '../Components/NavBar';
-import Sidebar from '../Components/Sidebar';
 
 const Home = () => {
   const overlay = useServer().overlay;
@@ -28,7 +28,7 @@ const Home = () => {
         {toogle ? (
           <div className="absolute inset-0 h-[100vh] w-[100%] lg:hidden">
             {' '}
-            <SidebarR />
+            <SidebarResponsive />
           </div>
         ) : (
           ''
@@ -48,9 +48,6 @@ const Home = () => {
                   <h2 className="font-semibold">{me.name}</h2>
                   <p className="text-sm opacity-80">{me.role}</p>
                 </div>
-                {/* <button className="block text-left align-middle w-full white-nowrap border-b pt-1 pb-3 px-3 font-medium">
-                Information
-              </button> */}
                 <button
                   className="block text-left align-middle  w-full white-nowrap border-b pt-1 pb-3 px-3 font-medium"
                   onClick={() => (auth?.logout(), server.showSettingFinish())}

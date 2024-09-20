@@ -20,7 +20,6 @@ import {
   T_Conforme,
   T_NonConforme,
   T_NonDeclare,
-  Tonnages,
   Update,
 } from './Pages';
 
@@ -54,7 +53,6 @@ function App() {
                     path="/tonnages-non-declares"
                     element={<T_NonDeclare />}
                   />
-                  <Route path="/tonnages" element={<Tonnages />} />
 
                   <Route
                     path="/declaration_conforme"

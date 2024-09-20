@@ -2,94 +2,26 @@ import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import { useMemo, useState } from 'react';
 import * as XLSX from 'xlsx';
-import { AllMonths, Year, headerTable } from '../Data';
-import Libelle from '../ui/Libelle';
-import Overlay from './overlay';
-
-const DeclarationConforme = () => {
-  const server = useServer();
-  const overlay = useServer().overlay;
-  const conform = useServer().conform;
-
-  const Data3: any = [];
+import { AllMonths, Year, headerTable } from '../../Data';
+import Libelle from '../../ui/Libelle';
+const NonDeclaration = () => {
+  const undeclared = useServer().undeclared;
 
   const [formValue, setFormValue] = useState({
     months: '',
     years: '',
   });
-  const [searchValue, setSearchValue] = useState();
+
+  const MonthsYears = formValue.years + '-' + formValue.months;
+  const server = useServer();
+  const [portA, setPortA] = useState<boolean>(false);
+  const [portSP, setPortSP] = useState<boolean>(false);
 
   const [current, setCurrent] = useState(1);
-
   const itemsPerPage = 10;
   const startIndex = (current - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const MonthsYears = formValue.years + '-' + formValue.months;
-  const [data3, setDate3] = useState({
-    idInstance: '',
-    nonDTCI: '',
-    imoDTCI: '',
-    consignataireDTCI: '',
-    mouvementDTCI: '',
-    dateDTCI: '',
-    dateDeclaration: '',
-    port: '',
-    typeNavire: '',
-    mrn: '',
-    numVoyage: '',
-    consignataire: '',
-    tonage: '',
-    observation: '',
-    dateTm: '',
-  });
-  const [update, setUpdate] = useState<boolean>(false);
-  const [portA, setPortA] = useState<boolean>(false);
-  const [portSP, setPortSP] = useState<boolean>(false);
-  const [showFilter, setShowFilter] = useState<boolean>(false);
 
-  const handleShowFilter = () => {
-    setShowFilter(!showFilter);
-  };
-  const handleUpdateFilter = () => {
-    setUpdate(false);
-    setPortA(false);
-    setPortSP(false);
-    setFormValue({ ...formValue, months: '', years: '' });
-    FinalData == Final;
-    //     setSearchValue('dc');
-  };
-  const handleChange = (val: any) => {
-    server.showOverlay();
-    setDate3({
-      ...data3,
-      idInstance: val.id,
-      observation: val.observation,
-      nonDTCI: val.soumission_dtci.nom_navire_dtci,
-      imoDTCI: val.soumission_dtci.imo_dtci,
-      mouvementDTCI:
-        val.soumission_dtci.mouvement_dtci === 'Arrivée' ? 'Arrivée' : 'Départ',
-      consignataireDTCI: val.soumission_dtci.consignataire_dtci,
-      dateDeclaration: val?.soumission_dtci?.date_declaration_dtci
-        .split('-')
-        .reverse()
-        .join('-'),
-      port: val?.soumission_dtci?.port_dtci,
-      typeNavire: val?.soumission_dtci?.type_de_navire_dtci,
-      mrn: val?.soumission_dtci?.mrn_dtci,
-      numVoyage: val?.soumission_dtci?.numero_voyage_dtci,
-      consignataire: val?.soumission_dtci?.consignataire_dtci,
-      tonage: val?.soumission_dtci?.tonage_facture_dtci,
-      dateDTCI:
-        val.soumission_dtci.mouvement_dtci === 'Arrivée'
-          ? val.soumission_dtci.eta_dtci.split('-').reverse().join('-')
-          : val.soumission_dtci.etd_dtci.split('-').reverse().join('-'),
-      dateTm: val.trafic_maritime.date_trafic,
-    });
-  };
-  const handleChangeCheck = () => {
-    setUpdate(!update);
-    server?.toInitialize();
-  };
   const handleChangePortA = () => {
     setPortA(!portA);
     setPortSP(false);
@@ -106,6 +38,19 @@ const DeclarationConforme = () => {
   };
   const goToPrevPage = () => {
     setCurrent(prevPage => prevPage - 1);
+  };
+
+  const [showFilter, setShowFilter] = useState<boolean>(false);
+
+  const handleShowFilter = () => {
+    setShowFilter(!showFilter);
+  };
+  const handleUpdateFilter = () => {
+    setPortA(false);
+    setPortSP(false);
+    setFormValue({ ...formValue, months: '', years: '' });
+    FinalData == Final;
+    //     setSearchValue('dc');
   };
   const renderPaginationControls = () => {
     const totalPages = Math.ceil(FinalData.length / itemsPerPage);
@@ -132,80 +77,58 @@ const DeclarationConforme = () => {
       </div>
     );
   };
-
+  const [searchValue, setSearchValue] = useState();
   const Filter = useMemo(() => {
-    return conform.filter((val: any) =>
-      val.soumission_dtci.mouvement_dtci === 'Arrivée'
-        ? val.soumission_dtci.eta_dtci.toString().slice(0, 7) === MonthsYears
-        : val.soumission_dtci.etd_dtci.toString().slice(0, 7) === MonthsYears
+    return undeclared.filter(
+      (val: any) =>
+        val.trafic_maritime.date_trafic.toString().slice(0, 7) === MonthsYears
     );
   }, [MonthsYears]);
-  const Final = MonthsYears === '-' ? conform : Filter;
+  const Final = MonthsYears === '-' ? undeclared : Filter;
   const dataFinal = searchValue
     ? Final.filter((val: any) =>
-        val.soumission_dtci.imo_dtci.toString().includes(searchValue)
+        val.trafic_maritime.imo_trafic.toString().includes(searchValue)
       )
     : Final;
-  const dataFinalChecked = update
-    ? dataFinal.filter((val: any) => val.observation)
-    : dataFinal;
 
-  let FinalData = dataFinalChecked;
+  let FinalData = dataFinal;
   if (portA) {
-    FinalData = dataFinalChecked.filter(
+    FinalData = dataFinal.filter(
       (val: any) => val.trafic_maritime.port_trafic === 'ABIDJAN'
     );
   } else if (portSP) {
-    FinalData = dataFinalChecked.filter(
+    FinalData = dataFinal.filter(
       (val: any) => val.trafic_maritime.port_trafic === 'SAN PEDRO'
     );
   } else {
-    ('');
+    console.log('');
   }
 
   const modifiedData = FinalData.map((item: any, index: number) => ({
     Id: index,
-    DateDeclaration: item?.soumission_dtci.date_declaration_dtci
-      .split('-')
-      .reverse()
-      .join('-'),
-    Port: item?.soumission_dtci.port_dtci,
-    Imo: item?.soumission_dtci?.imo_dtci,
-    Navire: item?.soumission_dtci?.nom_navire_dtci,
-    Mrn: item?.soumission_dtci?.mrn_dtci,
-    Consignataire: item?.soumission_dtci?.consignataire_dtci,
-    Tonnage: item?.soumission_dtci?.tonnage_facture_dtci,
-    Numero_de_Voyage: item?.soumission_dtci?.numero_voyage_dtci,
-    Mouvement:
-      item?.soumission_dtci?.mouvement_dtci === 'Arrivée'
-        ? 'Arrivée'
-        : 'Depart',
-    Date:
-      item?.soumission_dtci?.mouvement_dtci === 'Arrivée'
-        ? item?.soumission_dtci?.eta_dtci.split('-').reverse().join('-')
-        : item?.soumission_dtci?.etd_dtci.split('-').reverse().join('-'),
+    Imo: item?.trafic_maritime?.imo_trafic,
+    Navire: item?.trafic_maritime?.nom_navire_trafic,
+    Mouvement: item?.trafic_maritime.mouvement_trafic,
+    Date: item?.trafic_maritime?.date_trafic.split('-').reverse().join('-'),
+    Port: item?.trafic_maritime?.port_trafic,
   }));
-  for (let index = 1; index < modifiedData.length; index++) {
-    Data3.push(modifiedData[index]);
-  }
 
   const exportToExcel = () => {
     const ws = XLSX.utils.json_to_sheet(modifiedData);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, `Decalaration conforme.xlsx`);
+    XLSX.writeFile(wb, `Non declare.xlsx`);
   };
 
   return (
-    <div className="w-full relative h-full flex flex-col gap-6 ">
+    <div className="w-full relative h-full flex flex-col gap-6  ">
       <div className="flex justify-between gap-2 gap-y-4 w-full relative">
         <div className="flex gap-4">
-          {' '}
           <Libelle
-            icon="lucide:circle-check-big"
-            libelle="Conformes"
-            color="#2563eb"
-            number={conform.length}
+            icon="ph:x-circle"
+            libelle="Nom declares"
+            color="#F0352B"
+            number={undeclared.length}
           />
           <button
             className="rounded-md  whitespace-nowrap shadow-sm shadow-slate-200 p-2 inline-flex items-center bg-[#0e5c2f] text-firstColors text-sm h-10 "
@@ -220,14 +143,10 @@ const DeclarationConforme = () => {
             />
             Export en csv
           </button>
-          {!(MonthsYears === '-') ||
-          searchValue ||
-          update ||
-          portSP ||
-          portA ? (
-            <div className="rounded-md bg-[#2563eb]  shadow-sm shadow-slate-200 p-2 inline-flex gap-1 items-center h-10 text-firstColors whitespace-nowrap ">
+          {!(MonthsYears === '-') || searchValue || portA || portSP ? (
+            <div className="rounded-md bg-[#F0352B]  shadow-sm shadow-slate-200 p-2 inline-flex gap-1 items-center h-10 text-firstColors whitespace-nowrap">
               <Icon
-                icon="charm:notes-cross"
+                icon="ph:x-circle"
                 width="1.2em"
                 height="1.2em"
                 className="mr-2"
@@ -238,7 +157,6 @@ const DeclarationConforme = () => {
             ''
           )}
         </div>
-
         <div className="z-10 static  w-full flex justify-end ">
           <button
             className="rounded-md  whitespace-nowrap shadow-sm shadow-slate-200 p-2 inline-flex items-center bg-[#191114]  text-sm  text-firstColors font-semibold h-10 "
@@ -359,37 +277,16 @@ const DeclarationConforme = () => {
                   </div>
                 </div>
               </div>
-              <div className="w-full ">
-                {' '}
-                <h3 className="font-normal bg-[#7B7B7B]/5 p-2 rounded-md mb-3 text-base">
-                  Mise á jour
-                </h3>
-                <div className="flex justify-between items-center h-fit w-full p-2 rounded-sm border border-gray-700/10 ">
-                  <label
-                    htmlFor=""
-                    className="font-normal text-base text-[#000]/80"
-                  >
-                    À mettre á jour
-                  </label>
-                  <input
-                    type="checkbox"
-                    checked={update}
-                    onChange={handleChangeCheck}
-                    placeholder=""
-                    className="border outline-none p-1 rounded-sm text-2xl w-8 h-4 font-medium"
-                  />
-                </div>
-              </div>
             </div>
           ) : (
             ''
           )}
         </div>
       </div>
-      <div className="w-full h-full overflow-x-auto pr-2 relative">
+      <div className="w-full h-full overflow-x-auto  pr-2 relative">
         <table className="w-full pb-6">
           <thead>
-            <tr className="gridArray6 w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
+            <tr className="gridArray5 text-start py-4 w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
               {headerTable.map((item, index) => {
                 return (
                   <th
@@ -402,46 +299,33 @@ const DeclarationConforme = () => {
               })}
             </tr>
           </thead>
+
           <tbody>
             {FinalData.slice(startIndex, endIndex).map(
               (val: any, index: number) => {
                 return (
                   <tr
                     key={index}
-                    className="gridArray6 w-full border-b-2 border-slate-50 "
+                    className="gridArray5 w-full border-b-2 border-slate-50 "
                   >
-                    <td className="text-start text-sm xl:text-base headerSecond">
+                    <td className="text-start  text-sm xl:text-base">
                       {index + 1}
                     </td>
-                    <td className="text-start whitespace-normal text-sm xl:text-sm headerSecond">
-                      {val.soumission_dtci.nom_navire_dtci}
+                    <td className="text-start  text-sm xl:text-sm whitespace-normal">
+                      {val.trafic_maritime.nom_navire_trafic}
                     </td>
-                    <td className="text-start text-sm xl:text-base headerSecond">
-                      {val.soumission_dtci.imo_dtci}
+                    <td className="text-start  text-sm xl:text-base">
+                      {val.trafic_maritime.imo_trafic}
                     </td>
-                    <td className="text-start lg:w-40 text-sm xl:text-base headerSecond">
-                      {val.soumission_dtci.mouvement_dtci}
+                    <td className="text-start text-sm xl:text-base">
+                      {val.trafic_maritime.mouvement_trafic}
                     </td>
 
-                    <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base headerSecond">
-                      {val.soumission_dtci.mouvement_dtci === 'Arrivée'
-                        ? val.soumission_dtci.eta_dtci
-                            .split('-')
-                            .reverse()
-                            .join('-')
-                        : val.soumission_dtci.etd_dtci
-                            .split('-')
-                            .reverse()
-                            .join('-')}
-                    </td>
-                    <td className="text-start  text-sm xl:text-base ">
-                      <button onClick={() => handleChange(val)}>
-                        <Icon
-                          icon="weui:eyes-on-filled"
-                          width="1em"
-                          height="1em"
-                        />
-                      </button>
+                    <td className="text-start text-sm xl:text-base ">
+                      {val.trafic_maritime.date_trafic
+                        .split('-')
+                        .reverse()
+                        .join('-')}
                     </td>
                   </tr>
                 );
@@ -451,11 +335,8 @@ const DeclarationConforme = () => {
         </table>
       </div>
       {renderPaginationControls()}
-
-      {/* OVERLAY----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------      */}
-      {overlay ? <Overlay data={data3} /> : ''}
     </div>
   );
 };
 
-export default DeclarationConforme;
+export default NonDeclaration;

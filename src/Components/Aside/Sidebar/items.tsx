@@ -2,28 +2,13 @@ import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../Context/AuthProvider';
-import { MenuItems } from '../Data';
+import { MenuItems } from '../../Data';
 
-const Sideba2 = () => {
+const ItemsNav = () => {
   const active = useRef<HTMLButtonElement>(null);
   const [activeIndex, setActiveIndex] = useState<number>();
-  const auth = useAuth();
-  const me = useServer().user;
   const { pathname } = useServer();
   const server = useServer();
-
-  // const cookie = document.cookie.split(' ');
-  // console.log(cookie);
-  // const cookiesMap = {};
-  // let nameCookie = '';
-  // let valueCookie = '';
-  // cookie.forEach(cookie => {
-  //   const [name, value] = cookie.split('=');
-  //   nameCookie = name;
-  //   valueCookie = value;
-  // });
-  // console.log(nameCookie, valueCookie);
 
   const handleConsole = (index: number) => {
     setActiveIndex(prevIndex => (prevIndex === index ? prevIndex : index));
@@ -115,4 +100,4 @@ const Sideba2 = () => {
   );
 };
 
-export default Sideba2;
+export default ItemsNav;
