@@ -1,7 +1,7 @@
 import { useServer } from '@/Context/ServerProvider';
 import Sidebar from '../Sidebar';
 
-const SidebarR = () => {
+const SidebarResponsive = () => {
   const server = useServer();
   return (
     <div className="relative">
@@ -16,4 +16,4 @@ const SidebarR = () => {
   );
 };
 
-export default SidebarR;
+export default SidebarResponsive;

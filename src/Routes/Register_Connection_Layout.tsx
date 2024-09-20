@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import { Countries } from '../Components/Data';
-import logo from '../assets/images/logo.png';
+import logo from '../assets/images/Logo-CMS-1.png';
 
 const RCLayout = () => {
   function Days(date: Date, day: number) {

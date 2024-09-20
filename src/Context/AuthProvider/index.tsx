@@ -41,7 +41,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
   const [success, setSuccess] = useState<boolean>(false);
   const [user, setUser] = useState<any>();
   const server = useServer();
-  const [token, setToken] = useState(localStorage.getItem('site') || '');
+  const [token, setToken] = useState(sessionStorage.getItem('site') || '');
   const navigate = useNavigate();
   function getCookie(name: any) {
     let cookieValue = null;
@@ -85,7 +85,6 @@ const AuthProvider: FC<Props> = ({ children }) => {
       setPassword(response.data.password);
       setEmail(response.data.email);
       setRole(response.data.role);
-      // setSucces(`register successful:`);
       setToken(response.data.token);
       navigate('/');
     } catch (err: any) {
@@ -110,7 +109,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
 
       setToken(response.data.jwt);
 
-      localStorage.setItem('site', response.data.jwt);
+      sessionStorage.setItem('site', response.data.jwt);
       setSuccess(true);
       server?.showUserInitialize();
 
@@ -123,7 +122,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
         setError(false);
       }, 3000);
       setTimeout(() => {
-        localStorage.removeItem('site');
+        sessionStorage.removeItem('site');
       }, 36000);
       console.log(err);
     }
@@ -141,7 +140,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
         }
       );
       navigate('/');
-      localStorage.removeItem('site');
+      sessionStorage.removeItem('site');
       server?.showUserInitialize();
     } catch (error) {
       console.error('Erreur:', error);

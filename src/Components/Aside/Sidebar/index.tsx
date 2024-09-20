@@ -1,5 +1,6 @@
-import logo from '../../assets/images/Logo-CMS-1.png';
-import Sideba2 from '../Sideba2.tsx';
+// import logo from '@/src/assets/images/Logo-CMS-1.png';
+import logo from '../../../assets/images/Logo-CMS-1.png';
+import ItemsNav from './items.tsx';
 
 // type Item = {
 //   lib: string;
@@ -22,7 +23,7 @@ const Sidebar = () => {
         <Icon icon="clarity:menu-line" />
       </> */}
       <NavHeader />
-      <Sideba2 />
+      <ItemsNav />
     </aside>
   );
 };

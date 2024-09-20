@@ -2,6 +2,7 @@ import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Periode from '../Periode';
 import { Chart } from './Chart';
 import { Component1 } from './Component';
 import SelectedFile from './SelectedFile';
@@ -204,6 +205,8 @@ const Accueil = () => {
             </div>
           </div>
         </div>
+        {/* <Accordion year="2024" months={'Janvier'} is /> */}
+        <Periode />
       </div>
 
       {overlay ? handleSelectedCompare(lib) : ''}

@@ -155,6 +155,10 @@
   input[type='number']::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
+  input[type='checkbox'] {
+    accent-color: #4cbab8;
+  }
+
   option {
     background-color: #eeeeee;
     color: #000000 !important;

@@ -1,19 +1,19 @@
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import * as XLSX from 'xlsx';
-import { AllMonths, headerTable, Year } from '../Data';
-import Libelle from '../ui/Libelle';
+import { AllMonths, headerTable, Year } from '../../Data';
+import Libelle from '../../ui/Libelle';
 const T_NonConforme = () => {
   const server = useServer();
   const tonnes = server?.tonnages;
   const tonnesNc = server?.notConformTonnages;
+  console.log(tonnesNc);
   const exportToExcel = () => {
     const ws = XLSX.utils.json_to_sheet(tonnesNc);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     XLSX.writeFile(wb, `Tonnages Non conforme.xlsx`);
   };
-  console.log(tonnesNc);
   return (
     <div className="w-full h-full relative flex flex-col gap-6 ">
       <div className="flex justify-start gap-2 flex-wrap w-full">
@@ -116,7 +116,7 @@ const T_NonConforme = () => {
               })}
             </tr>
           </thead>
-          {tonnesNc.map((val: any, index: number) => {
+          {/* {tonnesNc.map((val: any, index: number) => {
             return (
               <tr
                 key={index}
@@ -149,7 +149,7 @@ const T_NonConforme = () => {
                 </td>
               </tr>
             );
-          })}
+          })} */}
         </table>
       </div>
     </div>
