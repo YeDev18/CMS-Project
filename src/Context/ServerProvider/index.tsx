@@ -1,5 +1,5 @@
 import url from '@/api';
-import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
 import {
   createContext,
   FC,
@@ -103,100 +103,146 @@ const ServerProvider: FC<Props> = ({ children }) => {
   }
   const csrfToken = getCookie('csrftoken');
 
-  const get_declaration_board = () => {
+  const get_declaration_board = async () => {
     const routes = [
       'api/non-declare',
       'api/declare-non-conforme',
       'api/declare-conforme',
     ];
-    axios.all(routes.map(route => url.get(route))).then(
-      axios.spread(
-        (
-          { data: undeclared },
-          { data: declareNConforme },
-          { data: declareConforme }
-        ) => {
-          setConform(declareConforme);
-          setUndeclared(undeclared);
-          setNotConform(declareNConforme);
-        }
-      )
-    );
-  };
 
-  const get_tonnages_board = () => {
+    try {
+      const responses = await Promise.all(routes.map(route => url.get(route)));
+
+      const [undeclared, declareNConforme, declareConforme] = responses.map(
+        response => response.data
+      );
+      setConform(declareConforme);
+      setUndeclared(undeclared);
+      setNotConform(declareNConforme);
+    } catch (error) {
+      // console.error('Failed to fetch data:', error);
+    }
+    return routes;
+  };
+  const {
+    data: boardData,
+    isFetching,
+    isError,
+  } = useQuery({
+    queryKey: ['board'],
+    queryFn: get_declaration_board,
+  });
+  if (isFetching) {
+    console.log('Loading...');
+  } else if (isError) {
+    // console.error('Error fetching data');
+  } else {
+    console.log('Data fetched successfully');
+  }
+
+  const get_tonnages_board = async () => {
     const routes = [
       'api/calcul-difference-tonnage/',
       'api/declare-conforme-tonnage',
       'api/declare-non-conforme-tonnage',
       'api/non-declare-tonnage',
     ];
-    axios.all(routes.map(route => url.get(route))).then(
-      axios.spread(
-        (
-          { data: tonnages },
-          { data: conformTonnages },
-          { data: notConformTonnages },
-          { data: undeclaredTonnages }
-        ) => {
-          setTonnages(tonnages);
-          setConformTonnages(conformTonnages);
-          setNotConformTonnages(notConformTonnages);
-          setUndeclaredTonnages(undeclaredTonnages);
-        }
-      )
-    );
+    try {
+      const responses = await Promise.all(routes.map(route => url.get(route)));
+      const [
+        tonnages,
+        conformTonnages,
+        notConformTonnages,
+        undeclaredTonnages,
+      ] = responses.map(response => response.data);
+      setTonnages(tonnages);
+      setConformTonnages(conformTonnages);
+      setNotConformTonnages(notConformTonnages);
+      setUndeclaredTonnages(undeclaredTonnages);
+    } catch (error) {
+      // console.error('Failed to fetch data:', error);
+    }
+    return routes;
   };
 
-  const get_board_consignor = () => {
+  const { isFetching: fetchingTonnages, isError: errorTonnages } = useQuery({
+    queryKey: ['tonnages'],
+    queryFn: get_tonnages_board,
+  });
+  if (fetchingTonnages) {
+    console.log('Loading Tonnes...');
+  } else if (errorTonnages) {
+    // console.error('Error Tonnes fetching data');
+  } else {
+    // console.log('Data Tonnes fetched successfully');
+  }
+
+  const get_board_consignor = async () => {
     const routes = ['api/consignataire-dtci', 'api/navire-soumission-dtci'];
-    axios.all(routes.map(route => url.get(route))).then(
-      axios.spread(({ data: consignataire }, { data: navire }) => {
-        setNavire(navire);
-        setConsignataire(consignataire);
-      })
-    );
+    try {
+      const responses = await Promise.all(routes.map(route => url.get(route)));
+      const [consignataire, navire] = responses.map(response => response.data);
+      setNavire(navire);
+      setConsignataire(consignataire);
+    } catch (error) {
+      console.log('Les Eurreur');
+    }
+    return routes;
   };
 
-  const getData = () => {
-    const routes = [
-      'api/consignataire-dtci',
-      'api/navire-soumission-dtci',
-      'api/non-declare',
-      'api/declare-non-conforme',
-      'api/declare-conforme',
-      'api/calcul-difference-tonnage/',
-      'api/declare-conforme-tonnage',
-      'api/declare-non-conforme-tonnage',
-      'api/non-declare-tonnage',
-      'api/get-csrf-token/',
-    ];
-    axios.all(routes.map(route => url.get(route))).then(
-      axios.spread(
-        (
-          { data: consignataire },
-          { data: navire },
-          { data: undeclared },
-          { data: declareNConforme },
-          { data: declareConforme },
-          { data: tonnages },
-          { data: conformTonnages },
-          { data: notConformTonnages },
-          { data: undeclaredTonnages }
-        ) => {
-          setNavire(navire);
-          setConsignataire(consignataire);
-          setConform(declareConforme);
-          setUndeclared(undeclared);
-          setNotConform(declareNConforme);
-          setTonnages(tonnages);
-          setConformTonnages(conformTonnages);
-          setNotConformTonnages(notConformTonnages);
-          setUndeclaredTonnages(undeclaredTonnages);
-        }
-      )
-    );
-  };
+  const { isFetching: boar_consignor, isError: errorBoar_consignor } = useQuery(
+    {
+      queryKey: ['boar_consignor'],
+      queryFn: get_board_consignor,
+    }
+  );
+  if (boar_consignor) {
+    console.log('Loading Navires...');
+  } else if (errorBoar_consignor) {
+    // console.error('Error Navires  data');
+  } else {
+    console.log('Data Navires ');
+  }
+
+  // const getData = () => {
+  //   const routes = [
+  //     'api/consignataire-dtci',
+  //     'api/navire-soumission-dtci',
+  //     'api/non-declare',
+  //     'api/declare-non-conforme',
+  //     'api/declare-conforme',
+  //     'api/calcul-difference-tonnage/',
+  //     'api/declare-conforme-tonnage',
+  //     'api/declare-non-conforme-tonnage',
+  //     'api/non-declare-tonnage',
+  //     'api/get-csrf-token/',
+  //   ];
+  //   axios.all(routes.map(route => url.get(route))).then(
+  //     axios.spread(
+  //       (
+  //         { data: consignataire },
+  //         { data: navire },
+  //         { data: undeclared },
+  //         { data: declareNConforme },
+  //         { data: declareConforme },
+  //         { data: tonnages },
+  //         { data: conformTonnages },
+  //         { data: notConformTonnages },
+  //         { data: undeclaredTonnages }
+  //       ) => {
+  //         setNavire(navire);
+  //         setConsignataire(consignataire);
+  //         setConform(declareConforme);
+  //         setUndeclared(undeclared);
+  //         setNotConform(declareNConforme);
+  //         setTonnages(tonnages);
+  //         setConformTonnages(conformTonnages);
+  //         setNotConformTonnages(notConformTonnages);
+  //         setUndeclaredTonnages(undeclaredTonnages);
+  //       }
+  //     )
+  //   );
+  // };
   const showSetting = () => {
     setSetting(true);
   };
@@ -268,10 +314,10 @@ const ServerProvider: FC<Props> = ({ children }) => {
     token;
   };
 
-  useEffect(() => {
-    getData();
-    // console.log(error1, error2);
-  }, [initialize]);
+  // useEffect(() => {
+  //   getData();
+  //   // console.log(error1, error2);
+  // }, [initialize]);
   useEffect(() => {
     url
       .get('api/user', {

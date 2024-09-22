@@ -2,7 +2,6 @@ import url from '@/api';
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import { FC, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 type Lib = {
   libelle: string;
@@ -13,7 +12,6 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   const [selectedFile1, setSelectedFile1] = useState<any>(null);
   const [selectedFile2, setSelectedFile2] = useState<any>(null);
   const server = useServer();
-  const direction = useNavigate();
   const csrf = server?.csrf?.csrfToken;
   console.log(csrf);
   function getCookie(name: any) {
