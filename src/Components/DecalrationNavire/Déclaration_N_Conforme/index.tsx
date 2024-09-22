@@ -363,10 +363,9 @@ const DeclaratioNConforme = () => {
               })}
             </tr>
           </thead>
-
-          {FinalPagination.map((val: any, index: number) => {
-            return (
-              <tbody>
+          <tbody>
+            {FinalPagination.map((val: any, index: number) => {
+              return (
                 <tr
                   key={index}
                   className="gridArray6 w-full border-b-2 border-slate-50 "
@@ -416,9 +415,9 @@ const DeclaratioNConforme = () => {
                     )}
                   </td>
                 </tr>
-              </tbody>
-            );
-          })}
+              );
+            })}
+          </tbody>
         </table>
       </div>
 
