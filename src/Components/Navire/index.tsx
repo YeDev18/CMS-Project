@@ -1,3 +1,4 @@
+import { useFilter } from '@/Context/FilterProvider';
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
@@ -6,6 +7,8 @@ import { headersNavire } from '../Data';
 
 const Navire = () => {
   const Navire = useServer().navire;
+  const summ = useFilter()?.sum;
+  console.log(summ);
 
   const [current, setCurrent] = useState(1);
   const itemsPerPage = 10;
