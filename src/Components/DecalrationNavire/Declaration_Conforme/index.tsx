@@ -1,10 +1,12 @@
 import Overlay from '@/Components/DecalrationNavire/Declaration_Conforme/overlay';
+import useExportExcel from '@/Components/ui/export-excel';
+import usePagination from '@/Components/ui/pagination';
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import { useMemo, useState } from 'react';
-import * as XLSX from 'xlsx';
-import { AllMonths, Year, headerTable } from '../../Data';
+import { AllMonths, Year } from '../../Data';
 import Libelle from '../../ui/Libelle';
+import Table from '../table-compare';
 
 const DeclarationConforme = () => {
   const server = useServer();
@@ -19,11 +21,6 @@ const DeclarationConforme = () => {
   });
   const [searchValue, setSearchValue] = useState();
 
-  const [current, setCurrent] = useState(1);
-
-  const itemsPerPage = 10;
-  const startIndex = (current - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
   const MonthsYears = formValue.years + '-' + formValue.months;
   const [data3, setDate3] = useState({
     idInstance: '',
@@ -101,38 +98,6 @@ const DeclarationConforme = () => {
     server?.toInitialize();
   };
 
-  const goToNextPage = () => {
-    setCurrent(prevPage => prevPage + 1);
-  };
-  const goToPrevPage = () => {
-    setCurrent(prevPage => prevPage - 1);
-  };
-  const renderPaginationControls = () => {
-    const totalPages = Math.ceil(FinalData.length / itemsPerPage);
-    return (
-      <div className="flex justify-end pb-5">
-        <button
-          onClick={goToPrevPage}
-          disabled={current === 1}
-          className="border text-shadowColors border-shadowColors p-1 rounded active:bg-firstBlue active:border hover:border-firstBlue hover:text-firstColors hover:bg-firstBlue hover:border"
-        >
-          <Icon icon="ep:arrow-left-bold" />
-        </button>
-        <div className="px-2 w-24 text-center">
-          <span className="font-medium text-borderColor">{current}</span> /{' '}
-          <span className="text-borderColor">{totalPages}</span>
-        </div>
-        <button
-          onClick={goToNextPage}
-          disabled={current === totalPages}
-          className="border text-shadowColors border-shadowColors p-1 rounded active:bg-firstBlue active:border hover:border-firstBlue hover:text-firstColors hover:bg-firstBlue hover:border"
-        >
-          <Icon icon="ep:arrow-right-bold" />
-        </button>
-      </div>
-    );
-  };
-
   const Filter = useMemo(() => {
     return conform.filter((val: any) =>
       val.soumission_dtci.mouvement_dtci === 'Arrivée'
@@ -189,13 +154,12 @@ const DeclarationConforme = () => {
     Data3.push(modifiedData[index]);
   }
 
-  const exportToExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(modifiedData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, `Decalaration conforme.xlsx`);
-  };
+  const { exportToExcel } = useExportExcel(FinalData, 'Conforme');
 
+  const { renderPaginationControls, startIndex, endIndex } =
+    usePagination(FinalData);
+
+  let FinalPagination = FinalData.slice(startIndex, endIndex);
   return (
     <div className="w-full relative h-full flex flex-col gap-6 ">
       <div className="flex justify-between gap-2 gap-y-4 w-full relative">
@@ -387,68 +351,7 @@ const DeclarationConforme = () => {
         </div>
       </div>
       <div className="w-full h-full overflow-x-auto pr-2 relative">
-        <table className="w-full pb-6">
-          <thead>
-            <tr className="gridArray6 w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
-              {headerTable.map((item, index) => {
-                return (
-                  <th
-                    className=" text-start font-semibold headerSecond"
-                    key={index}
-                  >
-                    {item}
-                  </th>
-                );
-              })}
-            </tr>
-          </thead>
-          <tbody>
-            {FinalData.slice(startIndex, endIndex).map(
-              (val: any, index: number) => {
-                return (
-                  <tr
-                    key={index}
-                    className="gridArray6 w-full border-b-2 border-slate-50 "
-                  >
-                    <td className="text-start text-sm xl:text-base headerSecond">
-                      {index + 1}
-                    </td>
-                    <td className="text-start whitespace-normal text-sm xl:text-sm headerSecond">
-                      {val.soumission_dtci.nom_navire_dtci}
-                    </td>
-                    <td className="text-start text-sm xl:text-base headerSecond">
-                      {val.soumission_dtci.imo_dtci}
-                    </td>
-                    <td className="text-start lg:w-40 text-sm xl:text-base headerSecond">
-                      {val.soumission_dtci.mouvement_dtci}
-                    </td>
-
-                    <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base headerSecond">
-                      {val.soumission_dtci.mouvement_dtci === 'Arrivée'
-                        ? val.soumission_dtci.eta_dtci
-                            .split('-')
-                            .reverse()
-                            .join('-')
-                        : val.soumission_dtci.etd_dtci
-                            .split('-')
-                            .reverse()
-                            .join('-')}
-                    </td>
-                    <td className="text-start  text-sm xl:text-base ">
-                      <button onClick={() => handleChange(val)}>
-                        <Icon
-                          icon="weui:eyes-on-filled"
-                          width="1em"
-                          height="1em"
-                        />
-                      </button>
-                    </td>
-                  </tr>
-                );
-              }
-            )}
-          </tbody>
-        </table>
+        <Table data={FinalPagination} label="conform" onClick={handleChange} />
       </div>
       {renderPaginationControls()}
 

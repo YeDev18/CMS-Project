@@ -19,8 +19,8 @@ const T_NonDeclare = () => {
       <div className="flex justify-start gap-2 flex-wrap w-full">
         <Libelle
           icon="lucide:anvil"
-          libelle="Tonages"
-          color="#F59069"
+          libelle="Non declarés"
+          color="#F0352B"
           number={tonnes.length}
         />
         <div className="rounded-md shadow-sm shadow-slate-200 p-2 inline-flex gap-4 items-center w-fit h-10">

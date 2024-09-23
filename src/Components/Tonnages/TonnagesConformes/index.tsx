@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { AllMonths, Year } from '../../Data.tsx';
 import Libelle from '../../ui/Libelle.tsx';
 import usePagination from '../../ui/pagination.tsx';
-import Table from '../table.tsx';
+import Table from '../table-tonnages.tsx';
 const T_Conforme = () => {
   const server = useServer();
   const tonnes = server?.tonnages;
@@ -67,8 +67,9 @@ const T_Conforme = () => {
   } else {
     console.log('');
   }
-  const { renderPaginationControls, FinalPagination } =
+  const { renderPaginationControls, startIndex, endIndex } =
     usePagination(FinalDataCheck);
+  let FinalPagination = tonnes.slice(startIndex, endIndex);
   return (
     <div className="w-full h-full  flex flex-col gap-6 ">
       <div className="flex justify-between gap-2 gap-y-4 w-full relative">

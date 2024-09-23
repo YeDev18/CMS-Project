@@ -1,8 +1,10 @@
+import usePagination from '@/Components/ui/pagination';
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import * as XLSX from 'xlsx';
-import { AllMonths, headerTable, Year } from '../../Data';
+import { AllMonths, Year } from '../../Data';
 import Libelle from '../../ui/Libelle';
+import Table from '../table-tonnages';
 const T_NonConforme = () => {
   const server = useServer();
   const tonnes = server?.tonnages;
@@ -14,14 +16,18 @@ const T_NonConforme = () => {
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     XLSX.writeFile(wb, `Tonnages Non conforme.xlsx`);
   };
+
+  const { renderPaginationControls, endIndex, startIndex } =
+    usePagination(tonnesNc);
+  let FinalPagination = tonnesNc.slice(startIndex, endIndex);
   return (
     <div className="w-full h-full relative flex flex-col gap-6 ">
       <div className="flex justify-start gap-2 flex-wrap w-full">
         <Libelle
           icon="lucide:anvil"
-          libelle="Tonages"
+          libelle="Nom comfomes"
           color="#F59069"
-          number={tonnes.length}
+          number={tonnesNc.length}
         />
         <div className="rounded-md shadow-sm shadow-slate-200 p-2 inline-flex gap-4 items-center w-fit h-10">
           <form action="" className="flex items-center justify-center">
@@ -101,57 +107,9 @@ const T_NonConforme = () => {
         </button>
       </div>
       <div className="w-full h-full overflow-x-auto  pr-2 relative">
-        <table className="w-full">
-          <thead>
-            <tr className="gridArray6 w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 sticky top-0">
-              {headerTable.map((item, index) => {
-                return (
-                  <th
-                    className="text-start  font-semibold headerSecond "
-                    key={index}
-                  >
-                    {item}
-                  </th>
-                );
-              })}
-            </tr>
-          </thead>
-          {/* {tonnesNc.map((val: any, index: number) => {
-            return (
-              <tr
-                key={index}
-                className="gridArray6 w-full border-b-2 border-slate-50 "
-              >
-                <td className="text-start text-sm xl:text-base headerSecond">
-                  {index + 1}
-                </td>
-                <td className="text-start  text-sm xl:text-sm headerSecond">
-                  {val.tonnagedt.nom_navire_dt_tonnages}
-                </td>
-                <td className="text-start  text-sm xl:text-base headerSecond">
-                  {val.tonnagedt.imo_dt_tonnage}
-                </td>
-
-                <td className="text-start lg:w-40 text-sm xl:text-base headerSecond">
-                  {val.tonnagedt.mouvement_dt_tonnage}
-                </td>
-
-                <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base headerSecond ">
-                  {val.tonnagedt.mouvement_dtci === 'Arrivée'
-                    ? val.tonnagedt.eta_dt_tonnage
-                        .split('-')
-                        .reverse()
-                        .join('-')
-                    : val.tonnagedt.etd_dt_tonnage
-                        .split('-')
-                        .reverse()
-                        .join('-')}
-                </td>
-              </tr>
-            );
-          })} */}
-        </table>
+        <Table data={FinalPagination} label="Non-comforme" />
       </div>
+      {renderPaginationControls()}
     </div>
   );
 };

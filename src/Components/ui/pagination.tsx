@@ -5,13 +5,14 @@ const usePagination = (data: any) => {
   const itemsPerPage = 10;
   const startIndex = (current - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const FinalPagination = data.slice(startIndex, itemsPerPage);
+
   const goToNextPage = () => {
     setCurrent(prevPage => prevPage + 1);
   };
   const goToPrevPage = () => {
     setCurrent(prevPage => prevPage - 1);
   };
+
   const renderPaginationControls = () => {
     const totalPages = Math.ceil(data.length / itemsPerPage);
     return (
@@ -38,7 +39,7 @@ const usePagination = (data: any) => {
     );
   };
 
-  return { renderPaginationControls, startIndex, endIndex, FinalPagination };
+  return { renderPaginationControls, startIndex, endIndex };
 };
 
 export default usePagination;
