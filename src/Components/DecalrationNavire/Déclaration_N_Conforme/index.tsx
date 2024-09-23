@@ -484,18 +484,6 @@ const DeclaratioNConforme = () => {
                     />
                   </div>
 
-                  {/* <div className="flex flex-col gap-1">
-                    <label htmlFor="" className="text-gray-500 font-semibold">
-                      Consignataire TM
-                    </label>
-                    <input
-                      disabled
-                      type="text"
-                      className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
-                      value={data3.consignataireTM}
-                    />
-                  </div> */}
-
                   <div className="flex flex-col gap-1">
                     <label htmlFor="" className="text-gray-500 font-semibold">
                       Date TM

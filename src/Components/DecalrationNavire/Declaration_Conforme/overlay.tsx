@@ -115,12 +115,6 @@ const Overlay: FC<DataProps> = ({ data }) => {
             className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
             value={data.numVoyage}
           />
-          {/* <input
-                disabled
-                type="text"
-                className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
-                value={data.dateTm}
-              /> */}
         </div>
 
         <button
