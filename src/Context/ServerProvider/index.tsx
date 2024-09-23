@@ -131,6 +131,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
   } = useQuery({
     queryKey: ['board'],
     queryFn: get_declaration_board,
+    gcTime: 0,
   });
   if (isFetching) {
     console.log('Loading...');
@@ -168,6 +169,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const { isFetching: fetchingTonnages, isError: errorTonnages } = useQuery({
     queryKey: ['tonnages'],
     queryFn: get_tonnages_board,
+    gcTime: 0,
   });
   if (fetchingTonnages) {
     console.log('Loading Tonnes...');
@@ -194,6 +196,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
     {
       queryKey: ['boar_consignor'],
       queryFn: get_board_consignor,
+      gcTime: 0,
     }
   );
   if (boar_consignor) {

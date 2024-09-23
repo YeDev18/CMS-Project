@@ -1,11 +1,12 @@
 import url from '@/api';
+import useExportExcel from '@/Components/ui/export-excel';
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import { useMemo, useState } from 'react';
-import * as XLSX from 'xlsx';
-import { AllMonths, headerTable, Year } from '../../Data';
+import { AllMonths, Year } from '../../Data';
 import Libelle from '../../ui/Libelle';
 import usePagination from '../../ui/pagination';
+import Table from '../table-compare';
 
 const DeclaratioNConforme = () => {
   const server = useServer();
@@ -174,14 +175,9 @@ const DeclaratioNConforme = () => {
         : item?.soumission_dtci?.etd_dtci.split('-').reverse().join('-'),
   }));
 
-  const exportToExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(modifiedData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, `Decalaration non conforme.xlsx`);
-  };
+  const { exportToExcel } = useExportExcel(modifiedData, 'nom declare');
 
-  const { renderPaginationControls, FinalPagination } =
+  const { renderPaginationControls, endIndex, startIndex } =
     usePagination(FinalData);
 
   const handleChange = (val: any) => {
@@ -210,7 +206,7 @@ const DeclaratioNConforme = () => {
       observation: val.observation,
     });
   };
-
+  let FinalPagination = FinalData.slice(startIndex, endIndex);
   return (
     <div className="w-full h-full relative flex flex-col gap-6 ">
       <div className="flex justify-start gap-2 flex-wrap w-full">
@@ -348,77 +344,11 @@ const DeclaratioNConforme = () => {
         )}
       </div>
       <div className="w-full h-full  overflow-x-auto  pr-2 relative">
-        <table className="w-full">
-          <thead>
-            <tr className="gridArray6 w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 sticky top-0">
-              {headerTable.map((item, index) => {
-                return (
-                  <th
-                    className="text-start  font-semibold headerSecond "
-                    key={index}
-                  >
-                    {item}
-                  </th>
-                );
-              })}
-            </tr>
-          </thead>
-          <tbody>
-            {FinalPagination.map((val: any, index: number) => {
-              return (
-                <tr
-                  key={index}
-                  className="gridArray6 w-full border-b-2 border-slate-50 "
-                >
-                  <td className="text-start text-sm xl:text-base headerSecond">
-                    {index + 1}
-                  </td>
-                  <td className="text-start  text-sm xl:text-sm headerSecond">
-                    {val.soumission_dtci.nom_navire_dtci}
-                  </td>
-                  <td className="text-start  text-sm xl:text-base headerSecond">
-                    {val.soumission_dtci.imo_dtci}
-                  </td>
-
-                  <td className="text-start lg:w-40 text-sm xl:text-base headerSecond">
-                    {val.soumission_dtci.mouvement_dtci}
-                  </td>
-
-                  <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base headerSecond ">
-                    {val.soumission_dtci.mouvement_dtci === 'Arrivée'
-                      ? val.soumission_dtci.eta_dtci
-                          .split('-')
-                          .reverse()
-                          .join('-')
-                      : val.soumission_dtci.etd_dtci
-                          .split('-')
-                          .reverse()
-                          .join('-')}
-                  </td>
-
-                  <td className="text-end lg:w-28 xl:w-48 flex gap-3  headerSecond">
-                    {!val.observation ? (
-                      <button onClick={() => handleChange(val)}>
-                        <Icon
-                          icon="mingcute:more-2-fill"
-                          width="20"
-                          height="20"
-                        />
-                      </button>
-                    ) : (
-                      <button
-                        className="bg-[#F59069]  text-firstColors px-2 font-medium rounded-md text-sm"
-                        onClick={() => handleChange(val)}
-                      >
-                        Mettre á jour
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <Table
+          data={FinalPagination}
+          label="Non-conform"
+          onClick={handleChange}
+        />
       </div>
 
       {renderPaginationControls()}

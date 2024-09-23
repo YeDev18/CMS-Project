@@ -1,6 +1,7 @@
 import url from '@/api';
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FC, useState } from 'react';
 
 type Lib = {
@@ -9,6 +10,7 @@ type Lib = {
 };
 
 const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
+  const queryClient = useQueryClient();
   const [selectedFile1, setSelectedFile1] = useState<any>(null);
   const [selectedFile2, setSelectedFile2] = useState<any>(null);
   const server = useServer();
@@ -93,6 +95,7 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   };
 
   ////DONNEES TONNAGES ////////////////////////////////////////////////
+
   const fetchTonnagesDtci = async () => {
     const formData = new FormData();
     formData.append('file', selectedFile1);
@@ -134,6 +137,22 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
         server?.showLoadingFinish();
       });
   };
+
+  const mutation = useMutation({
+    mutationFn: fetchTonnagesDtci,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['compare_consigno'] });
+      console.log('Bon ');
+    },
+  });
+
+  const mutation2 = useMutation({
+    mutationFn: fetchTonnagesPPA,
+    onSuccess: () => {
+      // queryClient.invalidateQueries({ queryKey: ['compare_consigno'] });
+      console.log('Bon ');
+    },
+  });
 
   ////DONNEES DECLARATION ////////////////////////////////////////////////
   const fetchDataDTCI = async () => {

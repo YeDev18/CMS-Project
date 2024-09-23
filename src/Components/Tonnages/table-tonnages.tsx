@@ -38,27 +38,37 @@ const Table = ({ data, label }: any) => {
                 : val.tonnage_dt.etd_dt_tonnage.split('-').reverse().join('-')}
             </td>
             <td className="text-start text-sm xl:text-base headerThird">
-              {parseInt(val.tonnage_facture_dt_tonnage)}
+              {parseInt(val.tonnage_facture_dt_tonnage) || 0}
             </td>
             <td className="text-start text-sm xl:text-base headerThird">
-              {parseInt(val.tonnage_trafic_national_port)}
+              {parseInt(val.tonnage_trafic_national_port) || 0}
             </td>
             <td className="text-start text-sm xl:text-base font-semibold headerThird">
-              {parseInt(val.difference_tonnage)}
+              {parseInt(val.difference_tonnage) || 0}
             </td>
 
             <td className="flex align-center text-sm headerThird">
-              {val.statut === 'Tonnage Incorrect' ? (
-                <div className="flex justify-center text-[#eeeeee] font-medium items-center gap-1  px-2 py-1 rounded-2xl bg-[#F04A1A] w-fit ">
-                  <Icon icon="zondicons:close-outline" />
-                  <p>Incorrect</p>
-                </div>
+              {label == 'Conforme' ? (
+                <>
+                  {val.statut === 'Tonnage Incorrect' ? (
+                    <div className="flex justify-center text-[#eeeeee] font-medium items-center gap-1  px-2 py-1 rounded-2xl bg-[#F04A1A] w-fit ">
+                      <Icon icon="zondicons:close-outline" />
+                      <p>Incorrect</p>
+                    </div>
+                  ) : (
+                    <div className="flex justify-center items-center text-[#eeeeee] font-medium  gap-1  px-2 py-1 rounded-2xl bg-[#19a856] w-fit">
+                      <Icon
+                        icon="ic:outline-check-circle"
+                        className="text-lg"
+                      />
+                      <p>Correct</p>
+                    </div>
+                  )}
+                </>
               ) : (
-                <div className="flex justify-center items-center text-[#eeeeee] font-medium  gap-1  px-2 py-1 rounded-2xl bg-[#19a856] w-fit">
-                  <Icon icon="ic:outline-check-circle" className="text-lg" />
-                  <p>Correct</p>
-                </div>
+                <>Non Conforme</>
               )}
+
               <br />
             </td>
           </tr>

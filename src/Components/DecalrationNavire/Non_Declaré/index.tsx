@@ -1,9 +1,11 @@
+import useExportExcel from '@/Components/ui/export-excel';
+import usePagination from '@/Components/ui/pagination';
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import { useMemo, useState } from 'react';
-import * as XLSX from 'xlsx';
-import { AllMonths, Year, headerTable } from '../../Data';
+import { AllMonths, Year } from '../../Data';
 import Libelle from '../../ui/Libelle';
+import Table from '../table-compare';
 const NonDeclaration = () => {
   const undeclared = useServer().undeclared;
 
@@ -17,11 +19,6 @@ const NonDeclaration = () => {
   const [portA, setPortA] = useState<boolean>(false);
   const [portSP, setPortSP] = useState<boolean>(false);
 
-  const [current, setCurrent] = useState(1);
-  const itemsPerPage = 10;
-  const startIndex = (current - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-
   const handleChangePortA = () => {
     setPortA(!portA);
     setPortSP(false);
@@ -31,13 +28,6 @@ const NonDeclaration = () => {
     setPortSP(!portSP);
     setPortA(false);
     server?.toInitialize();
-  };
-
-  const goToNextPage = () => {
-    setCurrent(prevPage => prevPage + 1);
-  };
-  const goToPrevPage = () => {
-    setCurrent(prevPage => prevPage - 1);
   };
 
   const [showFilter, setShowFilter] = useState<boolean>(false);
@@ -51,31 +41,6 @@ const NonDeclaration = () => {
     setFormValue({ ...formValue, months: '', years: '' });
     FinalData == Final;
     //     setSearchValue('dc');
-  };
-  const renderPaginationControls = () => {
-    const totalPages = Math.ceil(FinalData.length / itemsPerPage);
-    return (
-      <div className="flex justify-end pb-5">
-        <button
-          onClick={goToPrevPage}
-          disabled={current === 1}
-          className="border text-shadowColors border-shadowColors p-1 rounded active:bg-firstBlue active:border hover:border-firstBlue hover:text-firstColors hover:bg-firstBlue hover:border"
-        >
-          <Icon icon="ep:arrow-left-bold" />
-        </button>
-        <div className="px-2 w-24 text-center">
-          <span className="font-medium text-borderColor">{current}</span> /{' '}
-          <span className="text-borderColor">{totalPages}</span>
-        </div>
-        <button
-          onClick={goToNextPage}
-          disabled={current === totalPages}
-          className="border text-shadowColors border-shadowColors p-1 rounded active:bg-firstBlue active:border hover:border-firstBlue hover:text-firstColors hover:bg-firstBlue hover:border"
-        >
-          <Icon icon="ep:arrow-right-bold" />
-        </button>
-      </div>
-    );
   };
   const [searchValue, setSearchValue] = useState();
   const Filter = useMemo(() => {
@@ -113,12 +78,11 @@ const NonDeclaration = () => {
     Port: item?.trafic_maritime?.port_trafic,
   }));
 
-  const exportToExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(modifiedData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, `Non declare.xlsx`);
-  };
+  const { exportToExcel } = useExportExcel(modifiedData, 'non declare');
+
+  const { renderPaginationControls, startIndex, endIndex } =
+    usePagination(FinalData);
+  let FinalPagination = FinalData.slice(startIndex, endIndex);
 
   return (
     <div className="w-full relative h-full flex flex-col gap-6  ">
@@ -126,7 +90,7 @@ const NonDeclaration = () => {
         <div className="flex gap-4">
           <Libelle
             icon="ph:x-circle"
-            libelle="Nom declares"
+            libelle="Non declarés"
             color="#F0352B"
             number={undeclared.length}
           />
@@ -284,55 +248,7 @@ const NonDeclaration = () => {
         </div>
       </div>
       <div className="w-full h-full overflow-x-auto  pr-2 relative">
-        <table className="w-full pb-6">
-          <thead>
-            <tr className="gridArray5 text-start py-4 w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
-              {headerTable.map((item, index) => {
-                return (
-                  <th
-                    className=" text-start font-semibold headerSecond"
-                    key={index}
-                  >
-                    {item}
-                  </th>
-                );
-              })}
-            </tr>
-          </thead>
-
-          <tbody>
-            {FinalData.slice(startIndex, endIndex).map(
-              (val: any, index: number) => {
-                return (
-                  <tr
-                    key={index}
-                    className="gridArray5 w-full border-b-2 border-slate-50 "
-                  >
-                    <td className="text-start  text-sm xl:text-base">
-                      {index + 1}
-                    </td>
-                    <td className="text-start  text-sm xl:text-sm whitespace-normal">
-                      {val.trafic_maritime.nom_navire_trafic}
-                    </td>
-                    <td className="text-start  text-sm xl:text-base">
-                      {val.trafic_maritime.imo_trafic}
-                    </td>
-                    <td className="text-start text-sm xl:text-base">
-                      {val.trafic_maritime.mouvement_trafic}
-                    </td>
-
-                    <td className="text-start text-sm xl:text-base ">
-                      {val.trafic_maritime.date_trafic
-                        .split('-')
-                        .reverse()
-                        .join('-')}
-                    </td>
-                  </tr>
-                );
-              }
-            )}
-          </tbody>
-        </table>
+        <Table data={FinalPagination} label="Non Declare" />
       </div>
       {renderPaginationControls()}
     </div>
