@@ -4,11 +4,11 @@ const Table = ({ data, label, onClick }: any) => {
   return (
     <table className="w-full pb-6">
       <thead>
-        <tr className="gridArray6 w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
+        <tr className="gridArray6 shadow-testColors1 w-full rounded-md bg-slate-50 shadow-sm ">
           {headerTable.map((item, index) => {
             return (
               <th
-                className=" text-start font-semibold headerSecond"
+                className=" headerSecond text-start font-semibold"
                 key={index}
               >
                 {item}
@@ -24,24 +24,24 @@ const Table = ({ data, label, onClick }: any) => {
               key={index}
               className="gridArray6 w-full border-b-2 border-slate-50 "
             >
-              <td className="text-start text-sm xl:text-base headerSecond">
+              <td className="headerSecond text-start text-sm xl:text-base">
                 {index + 1}
               </td>
-              <td className="text-start whitespace-normal text-sm xl:text-sm headerSecond">
+              <td className="headerSecond whitespace-normal text-start text-sm xl:text-sm">
                 {label === 'Non Declare' ? (
                   <>{val.trafic_maritime.nom_navire_trafic}</>
                 ) : (
                   <>{val.soumission_dtci.nom_navire_dtci}</>
                 )}
               </td>
-              <td className="text-start text-sm xl:text-base headerSecond">
+              <td className="headerSecond text-start text-sm xl:text-base">
                 {label === 'Non Declare' ? (
                   <>{val.trafic_maritime.imo_trafic}</>
                 ) : (
                   <>{val.soumission_dtci.imo_dtci}</>
                 )}
               </td>
-              <td className="text-start lg:w-40 text-sm xl:text-base headerSecond">
+              <td className="headerSecond text-start text-sm lg:w-40 xl:text-base">
                 {label === 'Non Declare' ? (
                   <> {val.trafic_maritime.mouvement_trafic}</>
                 ) : (
@@ -49,7 +49,7 @@ const Table = ({ data, label, onClick }: any) => {
                 )}
               </td>
 
-              <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base headerSecond">
+              <td className="headerSecond text-start text-sm lg:w-28 xl:w-48 xl:text-base">
                 {label === 'Non Declare' ? (
                   <>
                     {val.trafic_maritime.date_trafic

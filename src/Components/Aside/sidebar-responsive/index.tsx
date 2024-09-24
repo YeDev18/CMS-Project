@@ -6,10 +6,10 @@ const SidebarResponsive = () => {
   return (
     <div className="relative">
       <div
-        className="overlay absolute inset-0 w-full h-[100vh] bg-black/50 z-20 "
+        className="absolute inset-0 z-20 h-screen w-full bg-black/50 "
         onClick={() => server.showResponsive()}
       ></div>
-      <div className="absolute inset-0 size-fit z-40 bg-white h-[100vh] w-72">
+      <div className="absolute inset-0 z-40 size-fit h-screen w-72 bg-white">
         <Sidebar />
       </div>
     </div>

@@ -1,18 +1,18 @@
 import { Link } from 'react-router-dom';
 const Header = () => {
   return (
-    <div className="max-w-lg mx-auto pb-8">
-      <ul className="flex justify-between text-2xl text-textColor">
+    <div className="mx-auto max-w-lg pb-8">
+      <ul className="text-textColor flex justify-between text-2xl">
         <Link
           to="/"
-          className="active:text-firstBlue focus:border-b-2 focus:border-firstBlue focus:text-firstBlue pb-2"
+          className="pb-2 focus:border-b-2 focus:border-firstBlue focus:text-firstBlue active:text-firstBlue"
         >
           {' '}
           Connection
         </Link>
         <Link
           to="/inscription"
-          className="active:text-firstBlue focus:border-b-2 focus:border-firstBlue focus:text-firstBlue pb-2 "
+          className="pb-2 focus:border-b-2 focus:border-firstBlue focus:text-firstBlue active:text-firstBlue "
         >
           {' '}
           Inscription

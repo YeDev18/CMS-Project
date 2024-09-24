@@ -10,11 +10,11 @@ type Notification = {
 const Notification: FC<Notification> = ({ icon, notification, bottom }) => {
   return (
     <div
-      className={`fixed w-64 bottom-${bottom} right-3 rounded-md shadow-sm bg-[#009FE3] flex justify-start items-center gap-2 py-3 px-2 animateElement`}
+      className={`fixed w-64 ${bottom} animateElement right-3 flex items-center justify-start gap-2 rounded-md bg-firstBlue px-2 py-3 shadow-sm`}
     >
       {' '}
-      <Icon icon={icon} className="text-firstColors text-xl" />
-      <h2 className="font-bold text-base text-firstColors">{notification}</h2>
+      <Icon icon={icon} className="text-xl text-firstColors" />
+      <h2 className="text-base font-bold text-firstColors">{notification}</h2>
     </div>
   );
 };

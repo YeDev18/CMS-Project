@@ -1,6 +1,7 @@
 import url from '@/api';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+type;
 const Update = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -30,13 +31,13 @@ const Update = () => {
   };
 
   return (
-    <div className=" w-full flex justify-center items-center">
+    <div className=" flex w-full items-center justify-center">
       <form
         onSubmit={handleSubmit}
-        className=" flex flex-col gap-4  align-middle items-center bg-firstColors shadow-md shadow-slate-200 w-[30rem] py-6 rounded-sm"
+        className=" flex w-[30rem] flex-col  items-center gap-4 rounded-sm bg-firstColors py-6 align-middle shadow-md shadow-slate-200"
       >
         <div className="flex flex-col gap-1">
-          <label htmlFor="" className="text-gray-500 font-semibold">
+          <label htmlFor="" className="font-semibold text-gray-500">
             Nom DTCI
           </label>
           <input
@@ -46,16 +47,16 @@ const Update = () => {
             onChange={e =>
               setData2({ ...data2, nom_navire_dtci: e.target.value })
             }
-            className="border outline-none p-2 rounded-sm  border-shadowColors w-[22rem] bg-firstColors text-sm"
+            className="w-[22rem] rounded-sm border border-shadowColors  bg-firstColors p-2 text-sm outline-none"
             id=""
           />
-          <span className="font-semibold text-[0.75rem] text-slate-500">
+          <span className="text-[0.75rem] font-semibold text-slate-500">
             Nom Trafic : {data1?.trafic_maritime?.nom_navire_trafic || '...'}
           </span>
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="" className="text-gray-500 font-semibold">
+          <label htmlFor="" className="font-semibold text-gray-500">
             Nom Consignataire DTCI
           </label>
           <input
@@ -66,14 +67,14 @@ const Update = () => {
               setData2({ ...data2, consignataire_dtci: e.target.value })
             }
             id=""
-            className="border outline-none p-2 rounded-sm border-shadowColors w-[22rem] bg-firstColors text-sm"
+            className="w-[22rem] rounded-sm border border-shadowColors bg-firstColors p-2 text-sm outline-none"
           />
-          <span className="font-semibold text-[0.75rem] text-slate-500">
+          <span className="text-[0.75rem] font-semibold text-slate-500">
             Nom Trafic : {data1?.trafic_maritime?.consignataire_trafic || '...'}
           </span>
         </div>
         <div className="flex flex-col gap-1">
-          <label htmlFor="" className="text-gray-500 font-semibold">
+          <label htmlFor="" className="font-semibold text-gray-500">
             Date DTCI
           </label>
           <input
@@ -84,16 +85,16 @@ const Update = () => {
               setData2({ ...data2, date_mouvement: e.target.value })
             }
             id=""
-            className="border outline-none p-2 rounded-sm border-shadowColors w-[22rem] bg-firstColors text-sm"
+            className="w-[22rem] rounded-sm border border-shadowColors bg-firstColors p-2 text-sm outline-none"
           />
-          <span className="font-semibold text-[0.75rem] text-slate-500">
+          <span className="text-[0.75rem] font-semibold text-slate-500">
             Nom Trafic : {data1?.trafic_maritime?.date_trafic || '...'}
           </span>
         </div>
 
         <button
           type="submit"
-          className="bg-firstBlue  w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold flex items-center justify-center"
+          className="flex  h-12 w-40 cursor-pointer items-center justify-center rounded-md bg-firstBlue font-semibold text-[#EEEEEC]"
         >
           UPDATE
         </button>

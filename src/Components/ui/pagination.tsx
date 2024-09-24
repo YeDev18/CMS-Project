@@ -20,18 +20,18 @@ const usePagination = (data: any) => {
         <button
           onClick={goToPrevPage}
           disabled={current === 1}
-          className="border text-shadowColors border-shadowColors p-1 rounded active:bg-firstBlue active:border hover:border-firstBlue hover:text-firstColors hover:bg-firstBlue hover:border"
+          className="rounded border border-shadowColors p-1 text-shadowColors hover:border hover:border-firstBlue hover:bg-firstBlue hover:text-firstColors active:border active:bg-firstBlue"
         >
           <Icon icon="ep:arrow-left-bold" />
         </button>
-        <div className="px-2 w-24 text-center">
-          <span className="font-medium text-borderColor">{current}</span> /{' '}
+        <div className="w-24 px-2 text-center">
+          <span className="text-borderColor font-medium">{current}</span> /{' '}
           <span className="text-borderColor">{totalPages}</span>
         </div>
         <button
           onClick={goToNextPage}
           disabled={current === totalPages}
-          className="border text-shadowColors border-shadowColors p-1 rounded active:bg-firstBlue active:border hover:border-firstBlue hover:text-firstColors hover:bg-firstBlue hover:border"
+          className="rounded border border-shadowColors p-1 text-shadowColors hover:border hover:border-firstBlue hover:bg-firstBlue hover:text-firstColors active:border active:bg-firstBlue"
         >
           <Icon icon="ep:arrow-right-bold" />
         </button>

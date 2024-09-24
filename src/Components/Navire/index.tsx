@@ -1,61 +1,36 @@
-import { useFilter } from '@/Context/FilterProvider';
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
 import { headersNavire } from '../Data';
+import usePagination from '../ui/pagination';
+type BoardProps = {
+  imo: string;
+  nom: string;
+};
 
 const Navire = () => {
   const Navire = useServer().navire;
-  const summ = useFilter()?.sum;
-  console.log(summ);
+  // const summ = useFilter()?.sum;
+  // console.log(summ);
 
-  const [current, setCurrent] = useState(1);
-  const itemsPerPage = 10;
-  const startIndex = (current - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-
-  const goToNextPage = () => {
-    setCurrent(prevPage => prevPage + 1);
-  };
-  const goToPrevPage = () => {
-    setCurrent(prevPage => prevPage - 1);
-  };
-
-  const renderPaginationControls = () => {
-    const totalPages = Math.ceil(TrueData.length / itemsPerPage);
-    return (
-      <div className="flex justify-end pb-5">
-        <button
-          onClick={goToPrevPage}
-          disabled={current === 1}
-          className="border text-shadowColors border-shadowColors p-1 rounded active:bg-firstBlue active:border hover:border-firstBlue hover:text-firstColors hover:bg-firstBlue hover:border"
-        >
-          <Icon icon="ep:arrow-left-bold" />
-        </button>
-        <div className="px-2 w-16 text-center">
-          <span className="font-medium text-borderColor">{current}</span> /{' '}
-          <span className="text-borderColor">{totalPages}</span>
-        </div>
-        <button
-          onClick={goToNextPage}
-          disabled={current === totalPages}
-          className="border text-shadowColors border-shadowColors p-1 rounded active:bg-firstBlue active:border hover:border-firstBlue hover:text-firstColors hover:bg-firstBlue hover:border"
-        >
-          <Icon icon="ep:arrow-right-bold" />
-        </button>
-      </div>
-    );
-  };
-
-  const [searchValue, setSearchValue] = useState();
-  const [searchNavire, setSearchNavire] = useState();
+  const [searchValue, setSearchValue] = useState<string>();
+  const [searchNavire, setSearchNavire] = useState<string>();
   const TrueData = searchValue
-    ? Navire.filter((val: any) => val.imo.toString().includes(searchValue))
+    ? Navire.filter((val: BoardProps) =>
+        val.imo.toString().includes(searchValue)
+      )
     : Navire;
   const FinalData = searchNavire
-    ? TrueData.filter((val: any) => val.nom.toString().includes(searchNavire))
+    ? TrueData.filter((val: BoardProps) =>
+        val.nom.toString().includes(searchNavire)
+      )
     : TrueData;
+
+  const { renderPaginationControls, startIndex, endIndex } =
+    usePagination(FinalData);
+
+  const FinalPagination = FinalData.slice(startIndex, endIndex);
 
   const exportToExcel = () => {
     // Créer une nouvelle feuille de calcul
@@ -70,10 +45,10 @@ const Navire = () => {
   };
 
   return (
-    <div className=" flex flex-col gap-6 text-grayBlack w-full ">
-      <div className="flex justify-start gap-3 flex-wrap gap-y-4 w-full pb-3">
+    <div className=" flex w-full flex-col gap-6 text-grayBlack ">
+      <div className="flex w-full flex-wrap justify-start gap-3 gap-y-4 pb-3">
         <div>
-          <p className="rounded-md shadow-sm shadow-slate-200 p-2 inline-flex items-center bg-firstBlue text-firstColors">
+          <p className="inline-flex items-center rounded-md bg-firstBlue p-2 text-firstColors shadow-sm shadow-slate-200">
             {' '}
             <Icon
               icon="lucide:ship"
@@ -83,34 +58,34 @@ const Navire = () => {
               className="mr-2"
             />
             Navires :{' '}
-            <span className="font-semibold pl-1"> {Navire.length}</span>
+            <span className="pl-1 font-semibold"> {Navire.length}</span>
           </p>
         </div>
 
-        <div className="rounded-md shadow-sm shadow-slate-200 p-2 inline-flex gap-2 items-center h-10">
+        <div className="inline-flex h-10 items-center gap-2 rounded-md p-2 shadow-sm shadow-slate-200">
           <label htmlFor="">
             <Icon icon="mdi:search" width="1.2em" height="1.2em" />
           </label>
           <input
             type="Number"
             placeholder="IMO"
-            onChange={(e: any) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setSearchValue(e.target.value);
             }}
-            className=" border-b w-28 outline-none pb-1 text-sm  h-fit font-medium"
+            className=" h-fit w-28 border-b pb-1 text-sm  font-medium outline-none"
           />
           <input
             type="text"
             placeholder="NAVIRE"
-            onChange={(e: any) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setSearchNavire(e.target.value);
             }}
-            className=" border-b w-38 outline-none pb-1 text-sm  h-fit font-medium"
+            className=" h-fit w-36 border-b pb-1 text-sm  font-medium outline-none"
           />
         </div>
 
         <button
-          className="rounded-md shadow-sm shadow-slate-200 p-2 inline-flex items-center bg-[#0e5c2f] text-firstColors"
+          className="inline-flex items-center rounded-md bg-[#0e5c2f] p-2 text-firstColors shadow-sm shadow-slate-200"
           type="button"
           onClick={() => exportToExcel()}
         >
@@ -124,9 +99,9 @@ const Navire = () => {
           Export en csv
         </button>
       </div>
-      <table className="w-full lg:w-2/3 pb-6">
+      <table className="w-full pb-6 lg:w-2/3">
         <thead>
-          <tr className="grid grid-cols-3 py-4 px-2 w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
+          <tr className="grid w-full grid-cols-3 rounded-md bg-slate-50 px-2 py-4 shadow-sm ">
             {headersNavire.map((item, index) => {
               return (
                 <th className=" text-start font-semibold" key={index}>
@@ -137,20 +112,18 @@ const Navire = () => {
           </tr>
         </thead>
         <tbody>
-          {FinalData.slice(startIndex, endIndex).map(
-            (val: any, index: number) => {
-              return (
-                <tr
-                  key={index}
-                  className="grid grid-cols-3 py-4 px-2  w-full border-b-2 border-slate-50 "
-                >
-                  <td className="text-start ">{index + 1}</td>
-                  <td className="text-start">{val.imo}</td>
-                  <td className="text-start ">{val.nom}</td>
-                </tr>
-              );
-            }
-          )}
+          {FinalPagination.map((val: BoardProps, index: number) => {
+            return (
+              <tr
+                key={index}
+                className="grid w-full grid-cols-3 border-b-2  border-slate-50 px-2 py-4 "
+              >
+                <td className="text-start ">{index + 1}</td>
+                <td className="text-start">{val.imo}</td>
+                <td className="text-start ">{val.nom}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
       {renderPaginationControls()}

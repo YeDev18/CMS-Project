@@ -19,17 +19,17 @@ const T_NonConforme = () => {
 
   const { renderPaginationControls, endIndex, startIndex } =
     usePagination(tonnesNc);
-  let FinalPagination = tonnesNc.slice(startIndex, endIndex);
+  const FinalPagination = tonnesNc.slice(startIndex, endIndex);
   return (
-    <div className="w-full h-full relative flex flex-col gap-6 ">
-      <div className="flex justify-start gap-2 flex-wrap w-full">
+    <div className="relative flex size-full flex-col gap-6 ">
+      <div className="flex w-full flex-wrap justify-start gap-2">
         <Libelle
           icon="lucide:anvil"
           libelle="Nom comfomes"
           color="#F59069"
           number={tonnesNc.length}
         />
-        <div className="rounded-md shadow-sm shadow-slate-200 p-2 inline-flex gap-4 items-center w-fit h-10">
+        <div className="inline-flex h-10 w-fit items-center gap-4 rounded-md p-2 shadow-sm shadow-slate-200">
           <form action="" className="flex items-center justify-center">
             <label htmlFor="">
               <Icon
@@ -40,11 +40,11 @@ const T_NonConforme = () => {
                 className="mr-2"
               />
             </label>
-            <div className="w-fit h-fit border p rounded-sm whitespace-nowrap ">
+            <div className="p size-fit whitespace-nowrap rounded-sm border ">
               <select
                 name="months"
                 id=""
-                className="bg-none border-none bg-firstColors"
+                className="border-none bg-firstColors bg-none"
                 // onChange={e => {
                 //   setFormValue({
                 //     ...formValue,
@@ -61,7 +61,7 @@ const T_NonConforme = () => {
               <select
                 name="years"
                 id=""
-                className="bg-none border-none bg-firstColors"
+                className="border-none bg-firstColors bg-none"
                 // onChange={e => {
                 //   setFormValue({
                 //     ...formValue,
@@ -78,7 +78,7 @@ const T_NonConforme = () => {
             </div>
           </form>
         </div>
-        <div className="rounded-md shadow-sm shadow-slate-200 p-2 inline-flex gap-2 items-center h-10 ">
+        <div className="inline-flex h-10 items-center gap-2 rounded-md p-2 shadow-sm shadow-slate-200 ">
           <label htmlFor="">
             <Icon icon="mdi:search" width="1.1em" height="1.1em" />
           </label>
@@ -86,14 +86,14 @@ const T_NonConforme = () => {
             type="number"
             placeholder="IMO"
             // value={searchValue}
-            className=" border-b w-28 outline-none pb-1 text-sm  h-fit font-medium"
+            className=" h-fit w-28 border-b pb-1 text-sm  font-medium outline-none"
             onChange={(e: any) => {
               // setSearchValue(e.target.value);
             }}
           />
         </div>
         <button
-          className="rounded-md  whitespace-nowrap shadow-sm shadow-slate-200 p-2 inline-flex items-center bg-[#0e5c2f] text-firstColors text-sm h-10 "
+          className="inline-flex  h-10 items-center whitespace-nowrap rounded-md bg-[#0e5c2f] p-2 text-sm text-firstColors shadow-sm shadow-slate-200 "
           onClick={() => exportToExcel()}
         >
           <Icon
@@ -106,7 +106,7 @@ const T_NonConforme = () => {
           Export en csv
         </button>
       </div>
-      <div className="w-full h-full overflow-x-auto  pr-2 relative">
+      <div className="relative size-full overflow-x-auto  pr-2">
         <Table data={FinalPagination} label="Non-comforme" />
       </div>
       {renderPaginationControls()}

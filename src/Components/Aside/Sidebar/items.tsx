@@ -14,8 +14,8 @@ const ItemsNav = () => {
     setActiveIndex(prevIndex => (prevIndex === index ? prevIndex : index));
   };
   return (
-    <div className="h-full w-full flex flex-col p-2">
-      <div className="w-full flex flex-col  gap-4  whitespace-nowrap  h-full ">
+    <div className="flex size-full flex-col p-2">
+      <div className="flex size-full flex-col  gap-4  whitespace-nowrap ">
         {MenuItems.map((item, index) => (
           <div key={index} className="">
             {!item.ite && (
@@ -24,16 +24,16 @@ const ItemsNav = () => {
                 onClick={() => {
                   return handleConsole(index);
                 }}
-                className={`flex justify-start gap-2 items-center h-10 w-full border border-[#000]/5 transition-all ease delay-50  hover:bg-firstBlue hover:text-firstColors rounded-md ${
+                className={`ease flex h-10 w-full items-center justify-start gap-2 rounded-md border border-[#000]/5 transition-all  delay-75 hover:bg-firstBlue hover:text-firstColors ${
                   pathname === item.route ? 'bg-firstBlue text-firstColors' : ''
                 }`}
               >
                 <Link
                   to={item.route}
-                  className="p-2 w-full text-start flex items-center gap-2 text-sm xl:text-base"
+                  className="flex w-full items-center gap-2 p-2 text-start text-sm xl:text-base"
                   onClick={() => server.showResponsive()}
                 >
-                  <Icon icon={item.icon} className="w-6 h-6" />
+                  <Icon icon={item.icon} className="size-6" />
 
                   <span>{item.lib}</span>
                 </Link>
@@ -43,25 +43,25 @@ const ItemsNav = () => {
               <>
                 <button
                   onClick={() => handleConsole(index)}
-                  className={`flex justify-between xl:justify-between gap-2 items-center h-12 w-full border transition-all ease delay-150  hover:bg-firstBlue hover:text-firstColors rounded-lg px-3 ${
+                  className={`ease flex h-12 w-full items-center justify-between gap-2 rounded-lg border px-3 transition-all  delay-150 hover:bg-firstBlue hover:text-firstColors xl:justify-between ${
                     activeIndex === index ? 'bg-firstBlue text-firstColors' : ''
                   }`}
                 >
                   <div className=" gap-3  ">
-                    <button className=" flex gap-2 text-start  items-center justify-center text-sm xl:text-base w-full">
-                      <Icon icon={item.icon} className="w-6 h-6" />
+                    <button className=" flex w-full items-center  justify-center gap-2 text-start text-sm xl:text-base">
+                      <Icon icon={item.icon} className="size-6" />
                       <span>{item.lib}</span>
                     </button>
                   </div>
-                  <Icon icon="gridicons:dropdown" className="w-6 h-6" />
+                  <Icon icon="gridicons:dropdown" className="size-6" />
                 </button>
                 {item.ite && (
-                  <ul className="flex flex-col pl-2 gap-2 ">
+                  <ul className="flex flex-col gap-2 pl-2 ">
                     {activeIndex === index &&
                       item.ite.map((good, index) => (
                         <button
                           key={index}
-                          className={`dropdown flex justify-start gap-2 border items-center h-12 w-full transition-all ease delay-150 hover:bg-firstBlue hover:text-firstColors rounded-md px-3 ${
+                          className={`dropdown ease flex h-12 w-full items-center justify-start gap-2 rounded-md border px-3 transition-all delay-150 hover:bg-firstBlue hover:text-firstColors ${
                             pathname === good.route
                               ? 'bg-firstBlue text-firstColors'
                               : ''
@@ -69,10 +69,10 @@ const ItemsNav = () => {
                         >
                           <Link
                             to={good.route}
-                            className="w-full text-start flex gap-2 items-center text-sm xl:text-base"
+                            className="flex w-full items-center gap-2 text-start text-sm xl:text-base"
                             onClick={() => server.showResponsive()}
                           >
-                            <Icon icon={good.icon} className="w-4 h-4" />
+                            <Icon icon={good.icon} className="size-4" />
                             {good.lib}
                           </Link>
                         </button>

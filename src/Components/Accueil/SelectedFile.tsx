@@ -202,26 +202,26 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   // );
 
   return (
-    <div className=" absolute inset-y-0 w-full flex-center animate-fadIn-up z-30 ">
-      <div className="w-[30%] min-w-[25rem] bg-white rounded-md static  flex-column px-4 shadow">
+    <div className=" flex-center absolute inset-y-0 z-30 w-full animate-fadIn-up ">
+      <div className="flex-column static w-[30%] min-w-[25rem] rounded-md  bg-white px-4 shadow">
         <button
           className=" relative w-full bg-slate-600 text-xl"
           onClick={onClick}
         >
           <Icon
             icon="ic:round-close"
-            className="text-grayBlack absolute top-0 right-0"
+            className="absolute right-0 top-0 text-grayBlack"
           />
         </button>
-        <h3 className="font-bold text-xl">{libelle}</h3>
-        <p className="text-neutral-900/60 font-semibold">
+        <h3 className="text-xl font-bold">{libelle}</h3>
+        <p className="font-semibold text-neutral-900/60">
           Televersez les fichiers Excel{' '}
         </p>
-        <div className="h-48 w-full m-3 border-2 rounded border-dashed flex justify-evenly items-center border-zinc-200 ">
-          <div className="bg-firstBlue w-32  h-3/4 p-1 rounded flex flex-col shadow items-center">
+        <div className="m-3 flex h-48 w-full items-center justify-evenly rounded border-2 border-dashed border-zinc-200 ">
+          <div className="flex h-3/4  w-32 flex-col items-center rounded bg-firstBlue p-1 shadow">
             <label
               htmlFor="fileDT"
-              className="flex-start text-[#EEEEEC] text-sm font-medium gap-1 cursor-pointer"
+              className="flex-start cursor-pointer gap-1 text-sm font-medium text-[#EEEEEC]"
             >
               {' '}
               <Icon icon="solar:download-bold" width="4rem" height="4rem" />
@@ -234,14 +234,14 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
               onChange={handleFileChange1}
             />
             <p className="font-semibold text-[#EEEEEC]">DTCI</p>
-            <p className=" text-[#EEEEEC] text-sm text-center">
+            <p className=" text-center text-sm text-[#EEEEEC]">
               Televersez fichier en .xlsx
             </p>
           </div>
-          <div className="bg-firstBlue w-32  h-3/4 p-1 rounded flex flex-col shadow items-center">
+          <div className="flex h-3/4  w-32 flex-col items-center rounded bg-firstBlue p-1 shadow">
             <label
               htmlFor="fileTM"
-              className="flex-start text-[#EEEEEC] text-sm font-medium gap-1 cursor-pointer"
+              className="flex-start cursor-pointer gap-1 text-sm font-medium text-[#EEEEEC]"
             >
               {' '}
               <Icon icon="solar:download-bold" width="4rem" height="4rem" />
@@ -258,29 +258,29 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
             ) : (
               <p className="font-semibold text-[#EEEEEC]">PAA</p>
             )}
-            <p className=" text-[#EEEEEC] text-sm text-center">
+            <p className=" text-center text-sm text-[#EEEEEC]">
               {' '}
               Televersez fichier en .xlsx
             </p>
           </div>
         </div>
-        <div className=" relative w-full flex-column h-40 bg-slate-200/20 rounded-sm flex justify-center items-center flex-col gap-4">
+        <div className=" flex-column relative flex h-40 w-full flex-col items-center justify-center gap-4 rounded-sm bg-slate-200/20">
           {!(selectedFile1 || selectedFile2) ? (
-            <p className=" text-base text-slate-400 font-normal">
+            <p className=" text-base font-normal text-slate-400">
               Aucun Fichier
             </p>
           ) : (
             ''
           )}
           {selectedFile1 && (
-            <div className="flex justify-between items-center w-full border p-3 rounded-md shadow-sm">
-              <div className="flex justify-center items-center gap-2 text-base">
+            <div className="flex w-full items-center justify-between rounded-md border p-3 shadow-sm">
+              <div className="flex items-center justify-center gap-2 text-base">
                 <Icon
                   icon="mdi:file-excel-outline"
                   width="1.7em"
                   height="1.7em"
                 />
-                <div className="flex flex-col justify-center items-start">
+                <div className="flex flex-col items-start justify-center">
                   <p> {selectedFile1?.name} </p>
                   <p className="text-xs text-grayBlack/60">Fichier DTCI</p>
                 </div>
@@ -304,14 +304,14 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
           )}
           {selectedFile2 && (
             <>
-              <div className="flex justify-between items-center w-full border p-3 rounded-md shadow-sm">
-                <div className="flex justify-center items-center gap-2 text-base">
+              <div className="flex w-full items-center justify-between rounded-md border p-3 shadow-sm">
+                <div className="flex items-center justify-center gap-2 text-base">
                   <Icon
                     icon="mdi:file-excel-outline"
                     width="1.7em"
                     height="1.7em"
                   />
-                  <div className="flex flex-col justify-center items-start">
+                  <div className="flex flex-col items-start justify-center">
                     <p> {selectedFile2?.name} </p>
                     <p className="text-xs text-grayBlack/60">
                       Fichier Trafic Maritime
@@ -337,10 +337,10 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
             </>
           )}
         </div>
-        <div className=" w-full text-black  py-3 flex h-10 flex-col justify-between">
+        <div className=" flex h-10  w-full flex-col justify-between py-3 text-black">
           {server?.loading === true && (
             <div
-              className={`flex justify-center bg-[#009fe3] items-center gap-1 py-1 px-2 rounded-sm font-semibold`}
+              className={`flex items-center justify-center gap-1 rounded-sm bg-[#009fe3] px-2 py-1 font-semibold`}
             >
               <Icon
                 icon="eos-icons:loading"
@@ -348,7 +348,7 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
                 width="1.2em"
                 height="1.2em"
               />
-              <p className="text-[#ffffff] text-sm">Chargement</p>
+              <p className="text-sm text-[#ffffff]">Chargement</p>
             </div>
           )}
 
@@ -356,9 +356,9 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
             server.success2 === true &&
             server.success === true && (
               <div
-                className={`flex justify-center items-center gap-1 bg-[#0e5c2f]  py-1 px-2 rounded-sm font-semibold`}
+                className={`flex items-center justify-center gap-1 rounded-sm  bg-[#0e5c2f] px-2 py-1 font-semibold`}
               >
-                <p className="text-[#ffffff] text-sm">Reussite</p>
+                <p className="text-sm text-[#ffffff]">Reussite</p>
                 <Icon
                   icon="gg:check-o"
                   width="1.1em"
@@ -369,9 +369,9 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
             )}
           {server.error1 == true || server.error2 == true ? (
             <div
-              className={`flex text-right justify-center items-center gap-1 bg-[#750b0b] p-1 rounded-sm font-semibold`}
+              className={`flex items-center justify-center gap-1 rounded-sm bg-[#750b0b] p-1 text-right font-semibold`}
             >
-              <p className="text-[#ffffff] text-sm">Echec</p>
+              <p className="text-sm text-[#ffffff]">Echec</p>
               <Icon
                 icon="carbon:close-outline"
                 width="1.2em"
@@ -383,15 +383,15 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
             ' '
           )}
         </div>
-        <div className="flex justify-between gap-4 w-full py-4">
+        <div className="flex w-full justify-between gap-4 py-4">
           <button
-            className=" border border-grayBlack transition ease-in-out delay-150 w-40 rounded-md text-grayBlack h-12 cursor-pointer font-semibold hover:scale-105 "
+            className=" h-12 w-40 cursor-pointer rounded-md border border-grayBlack font-semibold text-grayBlack transition delay-150 ease-in-out hover:scale-105 "
             onClick={onClick}
           >
             Quittez
           </button>
           <button
-            className="bg-firstBlue w-40 transition ease-in-out delay-150 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold hover:scale-105 "
+            className="h-12 w-40 cursor-pointer rounded-md bg-firstBlue font-semibold text-[#EEEEEC] transition delay-150 ease-in-out hover:scale-105 "
             onClick={libelle === 'VOYAGES' ? handleCompare : handleTonnage}
           >
             Comparez

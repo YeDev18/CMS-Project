@@ -48,46 +48,46 @@ const overlay = ({ data, val }: any) => {
   };
 
   return (
-    <div className="absolute inset-y-2/4 w-full h-fit z-[40] justify-center items-center animate-fadIn-up">
-      <div className="w-[40rem] h-fit  absolute  top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 rounded">
-        <div className="flex gap-2 justify-between py-6 flex-col bg-firstColors rounded-sm items-center h-full">
-          <div className="flex justify-center items-center gap-4 w-full px-12">
-            <h3 className="w-[16rem] p-2 rounded-sm bg-cyan-200 text-lg text-gray-800 font-semibold">
+    <div className="absolute inset-y-2/4 z-40 h-fit w-full animate-fadIn-up items-center justify-center">
+      <div className="absolute left-2/4  top-2/4  h-fit w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded">
+        <div className="flex h-full flex-col items-center justify-between gap-2 rounded-sm bg-firstColors py-6">
+          <div className="flex w-full items-center justify-center gap-4 px-12">
+            <h3 className="w-64 rounded-sm bg-cyan-200 p-2 text-lg font-semibold text-gray-800">
               Declaration DTCI
             </h3>
-            <h3 className="w-[16rem] p-2 rounded-sm bg-red-200 text-lg text-gray-800 font-semibold">
+            <h3 className="w-64 rounded-sm bg-red-200 p-2 text-lg font-semibold text-gray-800">
               Declaration TM
             </h3>
           </div>
-          <div className="flex gap-4 justify-center">
-            <form action="" className="flex flex-col gap-3  w-[16rem]">
+          <div className="flex justify-center gap-4">
+            <form action="" className="flex w-64 flex-col  gap-3">
               <div className="flex flex-col gap-1 ">
-                <label htmlFor="" className="text-gray-500 font-semibold">
+                <label htmlFor="" className="font-semibold text-gray-500">
                   Imo DTCI
                 </label>
                 <input
                   disabled
                   type="text"
-                  className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                  className=" rounded-sm border border-shadowColors bg-firstColors p-2 text-sm"
                   value={data.imoDTCI}
                 />
               </div>
 
               <div className="flex flex-col gap-1">
-                <label htmlFor="" className="text-gray-500 font-semibold">
+                <label htmlFor="" className="font-semibold text-gray-500">
                   Nom DTCI
                 </label>
                 {user.role === 'analyst' ? (
                   <input
                     type="text"
                     disabled
-                    className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                    className=" rounded-sm border border-shadowColors bg-firstColors p-2 text-sm"
                     value={data.nonDTCI}
                   />
                 ) : (
                   <input
                     type="text"
-                    className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm outline-none focus:outline-none focus:ring focus:border-none"
+                    className=" rounded-sm border border-shadowColors bg-firstColors p-2 text-sm outline-none focus:border-none focus:outline-none focus:ring"
                     value={data.nonDTCI}
                     onChange={(e: any) =>
                       setData3({
@@ -100,32 +100,32 @@ const overlay = ({ data, val }: any) => {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label htmlFor="" className="text-gray-500 font-semibold">
+                <label htmlFor="" className="font-semibold text-gray-500">
                   Mouvement DTCI
                 </label>
                 <input
                   disabled
                   type="text"
-                  className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                  className=" rounded-sm border border-shadowColors bg-firstColors p-2 text-sm"
                   value={data.mouvementDTCI}
                 />
               </div>
 
               <div className="flex flex-col gap-1">
-                <label htmlFor="" className="text-gray-500 font-semibold">
+                <label htmlFor="" className="font-semibold text-gray-500">
                   Date DTCI
                 </label>
                 {user.role === 'analyst' ? (
                   <input
                     type="text"
                     disabled
-                    className=" border p-2 rounded-sm border-red-500 bg-firstColors text-sm"
+                    className=" rounded-sm border border-red-500 bg-firstColors p-2 text-sm"
                     value={data.dateDTCI.split('-').reverse().join('-')}
                   />
                 ) : (
                   <input
                     type="text"
-                    className=" border p-2 rounded-sm border-red-500 bg-firstColors text-sm outline-none focus:outline-none focus:ring focus:border-none"
+                    className=" rounded-sm border border-red-500 bg-firstColors p-2 text-sm outline-none focus:border-none focus:outline-none focus:ring"
                     value={data.dateDTCI.split('-').reverse().join('-')}
                     onChange={(e: any) =>
                       setData3({
@@ -137,51 +137,51 @@ const overlay = ({ data, val }: any) => {
                 )}
               </div>
             </form>
-            <form action="" className="flex flex-col gap-3 w-[16rem]">
+            <form action="" className="flex w-64 flex-col gap-3">
               <div className="flex flex-col gap-1">
-                <label htmlFor="" className="text-gray-500 font-semibold">
+                <label htmlFor="" className="font-semibold text-gray-500">
                   Imo TM
                 </label>
                 <input
                   disabled
                   type="text"
-                  className=" border p-2 rounded-sm border-shadowColors w-[16rem] bg-firstColors text-sm "
+                  className=" w-64 rounded-sm border border-shadowColors bg-firstColors p-2 text-sm "
                   value={data.imoTM}
                 />
               </div>
 
               <div className="flex flex-col gap-1">
-                <label htmlFor="" className="text-gray-500 font-semibold">
+                <label htmlFor="" className="font-semibold text-gray-500">
                   Nom TM
                 </label>
                 <input
                   disabled
                   type="text"
-                  className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                  className=" rounded-sm border border-shadowColors bg-firstColors p-2 text-sm"
                   value={data.nonTM}
                 />
               </div>
 
               <div className="flex flex-col gap-1">
-                <label htmlFor="" className="text-gray-500 font-semibold">
+                <label htmlFor="" className="font-semibold text-gray-500">
                   Mouvement TM
                 </label>
                 <input
                   disabled
                   type="text"
-                  className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                  className=" rounded-sm border border-shadowColors bg-firstColors p-2 text-sm"
                   value={data.mouvementTM}
                 />
               </div>
 
               <div className="flex flex-col gap-1">
-                <label htmlFor="" className="text-gray-500 font-semibold">
+                <label htmlFor="" className="font-semibold text-gray-500">
                   Date TM
                 </label>
                 <input
                   disabled
                   type="text"
-                  className=" border p-2 rounded-sm border-red-500 bg-firstColors text-sm"
+                  className=" rounded-sm border border-red-500 bg-firstColors p-2 text-sm"
                   value={data.dateTM}
                 />
               </div>

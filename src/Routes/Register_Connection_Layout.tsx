@@ -14,33 +14,33 @@ const RCLayout = () => {
   const dateFormatter = new Intl.DateTimeFormat('fr-FR');
   const formattedDate = dateFormatter.format(newDate);
   return (
-    <div className="bg-bgColors w-full h-screen p-6 text-textColor">
-      <div className=" bg-firstColors w-full h-full rounded-md shadow-lg p-8">
+    <div className="bg-bgColors text-textColor h-screen w-full p-6">
+      <div className=" size-full rounded-md bg-firstColors p-8 shadow-lg">
         <div className="flex justify-between pb-2">
-          <div className="flex gap-4 items-center">
-            <div className="flex border-[0.5px] border-borderColor rounded-2xl px-2 py-1  w-fit">
+          <div className="flex items-center gap-4">
+            <div className="border-borderColor flex w-fit rounded-2xl border-[0.5px] px-2  py-1">
               <p>Abidjan</p>
             </div>
-            <span className="border-[0.5px] border-borderColor h-8 "></span>
+            <span className="border-borderColor h-8 border-[0.5px] "></span>
             <p className="font-semibold">{formattedDate}</p>
           </div>
           <div className="flex gap-4">
             {Countries.map((countrie, index) => {
               return (
-                <div key={index} className="w-16 h-8">
+                <div key={index} className="h-8 w-16">
                   <img
                     src={countrie.img}
                     alt={countrie.alt}
-                    className="w-full h-ful"
+                    className="h-ful w-full"
                   />
                 </div>
               );
             })}
           </div>
         </div>
-        <div className="flex flex-col justify-center items-center w-full gap-12 py-12">
-          <div className="w-48 h-35">
-            <img src={logo} alt="Logo" className="w-full h-full" />
+        <div className="flex w-full flex-col items-center justify-center gap-12 py-12">
+          <div className="h-35 w-48">
+            <img src={logo} alt="Logo" className="size-full" />
           </div>
           <div>
             <Outlet />

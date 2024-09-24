@@ -83,18 +83,18 @@ const SecondTables: FC<Lib> = ({
         <button
           onClick={goToPrevPage}
           disabled={current === 1}
-          className="border text-shadowColors border-shadowColors p-1 rounded active:bg-firstBlue active:border hover:border-firstBlue hover:text-firstColors hover:bg-firstBlue hover:border"
+          className="rounded border border-shadowColors p-1 text-shadowColors hover:border hover:border-firstBlue hover:bg-firstBlue hover:text-firstColors active:border active:bg-firstBlue"
         >
           <Icon icon="ep:arrow-left-bold" />
         </button>
-        <div className="px-2 w-16 text-center">
-          <span className="font-medium text-borderColor">{current}</span> /{' '}
+        <div className="w-16 px-2 text-center">
+          <span className="text-borderColor font-medium">{current}</span> /{' '}
           <span className="text-borderColor">{totalPages}</span>
         </div>
         <button
           onClick={goToNextPage}
           disabled={current === totalPages}
-          className="border text-shadowColors border-shadowColors p-1 rounded active:bg-firstBlue active:border hover:border-firstBlue hover:text-firstColors hover:bg-firstBlue hover:border"
+          className="rounded border border-shadowColors p-1 text-shadowColors hover:border hover:border-firstBlue hover:bg-firstBlue hover:text-firstColors active:border active:bg-firstBlue"
         >
           <Icon icon="ep:arrow-right-bold" />
         </button>
@@ -108,8 +108,8 @@ const SecondTables: FC<Lib> = ({
   const handleTlick = () => {
     return (
       <div>
-        <div className="bg-grayBlack opacity-10 w-full h-full absolute top-0 left-0 rounded-md"></div>
-        <div className="bg-white w-96 h-96 absolute top-[50%] left-[50%] -translate-x-2/4 -translate-y-1/2 rounded-sm flex justify-center items-center">
+        <div className="absolute left-0 top-0 size-full rounded-md bg-grayBlack opacity-10"></div>
+        <div className="absolute left-[50%] top-[50%] flex size-96 -translate-x-2/4 -translate-y-1/2 items-center justify-center rounded-sm bg-white">
           <button
             onClick={() => setForm(false)}
             className="absolute right-2 top-2"
@@ -126,10 +126,10 @@ const SecondTables: FC<Lib> = ({
 
   return (
     <>
-      <div className=" flex flex-col gap-6 text-grayBlack w-full ">
-        <div className="flex justify-between w-full">
+      <div className=" flex w-full flex-col gap-6 text-grayBlack ">
+        <div className="flex w-full justify-between">
           <div className="flex gap-4">
-            <button className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex items-center whitespace-nowrap">
+            <button className="inline-flex items-center whitespace-nowrap rounded-md p-2 shadow-sm shadow-shadowColors">
               {' '}
               <Icon
                 icon={liv}
@@ -140,10 +140,10 @@ const SecondTables: FC<Lib> = ({
               />
               {lib} : <span className="font-semibold">{Table.length}</span>
             </button>
-            <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
+            <div className="inline-flex items-center gap-4 rounded-md p-2 shadow-sm shadow-shadowColors">
               <form
                 action=""
-                className="flex gap-3  items-center justify-center"
+                className="flex items-center  justify-center gap-3"
                 onSubmit={handleClick2}
               >
                 <label htmlFor="">
@@ -158,7 +158,7 @@ const SecondTables: FC<Lib> = ({
                 <select
                   name=""
                   id=""
-                  className="bg-none outline-4 bg-firstColors"
+                  className="bg-firstColors bg-none outline-4"
                   onChange={e => {
                     setSelectValue(e.target.value);
                   }}
@@ -177,11 +177,11 @@ const SecondTables: FC<Lib> = ({
                   <option value="11">Novembre</option>
                   <option value="12">Decembre</option>
                 </select>
-                <span className="border border-borderColor h-4"></span>
+                <span className="border-borderColor h-4 border"></span>
                 <select
                   name=""
                   id=""
-                  className="bg-none outline-none bg-firstColors"
+                  className="bg-firstColors bg-none outline-none"
                   onChange={e => {
                     setSelectValue2(e.target.value);
                   }}
@@ -199,7 +199,7 @@ const SecondTables: FC<Lib> = ({
                 </button>
               </form>
             </div>
-            <div className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex gap-4 items-center">
+            <div className="inline-flex items-center gap-4 rounded-md p-2 shadow-sm shadow-shadowColors">
               <label htmlFor="">
                 <Icon icon="mdi:search" width="1.5em" height="1.5em" />
               </label>
@@ -207,7 +207,7 @@ const SecondTables: FC<Lib> = ({
                 type="number"
                 placeholder="IMO"
                 // onChange={() => handleChange}
-                className="border w-32 outline-none p-1 rounded-sm text-sm font-medium"
+                className="w-32 rounded-sm border p-1 text-sm font-medium outline-none"
                 onChange={e => {
                   setSelectValue(e.target.value);
                 }}
@@ -216,7 +216,7 @@ const SecondTables: FC<Lib> = ({
           </div>
 
           <button
-            className="rounded-md shadow-sm shadow-shadowColors p-2 inline-flex items-center"
+            className="inline-flex items-center rounded-md p-2 shadow-sm shadow-shadowColors"
             onClick={() => exportToExcel()}
           >
             <Icon
@@ -229,13 +229,13 @@ const SecondTables: FC<Lib> = ({
             Export en csv
           </button>
         </div>
-        <div className=" w-full  flex flex-col gap-6 ">
+        <div className=" flex  w-full flex-col gap-6 ">
           <table className="w-full">
-            <tr className="flex justify-start  py-4 px-2  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
+            <tr className="shadow-testColors1 flex  w-full justify-start  rounded-md bg-slate-50 px-2 py-4 shadow-sm ">
               {HeaderTable.map((item, index) => {
                 return (
                   <th
-                    className=" text-start font-semibold lg:w-28 xl:w-52 headerSecond"
+                    className=" headerSecond text-start font-semibold lg:w-28 xl:w-52"
                     key={index}
                   >
                     {item}
@@ -248,22 +248,22 @@ const SecondTables: FC<Lib> = ({
                 <>
                   <tr
                     key={index}
-                    className="flex justify-start py-4 px-2 w-full border-b-2 border-slate-50 "
+                    className="flex w-full justify-start border-b-2 border-slate-50 px-2 py-4 "
                   >
-                    <td className="text-start lg:w-32 text-sm xl:text-base">
+                    <td className="text-start text-sm lg:w-32 xl:text-base">
                       {index}
                     </td>
-                    <td className="text-start lg:w-32 text-sm xl:text-base">
+                    <td className="text-start text-sm lg:w-32 xl:text-base">
                       {val.imo}
                     </td>
-                    <td className="text-start lg:w-28 xl:w-52 text-sm xl:text-sm">
+                    <td className="text-start text-sm lg:w-28 xl:w-52 xl:text-sm">
                       {val.libDTCI}
                     </td>
-                    <td className="text-start lg:w-40 text-sm xl:text-base">
+                    <td className="text-start text-sm lg:w-40 xl:text-base">
                       {val.mouvement}
                     </td>
 
-                    <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base ">
+                    <td className="text-start text-sm lg:w-28 xl:w-48 xl:text-base ">
                       {val.date}
                     </td>
                     {nonDeclare ? (
