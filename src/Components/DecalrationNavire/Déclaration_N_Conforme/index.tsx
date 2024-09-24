@@ -206,17 +206,17 @@ const DeclaratioNConforme = () => {
       observation: val.observation,
     });
   };
-  let FinalPagination = FinalData.slice(startIndex, endIndex);
+  const FinalPagination = FinalData.slice(startIndex, endIndex);
   return (
-    <div className="w-full h-full relative flex flex-col gap-6 ">
-      <div className="flex justify-start gap-2 flex-wrap w-full">
+    <div className="relative flex size-full flex-col gap-6 ">
+      <div className="flex w-full flex-wrap justify-start gap-2">
         <Libelle
           icon="charm:notes-cross"
           libelle="Non Conformes"
           color="#F59069"
           number={notConform.length}
         />
-        <div className="rounded-md shadow-sm shadow-slate-200 p-2 inline-flex gap-4 items-center w-fit h-10">
+        <div className="inline-flex h-10 w-fit items-center gap-4 rounded-md p-2 shadow-sm shadow-slate-200">
           <form action="" className="flex items-center justify-center">
             <label htmlFor="">
               <Icon
@@ -227,11 +227,11 @@ const DeclaratioNConforme = () => {
                 className="mr-2"
               />
             </label>
-            <div className="w-fit h-fit border p rounded-sm whitespace-nowrap ">
+            <div className="size-fit whitespace-nowrap rounded-sm border ">
               <select
                 name="months"
                 id=""
-                className="bg-none border-none bg-firstColors"
+                className="border-none bg-firstColors bg-none"
                 onChange={e => {
                   setFormValue({
                     ...formValue,
@@ -249,7 +249,7 @@ const DeclaratioNConforme = () => {
               <select
                 name="years"
                 id=""
-                className="bg-none border-none bg-firstColors"
+                className="border-none bg-firstColors bg-none"
                 onChange={e => {
                   setFormValue({
                     ...formValue,
@@ -266,21 +266,21 @@ const DeclaratioNConforme = () => {
             </div>
           </form>
         </div>
-        <div className="rounded-md shadow-sm shadow-slate-200 p-2 inline-flex gap-2 items-center h-10 ">
+        <div className="inline-flex h-10 items-center gap-2 rounded-md p-2 shadow-sm shadow-slate-200 ">
           <label htmlFor="">
             <Icon icon="mdi:search" width="1.1em" height="1.1em" />
           </label>
           <input
             type="number"
             placeholder="IMO"
-            className=" border-b w-28 outline-none pb-1 text-sm  h-fit font-medium"
+            className=" h-fit w-28 border-b pb-1 text-sm  font-medium outline-none"
             onChange={(e: any) => {
               setSearchValue(e.target.value);
             }}
           />
-          <span className="border border-borderColor h-4"></span>
-          <div className="flex  justify-center items-center h-fit">
-            <label htmlFor="" className="font-semibold text-sm">
+          <span className="h-4 border"></span>
+          <div className="flex  h-fit items-center justify-center">
+            <label htmlFor="" className="text-sm font-semibold">
               Tags
             </label>
             <input
@@ -288,11 +288,11 @@ const DeclaratioNConforme = () => {
               checked={tags}
               onChange={handleChangeCheck}
               placeholder="IMO"
-              className="border outline-none p-1 rounded-sm text-2xl w-8 h-4 font-medium"
+              className="h-4 w-8 rounded-sm border p-1 text-2xl font-medium outline-none"
             />
           </div>
-          <div className="flex  justify-center items-center h-fit">
-            <label htmlFor="" className="font-semibold text-sm">
+          <div className="flex  h-fit items-center justify-center">
+            <label htmlFor="" className="text-sm font-semibold">
               Port A
             </label>
             <input
@@ -300,11 +300,11 @@ const DeclaratioNConforme = () => {
               checked={portA}
               onChange={handleChangePortA}
               placeholder="IMO"
-              className="border outline-none p-1 rounded-sm text-2xl w-8 h-4 font-medium"
+              className="h-4 w-8 rounded-sm border p-1 text-2xl font-medium outline-none"
             />
           </div>
-          <div className="flex  justify-center items-center h-fit">
-            <label htmlFor="" className="font-semibold text-sm">
+          <div className="flex  h-fit items-center justify-center">
+            <label htmlFor="" className="text-sm font-semibold">
               Port SP
             </label>
             <input
@@ -312,12 +312,12 @@ const DeclaratioNConforme = () => {
               checked={portSP}
               onChange={handleChangePortSP}
               placeholder="IMO"
-              className="border outline-none p-1 rounded-sm text-2xl w-8 h-4 font-medium"
+              className="h-4 w-8 rounded-sm border p-1 text-2xl font-medium outline-none"
             />
           </div>
         </div>
         <button
-          className="rounded-md  whitespace-nowrap shadow-sm shadow-slate-200 p-2 inline-flex items-center bg-[#0e5c2f] text-firstColors text-sm h-10 "
+          className="inline-flex  h-10 items-center whitespace-nowrap rounded-md bg-[#0e5c2f] p-2 text-sm text-firstColors shadow-sm shadow-slate-200 "
           onClick={() => exportToExcel()}
         >
           <Icon
@@ -330,7 +330,7 @@ const DeclaratioNConforme = () => {
           Export en csv
         </button>
         {!(MonthsYears === '-') || searchValue || tags || portA || portSP ? (
-          <div className="rounded-md bg-[#F59069] shadow-sm shadow-slate-200 p-2 inline-flex gap-1 items-center h-10 text-firstColors ">
+          <div className="inline-flex h-10 items-center gap-1 rounded-md bg-[#F59069] p-2 text-firstColors shadow-sm shadow-slate-200 ">
             <Icon
               icon="charm:notes-cross"
               width="1.2em"
@@ -343,7 +343,7 @@ const DeclaratioNConforme = () => {
           ''
         )}
       </div>
-      <div className="w-full h-full  overflow-x-auto  pr-2 relative">
+      <div className="relative size-full  overflow-x-auto  pr-2">
         <Table
           data={FinalPagination}
           label="Non-conform"
@@ -355,46 +355,46 @@ const DeclaratioNConforme = () => {
 
       {/* OVERLAY----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------      */}
       {overlay ? (
-        <div className="absolute inset-y-2/4 w-full h-fit z-[40] justify-center items-center animate-fadIn-up">
-          <div className="w-[40rem] h-fit  absolute  top-2/4 left-2/4 -translate-x-1/2 -translate-y-1/2 rounded">
-            <div className="flex gap-2 justify-between py-6 flex-col bg-firstColors rounded-sm items-center h-full">
-              <div className="flex justify-center items-center gap-4 w-full px-12">
-                <h3 className="w-[16rem] p-2 rounded-sm bg-cyan-200 text-lg text-gray-800 font-semibold">
+        <div className="absolute inset-y-2/4 z-40 h-fit w-full animate-fadIn-up items-center justify-center">
+          <div className="absolute left-2/4  top-2/4  h-fit w-[40rem] -translate-x-1/2 -translate-y-1/2 rounded">
+            <div className="flex h-full flex-col items-center justify-between gap-2 rounded-sm bg-firstColors py-6">
+              <div className="flex w-full items-center justify-center gap-4 px-12">
+                <h3 className="w-64 rounded-sm bg-cyan-200 p-2 text-lg font-semibold text-gray-800">
                   Declaration DTCI
                 </h3>
-                <h3 className="w-[16rem] p-2 rounded-sm bg-red-200 text-lg text-gray-800 font-semibold">
+                <h3 className="w-64 rounded-sm bg-red-200 p-2 text-lg font-semibold text-gray-800">
                   Declaration TM
                 </h3>
               </div>
-              <div className="flex gap-4 justify-center">
-                <form action="" className="flex flex-col gap-3  w-[16rem]">
+              <div className="flex justify-center gap-4">
+                <form action="" className="flex w-64 flex-col  gap-3">
                   <div className="flex flex-col gap-1 ">
-                    <label htmlFor="" className="text-gray-500 font-semibold">
+                    <label htmlFor="" className="font-semibold text-gray-500">
                       Imo DTCI
                     </label>
                     <input
                       disabled
                       type="text"
-                      className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                      className=" rounded-sm border border-shadowColors bg-firstColors p-2 text-sm"
                       value={data3.imoDTCI}
                     />
                   </div>
 
                   <div className="flex flex-col gap-1">
-                    <label htmlFor="" className="text-gray-500 font-semibold">
+                    <label htmlFor="" className="font-semibold text-gray-500">
                       Nom DTCI
                     </label>
                     {user.role === 'analyst' ? (
                       <input
                         type="text"
                         disabled
-                        className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                        className=" rounded-sm border border-shadowColors bg-firstColors p-2 text-sm"
                         value={data3.nonDTCI}
                       />
                     ) : (
                       <input
                         type="text"
-                        className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm outline-none focus:outline-none focus:ring focus:border-none"
+                        className=" rounded-sm border border-shadowColors bg-firstColors p-2 text-sm outline-none focus:border-none focus:outline-none focus:ring"
                         value={data3.nonDTCI}
                         onChange={(e: any) =>
                           setData3({
@@ -407,32 +407,32 @@ const DeclaratioNConforme = () => {
                   </div>
 
                   <div className="flex flex-col gap-1">
-                    <label htmlFor="" className="text-gray-500 font-semibold">
+                    <label htmlFor="" className="font-semibold text-gray-500">
                       Mouvement DTCI
                     </label>
                     <input
                       disabled
                       type="text"
-                      className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                      className=" rounded-sm border border-shadowColors bg-firstColors p-2 text-sm"
                       value={data3.mouvementDTCI}
                     />
                   </div>
 
                   <div className="flex flex-col gap-1">
-                    <label htmlFor="" className="text-gray-500 font-semibold">
+                    <label htmlFor="" className="font-semibold text-gray-500">
                       Date DTCI
                     </label>
                     {user.role === 'analyst' ? (
                       <input
                         type="text"
                         disabled
-                        className=" border p-2 rounded-sm border-red-500 bg-firstColors text-sm"
+                        className=" rounded-sm border border-red-500 bg-firstColors p-2 text-sm"
                         value={data3.dateDTCI.split('-').reverse().join('-')}
                       />
                     ) : (
                       <input
                         type="text"
-                        className=" border p-2 rounded-sm border-red-500 bg-firstColors text-sm outline-none focus:outline-none focus:ring focus:border-none"
+                        className=" rounded-sm border border-red-500 bg-firstColors p-2 text-sm outline-none focus:border-none focus:outline-none focus:ring"
                         value={data3.dateDTCI.split('-').reverse().join('-')}
                         onChange={(e: any) =>
                           setData3({
@@ -447,51 +447,51 @@ const DeclaratioNConforme = () => {
                     )}
                   </div>
                 </form>
-                <form action="" className="flex flex-col gap-3 w-[16rem]">
+                <form action="" className="flex w-64 flex-col gap-3">
                   <div className="flex flex-col gap-1">
-                    <label htmlFor="" className="text-gray-500 font-semibold">
+                    <label htmlFor="" className="font-semibold text-gray-500">
                       Imo TM
                     </label>
                     <input
                       disabled
                       type="text"
-                      className=" border p-2 rounded-sm border-shadowColors w-[16rem] bg-firstColors text-sm "
+                      className=" w-64 rounded-sm border border-shadowColors bg-firstColors p-2 text-sm "
                       value={data3.imoTM}
                     />
                   </div>
 
                   <div className="flex flex-col gap-1">
-                    <label htmlFor="" className="text-gray-500 font-semibold">
+                    <label htmlFor="" className="font-semibold text-gray-500">
                       Nom TM
                     </label>
                     <input
                       disabled
                       type="text"
-                      className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                      className=" rounded-sm border border-shadowColors bg-firstColors p-2 text-sm"
                       value={data3.nonTM}
                     />
                   </div>
 
                   <div className="flex flex-col gap-1">
-                    <label htmlFor="" className="text-gray-500 font-semibold">
+                    <label htmlFor="" className="font-semibold text-gray-500">
                       Mouvement TM
                     </label>
                     <input
                       disabled
                       type="text"
-                      className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+                      className=" rounded-sm border border-shadowColors bg-firstColors p-2 text-sm"
                       value={data3.mouvementTM}
                     />
                   </div>
 
                   <div className="flex flex-col gap-1">
-                    <label htmlFor="" className="text-gray-500 font-semibold">
+                    <label htmlFor="" className="font-semibold text-gray-500">
                       Date TM
                     </label>
                     <input
                       disabled
                       type="text"
-                      className=" border p-2 rounded-sm border-red-500 bg-firstColors text-sm"
+                      className=" rounded-sm border border-red-500 bg-firstColors p-2 text-sm"
                       value={data3.dateTM}
                     />
                   </div>
@@ -500,13 +500,13 @@ const DeclaratioNConforme = () => {
 
               {user.role === 'analyst' ? (
                 <>
-                  <div className="flex flex-col w-full px-14 gap-1">
-                    <label htmlFor="" className="text-gray-500 font-semibold">
+                  <div className="flex w-full flex-col gap-1 px-14">
+                    <label htmlFor="" className="font-semibold text-gray-500">
                       Observation
                     </label>
                     <textarea
                       name="observation"
-                      className="border outline-none p-2 h-32"
+                      className="h-32 border p-2 outline-none"
                       onChange={(e: any) =>
                         setObservation({
                           ...observation,
@@ -518,7 +518,7 @@ const DeclaratioNConforme = () => {
                     </textarea>
 
                     <div
-                      className={`h-8 py-4 flex justify-start items-center   gap-1 text-[#ffffff]`}
+                      className={`flex h-8 items-center justify-start gap-1   py-4 text-[#ffffff]`}
                     >
                       <Icon
                         icon="lets-icons:check-fill"
@@ -531,7 +531,7 @@ const DeclaratioNConforme = () => {
                   </div>
 
                   <button
-                    className="bg-firstBlue  w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold flex items-center justify-center transition ease-in-out delay-150 hover:scale-105 "
+                    className="flex  h-12 w-40 cursor-pointer items-center justify-center rounded-md bg-firstBlue font-semibold text-[#EEEEEC] transition delay-150 ease-in-out hover:scale-105 "
                     onClick={() => {
                       handleSubmit(data3.idInstance, observation);
                     }}
@@ -541,23 +541,23 @@ const DeclaratioNConforme = () => {
                 </>
               ) : (
                 data3.observation && (
-                  <div className=" w-full flex flex-col justify-center items-center">
-                    <div className="flex flex-col gap-1  w-[33rem]">
-                      <label htmlFor="" className="text-gray-500 font-semibold">
+                  <div className=" flex w-full flex-col items-center justify-center">
+                    <div className="flex w-[33rem] flex-col  gap-1">
+                      <label htmlFor="" className="font-semibold text-gray-500">
                         Observation
                       </label>
                       <textarea
                         disabled
-                        className="border outline-none p-2 h-32"
+                        className="h-32 border p-2 outline-none"
                         value={data3.observation}
                       >
                         {data3.observation}
                       </textarea>
                       <div
-                        className={`h-8 py-4 flex justify-between items-center   gap-1 text-[#ffffff]`}
+                        className={`flex h-8 items-center justify-between gap-1   py-4 text-[#ffffff]`}
                       >
                         {' '}
-                        <div className="flex justify-start items-center  gap-1 ">
+                        <div className="flex items-center justify-start  gap-1 ">
                           <Icon
                             icon="lets-icons:check-fill"
                             className={`${
@@ -572,7 +572,7 @@ const DeclaratioNConforme = () => {
                             Modification reussie
                           </p>
                         </div>
-                        <div className="flex justify-end items-center  gap-1 ">
+                        <div className="flex items-center justify-end  gap-1 ">
                           <Icon
                             icon="lets-icons:check-fill"
                             className={`${
@@ -592,7 +592,7 @@ const DeclaratioNConforme = () => {
 
                     <button
                       // to={`/update/${data3.idInstance}`}
-                      className="bg-firstBlue mt-4  w-40 rounded-md text-[#EEEEEC] h-12 cursor-pointer font-semibold flex items-center justify-center transition ease-in-out delay-150 hover:scale-105 "
+                      className="mt-4 flex  h-12 w-40 cursor-pointer items-center justify-center rounded-md bg-firstBlue font-semibold text-[#EEEEEC] transition delay-150 ease-in-out hover:scale-105 "
                       onClick={() =>
                         handleUpdateSubmit(
                           data3.idSoumission,
@@ -615,7 +615,7 @@ const DeclaratioNConforme = () => {
                 icon="ic:round-close"
                 width="1.5em"
                 height="1.5em"
-                className="text-grayBlack: '#000000',"
+                className="text-grayBlack"
                 onClick={() => server.showOverlay()}
               />
             </button>

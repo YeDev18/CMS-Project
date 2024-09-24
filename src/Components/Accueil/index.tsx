@@ -22,9 +22,9 @@ const Accueil = () => {
   const handleSelectedCompare = (lib: string) => {
     return <SelectedFile libelle={lib} onClick={() => server?.showOverlay()} />;
   };
-  const handleSelectedTonnages = (lib: string) => {
-    return <SelectedFile libelle={lib} onClick={() => server?.showOverlay()} />;
-  };
+  // const handleSelectedTonnages = (lib: string) => {
+  //   return <SelectedFile libelle={lib} onClick={() => server?.showOverlay()} />;
+  // };
 
   function Days(date: Date, day: number) {
     const newDate = new Date(date);
@@ -37,22 +37,22 @@ const Accueil = () => {
   const dateFormatter = new Intl.DateTimeFormat('fr-FR');
   const formattedDate = dateFormatter.format(newDate);
   return (
-    <div className="w-full relative">
-      <div className="flex justify-between items-center pb-2">
-        <div className="text-borderColor font-semibold">{formattedDate}</div>
-        <div className="flex justify-center items-center border-[0.5px] border-borderColor rounded-2xl px-2 py-1  w-fit">
+    <div className="relative w-full">
+      <div className="flex items-center justify-between pb-2">
+        <div className="font-semibold">{formattedDate}</div>
+        <div className="flex w-fit items-center justify-center rounded-2xl border-[0.5px] px-2  py-1">
           <Icon
             icon="typcn:location"
             width="1.2rem"
             height="1.2rem"
             style={{ color: '#313131' }}
           />
-          <p className="text-borderColor">Abidjan</p>
+          <p>Abidjan</p>
         </div>
       </div>
       <div className="flex flex-col gap-6">
-        <div className="flex flex-col items-center justify-start lg:flex-row gap-4">
-          <div className="w-full lg:w-2/5 flex-center gap-4">
+        <div className="flex flex-col items-center justify-start gap-4 lg:flex-row">
+          <div className="flex-center w-full gap-4 lg:w-2/5">
             <Component1
               index={1}
               icon1="lucide:ship"
@@ -70,15 +70,15 @@ const Accueil = () => {
               route="/consignataire"
             />
           </div>
-          <div className="w-full flex flex-col md:flex-row justify-start gap-4 items-center lg:w-3/5">
-            <div className="h-48 w-full lg:w-[50%]  flex flex-col justify-between bg-firstColors rounded-md shadow-sm shadow-shadowColors pt-4 ">
+          <div className="flex w-full flex-col items-center justify-start gap-4 md:flex-row lg:w-3/5">
+            <div className="flex h-48 w-full  flex-col justify-between rounded-md bg-firstColors pt-4 shadow-sm shadow-shadowColors lg:w-2/4 ">
               <div className="flex-between  px-4">
-                <h3 className="font-bold text-[1.25rem] text-[#272A2D]">
+                <h3 className="text-[1.25rem] font-bold text-[#272A2D]">
                   VOYAGES
                 </h3>
                 <Link
                   to="/declaration_conforme"
-                  className=" bg-firstBlue  w-fit p-1 rounded-md text-2xl cursor-pointer"
+                  className=" w-fit  cursor-pointer rounded-md bg-firstBlue p-1 text-2xl"
                 >
                   <Icon
                     icon="mingcute:arrow-up-fill"
@@ -90,18 +90,18 @@ const Accueil = () => {
                 </Link>
               </div>
 
-              <div className="mx-4 flex-center w-fit border rounded-md px-2 py-3 gap-2">
+              <div className="flex-center mx-4 w-fit gap-2 rounded-md border px-2 py-3">
                 <button
-                  className="bg-firstBlue text-xl rounded-md text-firstColors p-2 w-fit"
+                  className="w-fit rounded-md bg-firstBlue p-2 text-xl text-firstColors"
                   onClick={() => (server?.showOverlay(), setLib('VOYAGES'))}
                 >
                   <Icon icon="octicon:feed-plus-16" />
                 </button>
-                <p className="text-md font-medium ">Comparaison Voyages</p>
+                <p className="text-base font-medium ">Comparaison Voyages</p>
               </div>
 
-              <div className="grid grid-cols-3 w-full place-items-center h-10 bg-[#f7f7f8] rounded-b-md">
-                <div className=" flex-center border-r-2 w-full gap-2 text-xl text-[#2563eb]">
+              <div className="grid h-10 w-full grid-cols-3 place-items-center rounded-b-md bg-[#f7f7f8]">
+                <div className=" flex-center w-full gap-2 border-r-2 text-xl text-[#2563eb]">
                   <Icon
                     icon="lucide:circle-check-big"
                     className="drop-shadow-sm"
@@ -110,7 +110,7 @@ const Accueil = () => {
                     {conform?.length}
                   </p>
                 </div>
-                <div className="flex-center border-r-2 w-full gap-2 text-xl text-[#f59069] ">
+                <div className="flex-center w-full gap-2 border-r-2 text-xl text-[#f59069] ">
                   <Icon icon="charm:notes-cross" className="drop-shadow-sm" />
                   <p className="font-medium  drop-shadow-sm">
                     {notConform?.length}
@@ -124,14 +124,15 @@ const Accueil = () => {
                 </div>
               </div>
             </div>
-            <div className="h-48 w-full lg:w-[50%]  flex flex-col justify-between bg-firstColors rounded-md shadow-sm shadow-shadowColors pt-4 ">
+
+            <div className="flex h-48 w-full  flex-col justify-between rounded-md bg-firstColors pt-4 shadow-sm shadow-shadowColors lg:w-1/2 ">
               <div className="flex-between  px-4">
-                <h3 className="font-bold text-[1.25rem] text-[#272A2D]">
+                <h3 className="text-[1.25rem] font-bold text-[#272A2D]">
                   TONNAGES
                 </h3>
                 <Link
                   to={''}
-                  className=" bg-firstBlue  w-fit p-1 rounded-md text-2xl cursor-pointer"
+                  className=" w-fit  cursor-pointer rounded-md bg-firstBlue p-1 text-2xl"
                 >
                   <Icon
                     icon="mingcute:arrow-up-fill"
@@ -142,18 +143,18 @@ const Accueil = () => {
                   />
                 </Link>
               </div>
-              <div className="mx-4 flex-center w-fit border rounded-md px-2 py-3 gap-2">
+              <div className="flex-center mx-4 w-fit gap-2 rounded-md border px-2 py-3">
                 <button
-                  className="bg-firstBlue text-xl rounded-md text-firstColors p-2 w-fit"
+                  className="w-fit rounded-md bg-firstBlue p-2 text-xl text-firstColors"
                   onClick={() => (server?.showOverlay(), setLib('TONNAGES'))}
                 >
                   <Icon icon="octicon:feed-plus-16" />
                 </button>
-                <p className="text-md font-medium ">Comparaison Tonnages</p>
+                <p className="text-base font-medium ">Comparaison Tonnages</p>
               </div>
 
-              <div className="grid grid-cols-3 w-full place-items-center h-10 bg-[#f7f7f8] rounded-b-md">
-                <div className=" flex-center border-r-2 w-full gap-2 text-xl text-[#2563eb]">
+              <div className="grid h-10 w-full grid-cols-3 place-items-center rounded-b-md bg-[#f7f7f8]">
+                <div className=" flex-center w-full gap-2 border-r-2 text-xl text-[#2563eb]">
                   <Icon
                     icon="lucide:circle-check-big"
                     className="drop-shadow-sm"
@@ -162,7 +163,7 @@ const Accueil = () => {
                     {conformTonnages?.length}
                   </p>
                 </div>
-                <div className="flex-center border-r-2 w-full gap-2 text-xl text-[#f59069] ">
+                <div className="flex-center w-full gap-2 border-r-2 text-xl text-[#f59069] ">
                   <Icon icon="charm:notes-cross" className="drop-shadow-sm" />
                   <p className="font-medium  drop-shadow-sm">
                     {notConformTonnages?.length}
@@ -178,28 +179,29 @@ const Accueil = () => {
             </div>
           </div>
         </div>
-        <div className="w-[100%] h-fit flex flex-col mb-2 lg:flex-row gap-6">
-          <div className="w-full  lg:w-[50%]">
+
+        <div className="mb-2 flex h-fit w-full flex-col gap-6 lg:flex-row">
+          <div className="w-full lg:w-1/2">
             <Chart />
           </div>
-          <div className="w-full lg:w-fit h-fit border rounded-md flex flex-col justify-start items-start p-4 gap-6">
-            <h2 className="font-semibold text-xl">
+          <div className="flex h-fit w-full flex-col items-start justify-start gap-6 rounded-md border p-4 lg:w-fit">
+            <h2 className="text-xl font-semibold">
               Tonages des differents navires
             </h2>
-            <div className=" w-full flex  justify-between flex-col gap-2">
+            <div className=" flex w-full  flex-col justify-between gap-2">
               <div className="flex flex-col gap-2">
-                <div className="w-80 h-8 bg-black opacity-5 rounded-md"></div>
-                <div className="w-80 h-8 bg-black opacity-5 rounded-md"></div>
-                <div className="w-80 h-8 bg-black opacity-5 rounded-md"></div>
-                <div className="w-80 h-8 bg-black opacity-5 rounded-md"></div>
-                <div className="w-80 h-8 bg-black opacity-5 rounded-md"></div>
+                <div className="h-8 w-80 rounded-md bg-black opacity-5"></div>
+                <div className="h-8 w-80 rounded-md bg-black opacity-5"></div>
+                <div className="h-8 w-80 rounded-md bg-black opacity-5"></div>
+                <div className="h-8 w-80 rounded-md bg-black opacity-5"></div>
+                <div className="h-8 w-80 rounded-md bg-black opacity-5"></div>
               </div>
               <div className="flex flex-col gap-2">
-                <div className="w-80 h-8 bg-black opacity-5 rounded-md"></div>
-                <div className="w-80 h-8 bg-black opacity-5 rounded-md"></div>
-                <div className="w-80 h-8 bg-black opacity-5 rounded-md"></div>
-                <div className="w-80 h-8 bg-black opacity-5 rounded-md"></div>
-                <div className="w-80 h-8 bg-black opacity-5 rounded-md"></div>
+                <div className="h-8 w-80 rounded-md bg-black opacity-5"></div>
+                <div className="h-8 w-80 rounded-md bg-black opacity-5"></div>
+                <div className="h-8 w-80 rounded-md bg-black opacity-5"></div>
+                <div className="h-8 w-80 rounded-md bg-black opacity-5"></div>
+                <div className="h-8 w-80 rounded-md bg-black opacity-5"></div>
               </div>
             </div>
           </div>

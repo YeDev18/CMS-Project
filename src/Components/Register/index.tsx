@@ -21,53 +21,53 @@ const Register = () => {
 
   return (
     <div className="flex gap-8">
-      <div className="w-[30rem] bg-bgColors py-6 px-10 rounded-md shadow-md">
+      <div className="bg-bgColors w-[30rem] rounded-md px-10 py-6 shadow-md">
         <Header />
         <div>
           <form
-            className="max-w-lg mx-auto flex flex-col gap-4"
+            className="mx-auto flex max-w-lg flex-col gap-4"
             onSubmit={handleSubmit}
           >
-            <div className="relative z-0 w-full mb-5 group">
+            <div className="group relative z-0 mb-5 w-full">
               <input
                 type="text"
                 value={name}
                 name="name"
                 id="name"
-                className="block py-2.5 px-0 w-full text-md text-gray-900 bg-transparent border-0 border-b-[0.8px] border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-firstBlue peer"
+                className="text-md peer block w-full appearance-none border-0 border-b-[0.8px] border-gray-300 bg-transparent px-0 py-2.5 text-gray-900 focus:border-firstBlue focus:outline-none focus:ring-0"
                 onChange={e => {
                   setName(e.target.value);
                 }}
                 placeholder=" "
                 required
               />
-              <label className="peer-focus:font-medium absolute text-md text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-firstBlue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+              <label className="text-md absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:start-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-firstBlue rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4">
                 Nom & Prenom
               </label>
             </div>
-            <div className="relative z-0 w-full mb-5 group">
+            <div className="group relative z-0 mb-5 w-full">
               <input
                 type="email"
                 value={email}
                 name="email"
                 id="email"
-                className="block py-2.5 px-0 w-full text-md text-gray-900 bg-transparent border-0 border-b-[0.8px] border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-firstBlue peer"
+                className="text-md peer block w-full appearance-none border-0 border-b-[0.8px] border-gray-300 bg-transparent px-0 py-2.5 text-gray-900 focus:border-firstBlue focus:outline-none focus:ring-0"
                 onChange={e => {
                   setEmail(e.target.value);
                 }}
                 placeholder=""
                 required
               />
-              <label className="peer-focus:font-medium absolute text-md text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-firstBlue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+              <label className="text-md absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:start-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-firstBlue rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4">
                 Email
               </label>
             </div>
-            <div className="relative z-0 w-full mb-5 group">
+            <div className="group relative z-0 mb-5 w-full">
               <select
                 value={role}
                 name="role"
                 id="role"
-                className="block py-2.5 px-0 w-full text-md text-gray-900 bg-transparent border-0 border-b-[0.8px] border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-firstBlue peer"
+                className="text-md peer block w-full appearance-none border-0 border-b-[0.8px] border-gray-300 bg-transparent px-0 py-2.5 text-gray-900 focus:border-firstBlue focus:outline-none focus:ring-0"
                 onChange={e => {
                   setRole(e.target.value);
                 }}
@@ -78,33 +78,33 @@ const Register = () => {
                 <option value="admin">Administrateur</option>
                 <option value="dev">Dev</option>
               </select>
-              <label className="peer-focus:font-medium absolute text-md text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-firstBlue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+              <label className="text-md absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:start-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-firstBlue rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4">
                 role
               </label>
             </div>
-            <div className="relative z-0 w-full mb-5 group">
+            <div className="group relative z-0 mb-5 w-full">
               <input
                 type="password"
                 value={password}
                 minLength={6}
                 name="password"
                 id="password"
-                className="block py-2.5 px-0 w-full text-md text-gray-900 bg-transparent border-0 border-b-[0.8px] border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-firstBlue peer"
+                className="text-md peer block w-full appearance-none border-0 border-b-[0.8px] border-gray-300 bg-transparent px-0 py-2.5 text-gray-900 focus:border-firstBlue focus:outline-none focus:ring-0"
                 onChange={e => {
                   setPassword(e.target.value);
                 }}
                 placeholder=""
                 required
               />
-              <label className="peer-focus:font-medium absolute text-md text-gray-500 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-firstBlue peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+              <label className="text-md absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 text-gray-500 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:start-0 peer-focus:-translate-y-6 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-firstBlue rtl:peer-focus:left-auto rtl:peer-focus:translate-x-1/4">
                 Password
               </label>
             </div>
 
-            <div className="flex justify-center relative z-0 w-full mb-5 pt-9 group">
+            <div className="group relative z-0 mb-5 flex w-full justify-center pt-9">
               <button
                 type="submit"
-                className="text-xl text-firstColors rounded-md bg-firstBlue py-2 px-4"
+                className="rounded-md bg-firstBlue px-4 py-2 text-xl text-firstColors"
               >
                 Inscrivez Vous
               </button>

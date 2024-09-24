@@ -9,7 +9,7 @@ const Periode = () => {
     setActiveIndex(prevIndex => (prevIndex === index ? null : index));
   };
   return (
-    <div className="flex flex-col gap-6 pt-10 w-full">
+    <div className="flex w-full flex-col gap-6 pt-10">
       {ItemsPeriode.map((items, index) => (
         <Accordion
           key={index}

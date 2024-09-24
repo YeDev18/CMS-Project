@@ -1,69 +1,42 @@
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
-import * as XLSX from 'xlsx';
 import { headersConsignataires } from '../Data';
+import useExportExcel from '../ui/export-excel';
+import usePagination from '../ui/pagination';
+
+type ConsigneeProps = {
+  item: number;
+  imo: string;
+  nom: string;
+};
 const Consignataire = () => {
   const data = useServer().consignataire;
 
-  const [current, setCurrent] = useState(1);
-  const itemsPerPage = 10;
-  const startIndex = (current - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-
-  const goToNextPage = () => {
-    setCurrent(prevPage => prevPage + 1);
-  };
-  const goToPrevPage = () => {
-    setCurrent(prevPage => prevPage - 1);
-  };
-
-  const renderPaginationControls = () => {
-    const totalPages = Math.ceil(TrueData.length / itemsPerPage);
-    return (
-      <div className="flex justify-end pb-5">
-        <button
-          onClick={goToPrevPage}
-          disabled={current === 1}
-          className="border text-shadowColors border-shadowColors p-1 rounded active:bg-firstBlue active:border hover:border-firstBlue hover:text-firstColors hover:bg-firstBlue hover:border"
-        >
-          <Icon icon="ep:arrow-left-bold" />
-        </button>
-        <div className="px-2 w-16 text-center">
-          <span className="font-medium text-borderColor">{current}</span> /{' '}
-          <span className="text-borderColor">{totalPages}</span>
-        </div>
-        <button
-          onClick={goToNextPage}
-          disabled={current === totalPages}
-          className="border text-shadowColors border-shadowColors p-1 rounded active:bg-firstBlue active:border hover:border-firstBlue hover:text-firstColors hover:bg-firstBlue hover:border"
-        >
-          <Icon icon="ep:arrow-right-bold" />
-        </button>
-      </div>
-    );
-  };
-  const Consignataire = data.map((item: any, index: number) => ({
+  const Consignataire = data.map((item: ConsigneeProps, index: number) => ({
     id: index + 1,
     imo: item.imo,
     nom: item.nom,
   }));
-  const exportToExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, `Consignataire.xlsx`);
-    console.log('vit');
-  };
 
-  const [searchValue, setSearchValue] = useState();
+  const [searchValue, setSearchValue] = useState<string>();
+
   const TrueData = searchValue
-    ? Consignataire.filter((val: any) => val.nom.includes(searchValue))
+    ? Consignataire.filter((val: ConsigneeProps) =>
+        val.nom.includes(searchValue)
+      )
     : Consignataire;
+
+  const { renderPaginationControls, startIndex, endIndex } =
+    usePagination(TrueData);
+  const FinalPagination = TrueData.slice(startIndex, endIndex);
+
+  const { exportToExcel } = useExportExcel(FinalPagination, 'Consignataire');
+
   return (
-    <div className=" flex flex-col gap-6 text-grayBlack w-full ">
-      <div className="flex justify-start gap-3 w-full h-10">
-        <p className="rounded-md shadow-sm  p-2 inline-flex items-center bg-firstBlue text-firstColors">
+    <div className=" flex w-full flex-col justify-between gap-6 text-grayBlack ">
+      <div className="flex h-10 w-full justify-start gap-3">
+        <p className="inline-flex items-center  rounded-md bg-firstBlue p-2 text-firstColors shadow-sm">
           {' '}
           <Icon
             icon="lucide:contact"
@@ -73,24 +46,24 @@ const Consignataire = () => {
             className="mr-2"
           />
           Consignatires :{' '}
-          <span className="font-semibold pl-1"> {data.length}</span>
+          <span className="pl-1 font-semibold"> {data.length}</span>
         </p>
-        <div className="rounded-md shadow-sm shadow-slate-200 p-2 inline-flex gap-4 items-center">
+        <div className="inline-flex items-center gap-4 rounded-md p-2 shadow-sm shadow-slate-200">
           <label htmlFor="">
             <Icon icon="mdi:search" width="1.5em" height="1.5em" />
           </label>
           <input
             type="text"
             placeholder="Consignataire"
-            onChange={(e: any) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setSearchValue(e.target.value);
             }}
-            className=" border-b w-36 outline-none pb-1 text-sm  h-fit font-medium"
+            className=" h-fit w-36 border-b pb-1 text-sm  font-medium outline-none"
           />
         </div>
 
         <button
-          className="rounded-md shadow-sm shadow-slate-200 p-2 inline-flex items-center bg-[#0e5c2f] text-firstColors"
+          className="inline-flex items-center rounded-md bg-[#0e5c2f] p-2 text-firstColors shadow-sm shadow-slate-200"
           type="button"
           onClick={() => exportToExcel()}
         >
@@ -104,13 +77,13 @@ const Consignataire = () => {
           Export en csv
         </button>
       </div>
-      <table className="w-full lg:w-3/4 pb-6">
+      <table className="size-full pb-6 lg:w-3/4">
         <thead>
-          <tr className="flex justify-start  py-4 px-4  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50 ">
+          <tr className="flex w-full justify-start  rounded-md bg-slate-50 p-4 shadow-sm ">
             {headersConsignataires.map((item, index) => {
               return (
                 <th
-                  className=" text-start font-semibold lg:w-28 xl:w-72 headerFirst"
+                  className=" headerFirst text-start font-semibold lg:w-28 xl:w-72"
                   key={index}
                 >
                   {item}
@@ -120,19 +93,17 @@ const Consignataire = () => {
           </tr>
         </thead>
         <tbody>
-          {TrueData.slice(startIndex, endIndex).map(
-            (val: any, index: number) => {
-              return (
-                <tr
-                  key={index}
-                  className="flex justify-start p-4  w-full border-b-2 border-slate-50 "
-                >
-                  <td className="text-start w-32">{index + 1}</td>
-                  <td className="text-start w-94">{val.nom}</td>
-                </tr>
-              );
-            }
-          )}
+          {FinalPagination.map((val: ConsigneeProps, index: number) => {
+            return (
+              <tr
+                key={index}
+                className="flex w-full justify-start  border-b-2 border-slate-50 p-4 "
+              >
+                <td className="w-32 text-start">{index + 1}</td>
+                <td className="w-96 text-start">{val.nom}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
       {renderPaginationControls()}

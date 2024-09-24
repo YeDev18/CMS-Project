@@ -46,18 +46,18 @@ const Tables: FC<Lib> = ({ lib, HeaderTable, Table }) => {
         <button
           onClick={goToPrevPage}
           disabled={current === 1}
-          className="border text-shadowColors border-shadowColors p-1 rounded active:bg-firstBlue active:border hover:border-firstBlue hover:text-firstColors hover:bg-firstBlue hover:border"
+          className="rounded border border-shadowColors p-1 text-shadowColors hover:border hover:border-firstBlue hover:bg-firstBlue hover:text-firstColors active:border active:bg-firstBlue"
         >
           <Icon icon="ep:arrow-left-bold" />
         </button>
-        <div className="px-2 w-16 text-center">
-          <span className="font-medium text-borderColor">{current}</span> /{' '}
+        <div className="w-16 px-2 text-center">
+          <span className="text-borderColor font-medium">{current}</span> /{' '}
           <span className="text-borderColor">{totalPages}</span>
         </div>
         <button
           onClick={goToNextPage}
           disabled={current === totalPages}
-          className="border text-shadowColors border-shadowColors p-1 rounded active:bg-firstBlue active:border hover:border-firstBlue hover:text-bgColors hover:text-firstColors hover:border"
+          className="hover:text-bgColors rounded border border-shadowColors p-1 text-shadowColors hover:border hover:border-firstBlue hover:text-firstColors active:border active:bg-firstBlue"
         >
           <Icon icon="ep:arrow-right-bold" />
         </button>
@@ -66,9 +66,9 @@ const Tables: FC<Lib> = ({ lib, HeaderTable, Table }) => {
   };
 
   return (
-    <div className=" flex flex-col gap-6 text-grayBlack w-full ">
-      <div className="flex justify-between w-full">
-        <button className="rounded-md shadow-sm  p-2 inline-flex items-center bg-firstBlue text-firstColors">
+    <div className=" flex w-full flex-col gap-6 text-grayBlack ">
+      <div className="flex w-full justify-between">
+        <button className="inline-flex items-center  rounded-md bg-firstBlue p-2 text-firstColors shadow-sm">
           {' '}
           <Icon
             icon="lucide:circle-check-big"
@@ -80,7 +80,7 @@ const Tables: FC<Lib> = ({ lib, HeaderTable, Table }) => {
           {lib} : <span className="font-semibold">{Table.length}</span>
         </button>
         <button
-          className="rounded-md shadow-sm p-2 inline-flex items-center bg-firstBlue text-firstColors"
+          className="inline-flex items-center rounded-md bg-firstBlue p-2 text-firstColors shadow-sm"
           type="button"
           onClick={() => exportToExcel()}
         >
@@ -94,13 +94,13 @@ const Tables: FC<Lib> = ({ lib, HeaderTable, Table }) => {
           Export en csv
         </button>
       </div>
-      <div className=" w-full flex flex-col gap-6 ">
+      <div className=" flex w-full flex-col gap-6 ">
         <table className="w-full">
-          <tr className="flex justify-start gap  p-4  w-full rounded-md shadow-sm shadow-testColors1 bg-slate-50">
+          <tr className="gap shadow-testColors1 flex  w-full  justify-start rounded-md bg-slate-50 p-4 shadow-sm">
             {HeaderTable.map((item, index) => {
               return (
                 <th
-                  className="font-semibold text-start w-72 headerFirst  "
+                  className="headerFirst w-72 text-start font-semibold  "
                   key={index}
                 >
                   {item}
@@ -112,13 +112,13 @@ const Tables: FC<Lib> = ({ lib, HeaderTable, Table }) => {
             return (
               <tr
                 key={id}
-                className="flex justify-start p-4  w-full border-b-2 border-slate-50 "
+                className="flex w-full justify-start  border-b-2 border-slate-50 p-4 "
               >
-                <td className="text-start w-32">{val.id}</td>
-                {val.imo ? <td className="text-start w-72">{val.imo}</td> : ''}
-                <td className="text-start w-72">{val.libDTCI}</td>
+                <td className="w-32 text-start">{val.id}</td>
+                {val.imo ? <td className="w-72 text-start">{val.imo}</td> : ''}
+                <td className="w-72 text-start">{val.libDTCI}</td>
                 {val.libTM ? (
-                  <td className="text-start w-72">{val.libTM}</td>
+                  <td className="w-72 text-start">{val.libTM}</td>
                 ) : (
                   ''
                 )}

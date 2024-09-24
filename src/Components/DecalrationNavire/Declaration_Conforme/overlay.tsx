@@ -25,94 +25,94 @@ type DataProps = {
 const Overlay: FC<DataProps> = ({ data }) => {
   const server = useServer();
   return (
-    <div className="absolute inset-y-2/4 w-full h-fit justify-center z-50 items-center animate-fadIn-up ">
-      <div className="w-96 h-fit absolute z-[2] inset-1/2 flex flex-col justify-center items-center gap-2 bg-firstColors -translate-x-2/4  -translate-y-2/4 shadow-sm shadow-slate-100 rounded-sm p-6">
-        <div className="flex flex-col gap-1 w-full px-2">
-          <label htmlFor="" className="text-gray-500 font-semibold">
+    <div className="absolute inset-y-2/4 z-50 h-fit w-full animate-fadIn-up items-center justify-center ">
+      <div className="absolute inset-1/2 z-[2] flex h-fit w-96 -translate-x-2/4 -translate-y-2/4 flex-col items-center justify-center gap-2  rounded-sm bg-firstColors p-6 shadow-sm shadow-slate-100">
+        <div className="flex w-full flex-col gap-1 px-2">
+          <label htmlFor="" className="font-semibold text-gray-500">
             Date de declaration
           </label>
           <input
             disabled
             type="text"
-            className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+            className=" rounded-sm border border-shadowColors bg-firstColors p-2 text-sm"
             value={data.dateDeclaration}
           />
         </div>
-        <div className="flex flex-col gap-1 w-full px-2">
-          <label htmlFor="" className="text-gray-500 font-semibold">
+        <div className="flex w-full flex-col gap-1 px-2">
+          <label htmlFor="" className="font-semibold text-gray-500">
             IMO
           </label>
           <input
             disabled
             type="text"
-            className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+            className=" rounded-sm border border-shadowColors bg-firstColors p-2 text-sm"
             value={data.imoDTCI}
           />
         </div>
-        <div className="flex flex-col gap-1 w-full px-2 ">
-          <label htmlFor="" className="text-gray-500 font-semibold">
+        <div className="flex w-full flex-col gap-1 px-2 ">
+          <label htmlFor="" className="font-semibold text-gray-500">
             MRN
           </label>
           <input
             disabled
             type="text"
-            className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+            className=" rounded-sm border border-shadowColors bg-firstColors p-2 text-sm"
             value={data.mrn}
           />
         </div>
-        <div className="flex flex-col gap-1 w-full px-2">
-          <label htmlFor="" className="text-gray-500 font-semibold">
+        <div className="flex w-full flex-col gap-1 px-2">
+          <label htmlFor="" className="font-semibold text-gray-500">
             Nom
           </label>
           <input
             disabled
             type="text"
-            className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+            className=" rounded-sm border border-shadowColors bg-firstColors p-2 text-sm"
             value={data.nonDTCI}
           />
         </div>
-        <div className="flex flex-col gap-1 w-full px-2">
-          <label htmlFor="" className="text-gray-500 font-semibold">
+        <div className="flex w-full flex-col gap-1 px-2">
+          <label htmlFor="" className="font-semibold text-gray-500">
             Mouvement
           </label>
           <input
             disabled
             type="text"
-            className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+            className=" rounded-sm border border-shadowColors bg-firstColors p-2 text-sm"
             value={data.mouvementDTCI}
           />
         </div>
-        <div className="flex flex-col gap-1 w-full px-2 ">
-          <label htmlFor="" className="text-gray-500 font-semibold">
+        <div className="flex w-full flex-col gap-1 px-2 ">
+          <label htmlFor="" className="font-semibold text-gray-500">
             Consignataire
           </label>
           <input
             disabled
             type="text"
-            className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+            className=" rounded-sm border border-shadowColors bg-firstColors p-2 text-sm"
             value={data.consignataireDTCI}
           />
         </div>
-        <div className="flex flex-col gap-1 w-full px-2 ">
-          <label htmlFor="" className="text-gray-500 font-semibold">
+        <div className="flex w-full flex-col gap-1 px-2 ">
+          <label htmlFor="" className="font-semibold text-gray-500">
             Port
           </label>
           <input
             disabled
             type="text"
-            className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+            className=" rounded-sm border border-shadowColors bg-firstColors p-2 text-sm"
             value={data.port}
           />
         </div>
 
-        <div className="flex flex-col gap-1 w-full px-2 ">
-          <label htmlFor="" className="text-gray-500 font-semibold">
+        <div className="flex w-full flex-col gap-1 px-2 ">
+          <label htmlFor="" className="font-semibold text-gray-500">
             Numero Voyage
           </label>
           <input
             disabled
             type="text"
-            className=" border p-2 rounded-sm border-shadowColors bg-firstColors text-sm"
+            className=" rounded-sm border border-shadowColors bg-firstColors p-2 text-sm"
             value={data.numVoyage}
           />
         </div>

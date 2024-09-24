@@ -22,9 +22,9 @@ export const Component1: FC<Compo1> = ({
   return (
     <div
       key={index}
-      className="h-48 w-[100%]  flex flex-col justify-between bg-firstColors rounded-md shadow-sm shadow-shadowColors p-4"
+      className="flex h-48  w-full flex-col justify-between rounded-md bg-firstColors p-4 shadow-sm shadow-shadowColors"
     >
-      <div className=" bg-firstBlue w-fit p-2 rounded-md">
+      <div className=" w-fit rounded-md bg-firstBlue p-2">
         <Icon
           icon={icon1}
           width="2rem"
@@ -32,12 +32,12 @@ export const Component1: FC<Compo1> = ({
           style={{ color: '#EEEEEC' }}
         />
       </div>
-      <p className="text-2xl lg:text-xl xl:text-2xl font-medium ">{name}</p>
-      <div className="flex justify-between items-center">
+      <p className="text-2xl font-medium lg:text-xl xl:text-2xl ">{name}</p>
+      <div className="flex items-center justify-between">
         <p className="text-3xl font-medium">{number}</p>
         <Link
           to={route}
-          className=" bg-firstBlue  w-fit p-1 rounded-md text-2xl cursor-pointer"
+          className=" w-fit  cursor-pointer rounded-md bg-firstBlue p-1 text-2xl"
         >
           <Icon
             icon={icon2}
@@ -66,15 +66,15 @@ export const Component2: FC<Compo2> = ({ lib }) => {
   };
 
   return (
-    <div className="border-dashed w-48 h-40 mt-2 rounded-md border-2 p-2 border-firstBlue flex flex-col gap-2 justify-around items-center">
+    <div className="mt-2 flex h-40 w-48 flex-col items-center justify-around gap-2 rounded-md border-2 border-dashed border-firstBlue p-2">
       <label
         htmlFor="fileId"
-        className="flex flex-col gap-2 justify-between items-center cursor-pointer"
+        className="flex cursor-pointer flex-col items-center justify-between gap-2"
       >
-        <h2 className="font-medium text-[1.2rem] text-grayBlack" ref={laRef}>
+        <h2 className="text-[1.2rem] font-medium text-grayBlack" ref={laRef}>
           File {lib}
         </h2>
-        <div className="block bg-firstBlue rounded-full p-2 ">
+        <div className="block rounded-full bg-firstBlue p-2 ">
           <Icon
             icon="mdi:cloud-upload-outline"
             width="2rem"
@@ -83,7 +83,7 @@ export const Component2: FC<Compo2> = ({ lib }) => {
           />
         </div>
 
-        <p className="text-[0.6rem] text-testColors1 text-center">
+        <p className="text-testColors1 text-center text-[0.6rem]">
           <br />
           Import file from your computer(*.xls)
         </p>

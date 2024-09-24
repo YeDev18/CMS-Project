@@ -15,18 +15,18 @@ const Home = () => {
   return (
     <>
       <div
-        className={`flex relative p-2 items-center justify-between bg-bgColors w-full h-screen text-textColor ${
+        className={`bg-bgColors text-textColor relative flex h-screen w-full items-center justify-between p-2 ${
           toogle ? 'overflow-hidden' : ''
         }`}
       >
         {overlay && (
           <div
-            className="w-full h-full bg-black/25 fixed z-30 animate-fadIn-up"
+            className="fixed z-30 size-full animate-fadIn-up bg-black/25"
             onClick={() => server?.showOverlay()}
           ></div>
         )}
         {toogle ? (
-          <div className="absolute inset-0 h-[100vh] w-[100%] lg:hidden">
+          <div className="absolute inset-0 h-screen w-full lg:hidden">
             {' '}
             <SidebarResponsive />
           </div>
@@ -34,22 +34,22 @@ const Home = () => {
           ''
         )}
 
-        <div className="w-[15vw] hidden h-full lg:flex fixed pl-3  items-center ">
+        <div className="fixed hidden h-full w-[15vw] items-center pl-3  lg:flex ">
           <Sidebar />
         </div>
 
-        <div className="w-full lg:w-[83vw] flex flex-col relative lg:left-[16vw] gap-4 h-[98vh]">
+        <div className="relative flex h-[98vh] w-full flex-col gap-4 lg:left-[16vw] lg:w-[83vw]">
           <NavBar />
-          <div className=" w-[100%] flex h-full relative">
+          <div className=" relative flex size-full">
             <Outlet />
             {server.setting && (
-              <div className="fixed  w-64 h-fit bottom-10 left-[14vw] rounded shadow bg-firstColors flex flex-col justify-start items-center gap-2">
-                <div className="text-left  w-full white-nowrap border-b pb-2 pt-2 px-3">
+              <div className="fixed  bottom-10 left-[14vw] flex h-fit w-64 flex-col items-center justify-start gap-2 rounded bg-firstColors shadow">
+                <div className="white-nowrap  w-full border-b px-3 py-2 text-left">
                   <h2 className="font-semibold">{me.name}</h2>
                   <p className="text-sm opacity-80">{me.role}</p>
                 </div>
                 <button
-                  className="block text-left align-middle  w-full white-nowrap border-b pt-1 pb-3 px-3 font-medium"
+                  className="white-nowrap block w-full  border-b px-3 pb-3 pt-1 text-left align-middle font-medium"
                   onClick={() => (auth?.logout(), server.showSettingFinish())}
                 >
                   Deconnexion
