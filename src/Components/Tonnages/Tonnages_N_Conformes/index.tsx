@@ -1,21 +1,16 @@
+import useExportExcel from '@/Components/ui/export-excel';
 import usePagination from '@/Components/ui/pagination';
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
-import * as XLSX from 'xlsx';
 import { AllMonths, Year } from '../../Data';
 import Libelle from '../../ui/Libelle';
 import Table from '../table-tonnages';
 const T_NonConforme = () => {
   const server = useServer();
-  const tonnes = server?.tonnages;
   const tonnesNc = server?.notConformTonnages;
   console.log(tonnesNc);
-  const exportToExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(tonnesNc);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, `Tonnages Non conforme.xlsx`);
-  };
+
+  const { exportToExcel } = useExportExcel(tonnesNc, 'Tonnages Non conforme');
 
   const { renderPaginationControls, endIndex, startIndex } =
     usePagination(tonnesNc);
@@ -40,7 +35,7 @@ const T_NonConforme = () => {
                 className="mr-2"
               />
             </label>
-            <div className="p size-fit whitespace-nowrap rounded-sm border ">
+            <div className="size-fit whitespace-nowrap rounded-sm border ">
               <select
                 name="months"
                 id=""
@@ -87,9 +82,9 @@ const T_NonConforme = () => {
             placeholder="IMO"
             // value={searchValue}
             className=" h-fit w-28 border-b pb-1 text-sm  font-medium outline-none"
-            onChange={(e: any) => {
-              // setSearchValue(e.target.value);
-            }}
+            // onChange={event => {
+            //   // setSearchValue(e.target.value);
+            // }}
           />
         </div>
         <button

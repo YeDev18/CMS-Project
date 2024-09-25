@@ -1,6 +1,6 @@
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
-const usePagination = (data: any) => {
+const usePagination = (data: []) => {
   const [current, setCurrent] = useState(1);
   const itemsPerPage = 10;
   const startIndex = (current - 1) * itemsPerPage;
@@ -25,8 +25,8 @@ const usePagination = (data: any) => {
           <Icon icon="ep:arrow-left-bold" />
         </button>
         <div className="w-24 px-2 text-center">
-          <span className="text-borderColor font-medium">{current}</span> /{' '}
-          <span className="text-borderColor">{totalPages}</span>
+          <span className=" font-medium">{current}</span> /{' '}
+          <span>{totalPages}</span>
         </div>
         <button
           onClick={goToNextPage}

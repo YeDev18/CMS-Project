@@ -34,7 +34,7 @@ const T_NonDeclare = () => {
                 className="mr-2"
               />
             </label>
-            <div className="p size-fit whitespace-nowrap rounded-sm border ">
+            <div className="size-fit whitespace-nowrap rounded-sm border ">
               <select
                 name="months"
                 id=""
@@ -81,9 +81,9 @@ const T_NonDeclare = () => {
             placeholder="IMO"
             // value={searchValue}
             className=" h-fit w-28 border-b pb-1 text-sm  font-medium outline-none"
-            onChange={(e: any) => {
-              // setSearchValue(e.target.value);
-            }}
+            // onChange={(e: any) => {
+            //   // setSearchValue(e.target.value);
+            // }}
           />
         </div>
         <button
@@ -103,7 +103,7 @@ const T_NonDeclare = () => {
       <div className="relative size-full overflow-x-auto  pr-2">
         <table className="w-full">
           <thead>
-            <tr className="gridArray6 shadow-testColors1 sticky top-0 w-full rounded-md bg-slate-50 shadow-sm">
+            <tr className="gridArray6 sticky top-0 w-full rounded-md bg-slate-50 shadow-sm">
               {headerTable.map((item, index) => {
                 return (
                   <th

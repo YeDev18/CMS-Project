@@ -5,7 +5,7 @@ import * as XLSX from 'xlsx';
 type Lib = {
   lib: string;
   HeaderTable: string[];
-  Table: any;
+  Table: [];
 };
 interface Current {
   imo: number;
@@ -57,7 +57,7 @@ const Tables: FC<Lib> = ({ lib, HeaderTable, Table }) => {
         <button
           onClick={goToNextPage}
           disabled={current === totalPages}
-          className="hover:text-bgColors rounded border border-shadowColors p-1 text-shadowColors hover:border hover:border-firstBlue hover:text-firstColors active:border active:bg-firstBlue"
+          className="rounded border border-shadowColors p-1 text-shadowColors hover:border hover:border-firstBlue hover:text-firstColors active:border active:bg-firstBlue"
         >
           <Icon icon="ep:arrow-right-bold" />
         </button>
@@ -96,7 +96,7 @@ const Tables: FC<Lib> = ({ lib, HeaderTable, Table }) => {
       </div>
       <div className=" flex w-full flex-col gap-6 ">
         <table className="w-full">
-          <tr className="gap shadow-testColors1 flex  w-full  justify-start rounded-md bg-slate-50 p-4 shadow-sm">
+          <tr className="flex  w-full  justify-start rounded-md bg-slate-50 p-4 shadow-sm">
             {HeaderTable.map((item, index) => {
               return (
                 <th

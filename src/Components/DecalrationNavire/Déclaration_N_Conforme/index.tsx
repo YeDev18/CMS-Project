@@ -1,6 +1,7 @@
 import url from '@/api';
 import useExportExcel from '@/Components/ui/export-excel';
 import { useServer } from '@/Context/ServerProvider';
+import { DataProps, DeclarationTypes } from '@/Types';
 import { Icon } from '@iconify/react';
 import { useMemo, useState } from 'react';
 import { AllMonths, Year } from '../../Data';
@@ -8,18 +9,22 @@ import Libelle from '../../ui/Libelle';
 import usePagination from '../../ui/pagination';
 import Table from '../table-compare';
 
+type ObservationProps = {
+  observation: string;
+};
+
 const DeclaratioNConforme = () => {
   const server = useServer();
-  const notConform = useServer().notConform;
-  const user = useServer().user;
+  const notConform = useServer()?.notConform || [];
+  const user = useServer()?.user || [];
   const csrfToken = server?.csrfToken;
-  const overlay = useServer().overlay;
+  const overlay = useServer()?.overlay;
   const [formValue, setFormValue] = useState({
     months: '',
     years: '',
   });
-  const [searchValue, setSearchValue] = useState();
-  const [observation, setObservation] = useState({
+  const [searchValue, setSearchValue] = useState<string>();
+  const [observation, setObservation] = useState<ObservationProps>({
     observation: '',
   });
   const [tags, setTags] = useState<boolean>(false);
@@ -59,20 +64,14 @@ const DeclaratioNConforme = () => {
     imoTM: '',
     consignataireTM: '',
     mouvementTM: '',
-    dateTM: '',
+    dateTm: '',
     observation: '',
   });
-
-  const [showFilter, setShowFilter] = useState<boolean>(false);
-
-  const handleShowFilter = () => {
-    setShowFilter(!showFilter);
-  };
-
-  const handleSubmit = (id: any, data: any) => {
+  const handleSubmit = (id: number, data: DataProps) => {
     url
       .put(`api/declarationstatus/${id}/add_observation/`, data)
       .then(res => {
+        console.log(res);
         server?.toInitialize();
         setNotificationTags(true);
         setTimeout(() => {
@@ -83,11 +82,10 @@ const DeclaratioNConforme = () => {
       .catch(error => console.log(error));
   };
   const handleUpdateSubmit = (
-    id: any,
-    nom_navire_dtci: any,
-    date_mouvement: any,
-    consignataire_dtci: any,
-    observation: any
+    id: string,
+    nom_navire_dtci: string,
+    date_mouvement: string,
+    consignataire_dtci: string
   ) => {
     url
       .put(
@@ -105,6 +103,7 @@ const DeclaratioNConforme = () => {
       )
       .then(res => {
         setNotificationUpdate(true);
+        console.log(res);
         setTimeout(() => {
           server?.showOverlay();
           setNotificationUpdate(0);
@@ -122,7 +121,7 @@ const DeclaratioNConforme = () => {
   };
 
   const Filter = useMemo(() => {
-    return notConform.filter((val: any) =>
+    return notConform.filter((val: DeclarationTypes) =>
       val.soumission_dtci.mouvement_dtci === 'Arrivée'
         ? val.soumission_dtci.eta_dtci.toString().slice(0, 7) === MonthsYears
         : val.soumission_dtci.etd_dtci.toString().slice(0, 7) === MonthsYears
@@ -130,58 +129,35 @@ const DeclaratioNConforme = () => {
   }, [MonthsYears]);
   const Final = MonthsYears === '-' ? notConform : Filter;
   const dataFinal = searchValue
-    ? Final.filter((val: any) =>
+    ? Final.filter((val: DeclarationTypes) =>
         val.soumission_dtci.imo_dtci.toString().includes(searchValue)
       )
     : Final;
 
   const dataFinalChecked = tags
-    ? dataFinal.filter((val: any) => val.observation)
+    ? dataFinal.filter((val: DeclarationTypes) => val.observation)
     : dataFinal;
 
   let FinalData = dataFinalChecked;
   if (portA) {
     FinalData = dataFinalChecked.filter(
-      (val: any) => val.trafic_maritime.port_trafic === 'ABIDJAN'
+      (val: DeclarationTypes) => val.trafic_maritime.port_trafic === 'ABIDJAN'
     );
   } else if (portSP) {
     FinalData = dataFinalChecked.filter(
-      (val: any) => val.trafic_maritime.port_trafic === 'SAN PEDRO'
+      (val: DeclarationTypes) => val.trafic_maritime.port_trafic === 'SAN PEDRO'
     );
   } else {
     console.log('');
   }
 
-  const modifiedData = FinalData.map((item: any, index: number) => ({
-    Id: index,
-    DateDeclaration: item?.soumission_dtci.date_declaration_dtci
-      .split('-')
-      .reverse()
-      .join('-'),
-    Port: item?.soumission_dtci.port_dtci,
-    Imo: item?.soumission_dtci?.imo_dtci,
-    Navire: item?.soumission_dtci?.nom_navire_dtci,
-    Mrn: item?.soumission_dtci?.mrn_dtci,
-    Consignataire: item?.soumission_dtci?.consignataire_dtci,
-    Tonnage: item?.soumission_dtci?.tonnage_facture_dtci,
-    Numero_de_Voyage: item?.soumission_dtci?.numero_voyage_dtci,
-    Mouvement:
-      item?.soumission_dtci?.mouvement_dtci === 'Arrivée'
-        ? 'Arrivée'
-        : 'Depart',
-    Date:
-      item?.soumission_dtci?.mouvement_dtci === 'Arrivée'
-        ? item?.soumission_dtci?.eta_dtci.split('-').reverse().join('-')
-        : item?.soumission_dtci?.etd_dtci.split('-').reverse().join('-'),
-  }));
-
-  const { exportToExcel } = useExportExcel(modifiedData, 'nom declare');
+  const { exportToExcel } = useExportExcel(FinalData, 'nom declare');
 
   const { renderPaginationControls, endIndex, startIndex } =
     usePagination(FinalData);
 
-  const handleChange = (val: any) => {
-    server.showOverlay();
+  const handleChange = (val: DeclarationTypes) => {
+    server?.showOverlay();
     // !data3.observation && AddUpdate();
     setData3({
       ...data3,
@@ -274,8 +250,8 @@ const DeclaratioNConforme = () => {
             type="number"
             placeholder="IMO"
             className=" h-fit w-28 border-b pb-1 text-sm  font-medium outline-none"
-            onChange={(e: any) => {
-              setSearchValue(e.target.value);
+            onChange={event => {
+              setSearchValue(event.target.value);
             }}
           />
           <span className="h-4 border"></span>
@@ -384,7 +360,7 @@ const DeclaratioNConforme = () => {
                     <label htmlFor="" className="font-semibold text-gray-500">
                       Nom DTCI
                     </label>
-                    {user.role === 'analyst' ? (
+                    {user?.role === 'analyst' ? (
                       <input
                         type="text"
                         disabled
@@ -396,10 +372,10 @@ const DeclaratioNConforme = () => {
                         type="text"
                         className=" rounded-sm border border-shadowColors bg-firstColors p-2 text-sm outline-none focus:border-none focus:outline-none focus:ring"
                         value={data3.nonDTCI}
-                        onChange={(e: any) =>
+                        onChange={event =>
                           setData3({
                             ...data3,
-                            nonDTCI: e.target.value,
+                            nonDTCI: event.target.value,
                           })
                         }
                       />
@@ -422,7 +398,7 @@ const DeclaratioNConforme = () => {
                     <label htmlFor="" className="font-semibold text-gray-500">
                       Date DTCI
                     </label>
-                    {user.role === 'analyst' ? (
+                    {user?.role === 'analyst' ? (
                       <input
                         type="text"
                         disabled
@@ -434,10 +410,10 @@ const DeclaratioNConforme = () => {
                         type="text"
                         className=" rounded-sm border border-red-500 bg-firstColors p-2 text-sm outline-none focus:border-none focus:outline-none focus:ring"
                         value={data3.dateDTCI.split('-').reverse().join('-')}
-                        onChange={(e: any) =>
+                        onChange={event =>
                           setData3({
                             ...data3,
-                            dateDTCI: e.target.value
+                            dateDTCI: event.target.value
                               .split('-')
                               .reverse()
                               .join('-'),
@@ -507,10 +483,10 @@ const DeclaratioNConforme = () => {
                     <textarea
                       name="observation"
                       className="h-32 border p-2 outline-none"
-                      onChange={(e: any) =>
+                      onChange={event =>
                         setObservation({
                           ...observation,
-                          [e.target.name]: e.target.value,
+                          [event.target.name]: event.target.value,
                         })
                       }
                     >
@@ -598,8 +574,7 @@ const DeclaratioNConforme = () => {
                           data3.idSoumission,
                           data3.nonDTCI,
                           data3.dateDTCI.split('-').reverse().join('-'),
-                          data3.consignataireDTCI,
-                          data3.observation
+                          data3.consignataireDTCI
                         )
                       }
                     >
@@ -616,7 +591,7 @@ const DeclaratioNConforme = () => {
                 width="1.5em"
                 height="1.5em"
                 className="text-grayBlack"
-                onClick={() => server.showOverlay()}
+                onClick={() => server?.showOverlay()}
               />
             </button>
           </div>
