@@ -5,14 +5,14 @@ type Context = {
 };
 const FilterContext = createContext<Context | null>(null);
 
-const initialState = [];
-const action = {
-  addMonths: 'AddMonths',
-  addYear: 'addYear',
-  addImo: 'AddMonths',
-  addPort: 'AddPort',
-  addUpdate: 'addUpdate',
-};
+// const initialState = [];
+// const action = {
+//   addMonths: 'AddMonths',
+//   addYear: 'addYear',
+//   addImo: 'AddMonths',
+//   addPort: 'AddPort',
+//   addUpdate: 'addUpdate',
+// };
 
 type ChildrenProps = {
   children: ReactNode;

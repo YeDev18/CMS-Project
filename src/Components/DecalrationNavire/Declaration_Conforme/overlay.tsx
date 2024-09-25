@@ -1,28 +1,9 @@
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
-import { FC } from 'react';
 
-type DataProps = {
-  data: {
-    idInstance: string;
-    nonDTCI: string;
-    imoDTCI: string;
-    consignataireDTCI: string;
-    mouvementDTCI: string;
-    dateDTCI: string;
-    dateDeclaration: string;
-    port: string;
-    typeNavire: string;
-    mrn: string;
-    numVoyage: string;
-    consignataire: string;
-    tonage: string;
-    observation: string;
-    dateTm: string;
-  };
-};
+import { DataProps } from '@/Types';
 
-const Overlay: FC<DataProps> = ({ data }) => {
+const Overlay = ({ data }: DataProps) => {
   const server = useServer();
   return (
     <div className="absolute inset-y-2/4 z-50 h-fit w-full animate-fadIn-up items-center justify-center ">

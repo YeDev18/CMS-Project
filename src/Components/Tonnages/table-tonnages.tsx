@@ -1,11 +1,12 @@
+import { TablesPropsTonnes, TonnesTypes } from '@/Types';
 import { Icon } from '@iconify/react';
 import { headerTableTonnes } from '../Data';
-const Table = ({ data, label }: any) => {
+const Table = ({ data, label }: TablesPropsTonnes) => {
   return (
     <table className="w-full">
       <thead>
-        <tr className="gridArray8 shadow-testColors1 sticky top-0 w-full rounded-md bg-slate-50 shadow-sm ">
-          {headerTableTonnes.map((item: any, index: any) => {
+        <tr className="gridArray8 sticky top-0 w-full rounded-md bg-slate-50 shadow-sm ">
+          {headerTableTonnes.map((item, index) => {
             return (
               <th
                 key={index}
@@ -17,7 +18,7 @@ const Table = ({ data, label }: any) => {
           })}
         </tr>
       </thead>
-      {data?.map((val: any, index: number) => {
+      {data?.map((val: TonnesTypes, index: number) => {
         return (
           <tr
             key={index}
@@ -47,7 +48,7 @@ const Table = ({ data, label }: any) => {
               {parseInt(val.difference_tonnage) || 0}
             </td>
 
-            <td className="align-center headerThird flex text-sm">
+            <td className="headerThird flex text-sm">
               {label == 'Conforme' ? (
                 <>
                   {val.statut === 'Tonnage Incorrect' ? (

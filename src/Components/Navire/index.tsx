@@ -1,8 +1,8 @@
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import React, { useState } from 'react';
-import * as XLSX from 'xlsx';
 import { headersNavire } from '../Data';
+import useExportExcel from '../ui/export-excel';
 import usePagination from '../ui/pagination';
 type BoardProps = {
   imo: string;
@@ -32,17 +32,7 @@ const Navire = () => {
 
   const FinalPagination = FinalData.slice(startIndex, endIndex);
 
-  const exportToExcel = () => {
-    // Créer une nouvelle feuille de calcul
-    const ws = XLSX.utils.json_to_sheet(TrueData);
-    // Créer un nouveau classeur
-    const wb = XLSX.utils.book_new();
-    // Ajouter la feuille de calcul au classeur
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    // Générer et télécharger le fichier Excel
-    XLSX.writeFile(wb, `Navires.xlsx`);
-    console.log('vit');
-  };
+  const { exportToExcel } = useExportExcel(TrueData, 'Navire');
 
   return (
     <div className=" flex w-full flex-col gap-6 text-grayBlack ">

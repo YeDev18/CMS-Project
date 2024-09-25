@@ -1,12 +1,28 @@
 import url from '@/api';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-type;
+
+type Data1Props = {
+  soumission: {
+    id: string;
+  };
+  trafic_maritime: {
+    date_trafic: string;
+    nom_navire_trafic: string;
+    consignataire_trafic: string;
+  };
+};
+
+type Data2Props = {
+  nom_navire_dtci: string;
+  date_mouvement: string;
+  consignataire_dtci: string;
+};
 const Update = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [data1, setData1] = useState<any>([]);
-  const [data2, setData2] = useState({
+  const [data1, setData1] = useState<Data1Props>();
+  const [data2, setData2] = useState<Data2Props>({
     nom_navire_dtci: '',
     date_mouvement: '',
     consignataire_dtci: '',
@@ -25,6 +41,7 @@ const Update = () => {
       .put(`api/update-soumission-dtci-and-status/${id2}/`, data2)
       .then(res => {
         alert('Data Suucess');
+        console.log(res);
         navigate('/nom_conforme');
       })
       .catch(error => console.log(error));

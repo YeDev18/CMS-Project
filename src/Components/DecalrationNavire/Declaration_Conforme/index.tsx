@@ -2,6 +2,7 @@ import Overlay from '@/Components/DecalrationNavire/Declaration_Conforme/overlay
 import useExportExcel from '@/Components/ui/export-excel';
 import usePagination from '@/Components/ui/pagination';
 import { useServer } from '@/Context/ServerProvider';
+import { DeclarationTypes } from '@/Types';
 import { Icon } from '@iconify/react';
 import React, { useMemo, useState } from 'react';
 import { AllMonths, Year } from '../../Data';
@@ -10,10 +11,9 @@ import Table from '../table-compare';
 
 const DeclarationConforme = () => {
   const server = useServer();
-  const overlay = useServer().overlay;
-  const conform = useServer().conform;
-
-  const Data3: [] = [];
+  const overlay = useServer()?.overlay;
+  const conform = useServer()?.conform || [];
+  console.log(conform);
 
   const [formValue, setFormValue] = useState({
     months: '',
@@ -35,7 +35,7 @@ const DeclarationConforme = () => {
     mrn: '',
     numVoyage: '',
     consignataire: '',
-    tonage: '',
+    tonnage: '',
     observation: '',
     dateTm: '',
   });
@@ -55,8 +55,8 @@ const DeclarationConforme = () => {
 
     //     setSearchValue('dc');
   };
-  const handleChange = (val: []) => {
-    server.showOverlay();
+  const handleChange = (val: DeclarationTypes) => {
+    server?.showOverlay();
     setDate3({
       ...data3,
       idInstance: val.id,
@@ -75,7 +75,6 @@ const DeclarationConforme = () => {
       mrn: val?.soumission_dtci?.mrn_dtci,
       numVoyage: val?.soumission_dtci?.numero_voyage_dtci,
       consignataire: val?.soumission_dtci?.consignataire_dtci,
-      tonage: val?.soumission_dtci?.tonage_facture_dtci,
       dateDTCI:
         val.soumission_dtci.mouvement_dtci === 'Arrivée'
           ? val.soumission_dtci.eta_dtci.split('-').reverse().join('-')
@@ -99,7 +98,7 @@ const DeclarationConforme = () => {
   };
 
   const Filter = useMemo(() => {
-    return conform.filter((val: any) =>
+    return conform?.filter((val: DeclarationTypes) =>
       val.soumission_dtci.mouvement_dtci === 'Arrivée'
         ? val.soumission_dtci.eta_dtci.toString().slice(0, 7) === MonthsYears
         : val.soumission_dtci.etd_dtci.toString().slice(0, 7) === MonthsYears
@@ -107,51 +106,25 @@ const DeclarationConforme = () => {
   }, [MonthsYears]);
   const Final = MonthsYears === '-' ? conform : Filter;
   const dataFinal = searchValue
-    ? Final.filter((val: any) =>
+    ? Final.filter((val: DeclarationTypes) =>
         val.soumission_dtci.imo_dtci.toString().includes(searchValue)
       )
     : Final;
   const dataFinalChecked = update
-    ? dataFinal.filter((val: any) => val.observation)
+    ? dataFinal.filter((val: DeclarationTypes) => val.observation)
     : dataFinal;
 
   let FinalData = dataFinalChecked;
   if (portA) {
     FinalData = dataFinalChecked.filter(
-      (val: any) => val.trafic_maritime.port_trafic === 'ABIDJAN'
+      (val: DeclarationTypes) => val.trafic_maritime.port_trafic === 'ABIDJAN'
     );
   } else if (portSP) {
     FinalData = dataFinalChecked.filter(
-      (val: any) => val.trafic_maritime.port_trafic === 'SAN PEDRO'
+      (val: DeclarationTypes) => val.trafic_maritime.port_trafic === 'SAN PEDRO'
     );
   } else {
-    ('');
-  }
-
-  const modifiedData = FinalData.map((item: any, index: number) => ({
-    Id: index,
-    DateDeclaration: item?.soumission_dtci.date_declaration_dtci
-      .split('-')
-      .reverse()
-      .join('-'),
-    Port: item?.soumission_dtci.port_dtci,
-    Imo: item?.soumission_dtci?.imo_dtci,
-    Navire: item?.soumission_dtci?.nom_navire_dtci,
-    Mrn: item?.soumission_dtci?.mrn_dtci,
-    Consignataire: item?.soumission_dtci?.consignataire_dtci,
-    Tonnage: item?.soumission_dtci?.tonnage_facture_dtci,
-    Numero_de_Voyage: item?.soumission_dtci?.numero_voyage_dtci,
-    Mouvement:
-      item?.soumission_dtci?.mouvement_dtci === 'Arrivée'
-        ? 'Arrivée'
-        : 'Depart',
-    Date:
-      item?.soumission_dtci?.mouvement_dtci === 'Arrivée'
-        ? item?.soumission_dtci?.eta_dtci.split('-').reverse().join('-')
-        : item?.soumission_dtci?.etd_dtci.split('-').reverse().join('-'),
-  }));
-  for (let index = 1; index < modifiedData.length; index++) {
-    Data3.push(modifiedData[index]);
+    <></>;
   }
 
   const { exportToExcel } = useExportExcel(FinalData, 'Conforme');

@@ -8,11 +8,16 @@ type Context = {
   name: string;
   email: string;
   role: string;
-  user: number;
+  user: string;
   success: boolean;
   error: boolean;
-  RegisterAction: Function;
-  LoginAction: Function;
+  RegisterAction: (
+    name: Register,
+    email: Register,
+    password: Register,
+    role: Register
+  ) => Promise<void>;
+  LoginAction: (email: Register, password: Register) => Promise<void>;
   logout: () => void;
 };
 type Props = {
@@ -33,17 +38,17 @@ export const Viva = () => {
 };
 
 const AuthProvider: FC<Props> = ({ children }) => {
-  const [name, setName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [role, setRole] = useState<string>('');
-  const [error, setError] = useState<boolean>(false);
-  const [success, setSuccess] = useState<boolean>(false);
-  const [user, setUser] = useState<any>();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [role, setRole] = useState('');
+  const [error, setError] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [user, setUser] = useState('');
   const server = useServer();
   const [token, setToken] = useState(sessionStorage.getItem('site') || '');
   const navigate = useNavigate();
-  function getCookie(name: any) {
+  function getCookie(name: string) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
       const cookies = document.cookie.split(';');
@@ -87,7 +92,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
       setRole(response.data.role);
       setToken(response.data.token);
       navigate('/');
-    } catch (err: any) {
+    } catch (error) {
       console.log(error);
     }
   };
@@ -114,9 +119,9 @@ const AuthProvider: FC<Props> = ({ children }) => {
       server?.showUserInitialize();
 
       navigate('/accueil');
-      const decode: any = jwtDecode(response.data.jwt);
+      const decode: { id: string } = jwtDecode(response.data.jwt);
       setUser(decode.id);
-    } catch (err: any) {
+    } catch (error: unknown) {
       setError(true);
       setTimeout(() => {
         setError(false);
@@ -124,12 +129,12 @@ const AuthProvider: FC<Props> = ({ children }) => {
       setTimeout(() => {
         sessionStorage.removeItem('site');
       }, 36000);
-      console.log(err);
+      console.log(error);
     }
   };
   const logout = async () => {
     try {
-      const response = await url.post(
+      await url.post(
         '/api/logout',
         {},
 

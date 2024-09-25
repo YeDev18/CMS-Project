@@ -22,7 +22,7 @@ type Context = {
   notConformTonnages: [];
   undeclaredTonnages: [];
   tonnages: [];
-  csrfToken: string;
+  csrfToken: string | null;
   getCsrf: string | null;
   pathname: string;
   initialize: boolean;
@@ -58,7 +58,7 @@ type Context = {
 type Props = {
   children: ReactNode;
 };
-const SeverContext = createContext<Context | any>(null);
+const SeverContext = createContext<Context | null>(null);
 
 const ServerProvider: FC<Props> = ({ children }) => {
   const token = useAuth()?.token;
@@ -81,13 +81,13 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const [error2, setError2] = useState<boolean>(false);
   const [success1, setSuccess1] = useState<boolean>(false);
   const [success2, setSuccess2] = useState<boolean>(false);
-  const [success, setSuccess] = useState<boolean | 0>(0);
-  const [loading, setLoading] = useState<boolean | 0>(0);
-  const [notification, setNotification] = useState<boolean | 0>(0);
-  const [setting, setSetting] = useState<boolean | 0>(false);
+  const [success, setSuccess] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [notification, setNotification] = useState<boolean>(false);
+  const [setting, setSetting] = useState<boolean>(false);
   const [responsive, setResponsive] = useState<boolean>(false);
 
-  function getCookie(name: any) {
+  function getCookie(name: string) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
       const cookies = document.cookie.split(';');
@@ -119,16 +119,12 @@ const ServerProvider: FC<Props> = ({ children }) => {
       setConform(declareConforme);
       setUndeclared(undeclared);
       setNotConform(declareNConforme);
-    } catch (error) {
-      // console.error('Failed to fetch data:', error);
+    } catch {
+      console.error('Failed to fetch data:');
     }
     return routes;
   };
-  const {
-    data: boardData,
-    isFetching,
-    isError,
-  } = useQuery({
+  const { isFetching, isError } = useQuery({
     queryKey: ['board'],
     queryFn: get_declaration_board,
     gcTime: 0,
@@ -160,8 +156,8 @@ const ServerProvider: FC<Props> = ({ children }) => {
       setConformTonnages(conformTonnages);
       setNotConformTonnages(notConformTonnages);
       setUndeclaredTonnages(undeclaredTonnages);
-    } catch (error) {
-      // console.error('Failed to fetch data:', error);
+    } catch {
+      console.error('Failed to fetch data');
     }
     return routes;
   };
@@ -186,7 +182,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
       const [consignataire, navire] = responses.map(response => response.data);
       setNavire(navire);
       setConsignataire(consignataire);
-    } catch (error) {
+    } catch {
       console.log('Les Eurreur');
     }
     return routes;
@@ -304,18 +300,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const showResponsive = () => {
     setResponsive(!responsive);
   };
-  const toInitialize = () => {
-    setError1(false),
-      setError2(false),
-      setSuccess1(false),
-      setSuccess2(false),
-      setError2(false),
-      setSuccess(0),
-      setLoading(0),
-      setInitialize(!initialize);
-    // localStorage.setItem('csrf', crsf?.csrfToken);
-    token;
-  };
+  const toInitialize = () => {};
 
   // useEffect(() => {
   //   getData();

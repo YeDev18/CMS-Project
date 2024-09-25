@@ -1,4 +1,5 @@
 import { useServer } from '@/Context/ServerProvider';
+import { TonnesTypes } from '@/Types.tsx';
 import { Icon } from '@iconify/react';
 import { useMemo, useState } from 'react';
 import { AllMonths, Year } from '../../Data.tsx';
@@ -18,20 +19,20 @@ const T_Conforme = () => {
   });
   // <Viva />;s
   console.log(server);
-  const [correct, setCorrect] = useState<boolean>(false);
-  const [incorrect, setIncorrect] = useState<boolean>(false);
-  const [searchValue, setSearchValue] = useState();
+  // const [correct, setCorrect] = useState<boolean>(false);
+  // const [incorrect, setIncorrect] = useState<boolean>(false);
+  const [searchValue, setSearchValue] = useState<string>();
 
-  const handleChangeCorrect = () => {
-    setCorrect(!correct);
-    setIncorrect(false);
-    server?.toInitialize();
-  };
-  const handleChangeIncorrect = () => {
-    setIncorrect(!incorrect);
-    setCorrect(false);
-    server?.toInitialize();
-  };
+  // const handleChangeCorrect = () => {
+  //   setCorrect(!correct);
+  //   setIncorrect(false);
+  //   server?.toInitialize();
+  // };
+  // const handleChangeIncorrect = () => {
+  //   setIncorrect(!incorrect);
+  //   setCorrect(false);
+  //   server?.toInitialize();
+  // };
 
   const MonthsYears = formValue.years + '-' + formValue.months;
 
@@ -42,7 +43,7 @@ const T_Conforme = () => {
   };
 
   const Filter = useMemo(() => {
-    return tonnes.filter((val: any) =>
+    return tonnes.filter((val: TonnesTypes) =>
       val.tonnage_dt.mouvement_dt_tonnage === 'Arrivée'
         ? val.tonnage_dt.eta_dt_tonnage.toString().slice(0, 7) === MonthsYears
         : val.tonnage_dt.etd_dt_tonnage.toString().slice(0, 7) === MonthsYears
@@ -50,23 +51,23 @@ const T_Conforme = () => {
   }, [MonthsYears]);
   const Final = MonthsYears === '-' ? tonnes : Filter;
   const dataFinal = searchValue
-    ? Final.filter((val: any) =>
+    ? Final.filter((val: TonnesTypes) =>
         val.tonnage_dt.imo_dt_tonnage.toString().includes(searchValue)
       )
     : Final;
 
-  let FinalDataCheck = Final;
-  if (correct) {
-    FinalDataCheck = Final.filter(
-      (val: any) => val.statut === 'Tonnage Correct'
-    );
-  } else if (incorrect) {
-    FinalDataCheck = Final.filter(
-      (val: any) => val.statut === 'Tonnage Incorrect'
-    );
-  } else {
-    console.log('');
-  }
+  const FinalDataCheck = dataFinal;
+  // if (correct) {
+  //   FinalDataCheck = Final.filter(
+  //     (val: TonnesTypes) => val.statut === 'Tonnage Correct'
+  //   );
+  // } else if (incorrect) {
+  //   FinalDataCheck = Final.filter(
+  //     (val: TonnesTypes) => val.statut === 'Tonnage Incorrect'
+  //   );
+  // } else {
+  //   console.log('');
+  // }
   const { renderPaginationControls, startIndex, endIndex } =
     usePagination(FinalDataCheck);
   const FinalPagination = tonnes.slice(startIndex, endIndex);
@@ -109,7 +110,7 @@ const T_Conforme = () => {
             Filtre
           </button>
           {showFilter ? (
-            <div className="z-3 absolute top-12 flex w-80 flex-col gap-4 bg-white p-4 shadow">
+            <div className="absolute top-12 z-10 flex w-80 flex-col gap-4 bg-white p-4 shadow">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold">Filtre</h2>
                 <button>
@@ -173,8 +174,8 @@ const T_Conforme = () => {
                   placeholder="IMO"
                   value={searchValue}
                   className="w-full rounded-sm border  border-gray-700/10 bg-firstColors bg-none p-2 outline-none "
-                  onChange={(e: any) => {
-                    setSearchValue(e.target.value);
+                  onChange={event => {
+                    setSearchValue(event.target.value);
                   }}
                 />
               </div>
