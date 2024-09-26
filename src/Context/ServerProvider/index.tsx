@@ -1,4 +1,10 @@
 import url from '@/api';
+import {
+  BoardProps,
+  ConsigneeProps,
+  DeclarationTypes,
+  TonnesTypes,
+} from '@/Types';
 import { useQuery } from '@tanstack/react-query';
 import {
   createContext,
@@ -13,15 +19,15 @@ import { useAuth } from '../AuthProvider';
 
 type Context = {
   user: [];
-  navire: [];
-  consignataire: [];
-  undeclared: [];
-  notConform: [];
-  conform: [];
-  conformTonnages: [];
-  notConformTonnages: [];
-  undeclaredTonnages: [];
-  tonnages: [];
+  navire: BoardProps[];
+  consignataire: ConsigneeProps[];
+  undeclared: DeclarationTypes[];
+  notConform: DeclarationTypes[];
+  conform: DeclarationTypes[];
+  conformTonnages: TonnesTypes[];
+  notConformTonnages: TonnesTypes[];
+  undeclaredTonnages: TonnesTypes[];
+  tonnages: TonnesTypes[];
   csrfToken: string | null;
   getCsrf: string | null;
   pathname: string;
@@ -29,6 +35,10 @@ type Context = {
   overlay: boolean;
   userInitialize: boolean;
   error: boolean;
+  success1: boolean;
+  success2: boolean;
+  error1: boolean;
+  error2: boolean;
   success: boolean | 0;
   loading: boolean | 0;
   notification: boolean | 0;
@@ -203,45 +213,6 @@ const ServerProvider: FC<Props> = ({ children }) => {
     console.log('Data Navires ');
   }
 
-  // const getData = () => {
-  //   const routes = [
-  //     'api/consignataire-dtci',
-  //     'api/navire-soumission-dtci',
-  //     'api/non-declare',
-  //     'api/declare-non-conforme',
-  //     'api/declare-conforme',
-  //     'api/calcul-difference-tonnage/',
-  //     'api/declare-conforme-tonnage',
-  //     'api/declare-non-conforme-tonnage',
-  //     'api/non-declare-tonnage',
-  //     'api/get-csrf-token/',
-  //   ];
-  //   axios.all(routes.map(route => url.get(route))).then(
-  //     axios.spread(
-  //       (
-  //         { data: consignataire },
-  //         { data: navire },
-  //         { data: undeclared },
-  //         { data: declareNConforme },
-  //         { data: declareConforme },
-  //         { data: tonnages },
-  //         { data: conformTonnages },
-  //         { data: notConformTonnages },
-  //         { data: undeclaredTonnages }
-  //       ) => {
-  //         setNavire(navire);
-  //         setConsignataire(consignataire);
-  //         setConform(declareConforme);
-  //         setUndeclared(undeclared);
-  //         setNotConform(declareNConforme);
-  //         setTonnages(tonnages);
-  //         setConformTonnages(conformTonnages);
-  //         setNotConformTonnages(notConformTonnages);
-  //         setUndeclaredTonnages(undeclaredTonnages);
-  //       }
-  //     )
-  //   );
-  // };
   const showSetting = () => {
     setSetting(true);
   };
@@ -377,4 +348,46 @@ const ServerProvider: FC<Props> = ({ children }) => {
 export default ServerProvider;
 export const useServer = () => {
   return useContext(SeverContext);
+};
+
+export const useConsigneeBoard = () => {
+  const { consignataire, navire } = useServer() ?? {
+    consignataire: [],
+    navire: [],
+  };
+  if (!consignataire && !navire) {
+    throw new Error('useConsigneeBoard must be used within a Provider');
+  }
+  return { consignataire, navire };
+};
+
+export const useDeclarationBoard = () => {
+  const { conform, notConform, undeclared } = useServer() ?? {
+    conform: [],
+    notConform: [],
+    undeclared: [],
+  };
+  if (!conform && !notConform && !undeclared) {
+    throw new Error('useConsigneeBoard must be used within a Provider');
+  }
+  return { conform, notConform, undeclared };
+};
+
+export const useTonnesBoard = () => {
+  const { conformTonnages, notConformTonnages, undeclaredTonnages, tonnages } =
+    useServer() ?? {
+      tonnages: [],
+      conformTonnages: [],
+      notConformTonnages: [],
+      undeclaredTonnages: [],
+    };
+  if (
+    !conformTonnages &&
+    !notConformTonnages &&
+    !undeclaredTonnages &&
+    !tonnages
+  ) {
+    throw new Error('useTonnesBoard must be used within a Provider');
+  }
+  return { conformTonnages, notConformTonnages, undeclaredTonnages, tonnages };
 };

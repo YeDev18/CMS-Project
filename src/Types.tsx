@@ -1,3 +1,7 @@
+export type UserProps = {
+  id: string;
+};
+
 export type TonnesTypes = {
   data_port: {
     Consignataire_port: string;
@@ -114,4 +118,17 @@ export type DataProps = {
     observation: string;
     dateTm: string;
   };
+};
+
+export type ConsigneeProps = { id: number; nom: string };
+
+export type BoardProps = { id: number; imo: string; nom: string };
+
+export type ExcelDataProps = {
+  Id: number;
+  Imo: number;
+  Navire: string;
+  Mouvement: string;
+  Date: string;
+  Port: string;
 };

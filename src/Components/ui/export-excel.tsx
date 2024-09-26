@@ -1,5 +1,14 @@
+import {
+  ConsigneeProps,
+  DeclarationTypes,
+  ExcelDataProps,
+  TonnesTypes,
+} from '@/Types';
 import * as XLSX from 'xlsx';
-const useExportExcel = (data: [], label: string) => {
+const useExportExcel = (
+  data: (DeclarationTypes | ConsigneeProps | TonnesTypes | ExcelDataProps)[],
+  label: string
+) => {
   const exportToExcel = () => {
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();

@@ -14,7 +14,7 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   const [selectedFile1, setSelectedFile1] = useState<any>(null);
   const [selectedFile2, setSelectedFile2] = useState<any>(null);
   const server = useServer();
-  const csrf = server?.csrf?.csrfToken;
+  const csrf = server?.csrfToken;
   console.log(csrf);
   function getCookie(name: any) {
     let cookieValue = null;

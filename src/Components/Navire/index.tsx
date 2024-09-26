@@ -1,4 +1,4 @@
-import { useServer } from '@/Context/ServerProvider';
+import { useConsigneeBoard } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import React, { useState } from 'react';
 import { headersNavire } from '../Data';
@@ -10,21 +10,16 @@ type BoardProps = {
 };
 
 const Navire = () => {
-  const Navire = useServer().navire;
-  // const summ = useFilter()?.sum;
-  // console.log(summ);
+  const { navire } = useConsigneeBoard();
+  let Board = navire;
 
   const [searchValue, setSearchValue] = useState<string>();
   const [searchNavire, setSearchNavire] = useState<string>();
   const TrueData = searchValue
-    ? Navire.filter((val: BoardProps) =>
-        val.imo.toString().includes(searchValue)
-      )
-    : Navire;
+    ? Board.filter(val => val.imo.toString().includes(searchValue))
+    : Board;
   const FinalData = searchNavire
-    ? TrueData.filter((val: BoardProps) =>
-        val.nom.toString().includes(searchNavire)
-      )
+    ? TrueData.filter(val => val.nom.toString().includes(searchNavire))
     : TrueData;
 
   const { renderPaginationControls, startIndex, endIndex } =

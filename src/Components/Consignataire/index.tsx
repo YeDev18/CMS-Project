@@ -1,37 +1,29 @@
-import { useServer } from '@/Context/ServerProvider';
+import { useConsigneeBoard } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
 import { headersConsignataires } from '../Data';
 import useExportExcel from '../ui/export-excel';
 import usePagination from '../ui/pagination';
 
-type ConsigneeProps = {
-  item: number;
-  imo: string;
-  nom: string;
-};
 const Consignataire = () => {
-  const data = useServer().consignataire;
+  const { consignataire } = useConsigneeBoard();
 
-  const Consignataire = data.map((item: ConsigneeProps, index: number) => ({
+  const Consignataire = consignataire.map((item, index) => ({
     id: index + 1,
-    imo: item.imo,
     nom: item.nom,
   }));
 
   const [searchValue, setSearchValue] = useState<string>();
 
   const TrueData = searchValue
-    ? Consignataire.filter((val: ConsigneeProps) =>
-        val.nom.includes(searchValue)
-      )
+    ? Consignataire.filter(val => val.nom.includes(searchValue))
     : Consignataire;
 
   const { renderPaginationControls, startIndex, endIndex } =
     usePagination(TrueData);
   const FinalPagination = TrueData.slice(startIndex, endIndex);
 
-  const { exportToExcel } = useExportExcel(FinalPagination, 'Consignataire');
+  const { exportToExcel } = useExportExcel(TrueData, 'Consignataire');
 
   return (
     <div className=" flex w-full flex-col justify-between gap-6 text-grayBlack ">
@@ -46,7 +38,7 @@ const Consignataire = () => {
             className="mr-2"
           />
           Consignatires :{' '}
-          <span className="pl-1 font-semibold"> {data.length}</span>
+          <span className="pl-1 font-semibold"> {consignataire.length}</span>
         </p>
         <div className="inline-flex items-center gap-4 rounded-md p-2 shadow-sm shadow-slate-200">
           <label htmlFor="">
@@ -93,7 +85,7 @@ const Consignataire = () => {
           </tr>
         </thead>
         <tbody>
-          {FinalPagination.map((val: ConsigneeProps, index: number) => {
+          {FinalPagination.map((val, index) => {
             return (
               <tr
                 key={index}

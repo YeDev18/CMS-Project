@@ -1,106 +1,95 @@
 import useExportExcel from '@/Components/ui/export-excel';
+import useFilter from '@/Components/ui/FilterTonnage';
 import usePagination from '@/Components/ui/pagination';
-import { useServer } from '@/Context/ServerProvider';
+import { useTonnesBoard } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
-import { AllMonths, Year } from '../../Data';
+
+import { useState } from 'react';
 import Libelle from '../../ui/Libelle';
 import Table from '../table-tonnages';
 const T_NonConforme = () => {
-  const server = useServer();
-  const tonnesNc = server?.notConformTonnages;
-  console.log(tonnesNc);
+  const { notConformTonnages } = useTonnesBoard();
+  let NotConformTonnages = notConformTonnages;
+  console.log(NotConformTonnages);
+  const {
+    FinalData,
+    MonthsYears,
+    searchValue,
+    update,
+    portSP,
+    portA,
+    filterComponent,
+  } = useFilter(NotConformTonnages, 'TonnagesNC');
 
-  const { exportToExcel } = useExportExcel(tonnesNc, 'Tonnages Non conforme');
+  const [showFilter, setShowFilter] = useState<boolean>(false);
+
+  const handleShowFilter = () => {
+    setShowFilter(!showFilter);
+  };
+
+  const { exportToExcel } = useExportExcel(FinalData, 'Tonnages Non conforme');
 
   const { renderPaginationControls, endIndex, startIndex } =
-    usePagination(tonnesNc);
-  const FinalPagination = tonnesNc.slice(startIndex, endIndex);
+    usePagination(FinalData);
+  const FinalPagination = FinalData.slice(startIndex, endIndex);
   return (
     <div className="relative flex size-full flex-col gap-6 ">
-      <div className="flex w-full flex-wrap justify-start gap-2">
-        <Libelle
-          icon="lucide:anvil"
-          libelle="Nom comfomes"
-          color="#F59069"
-          number={tonnesNc.length}
-        />
-        <div className="inline-flex h-10 w-fit items-center gap-4 rounded-md p-2 shadow-sm shadow-slate-200">
-          <form action="" className="flex items-center justify-center">
-            <label htmlFor="">
+      <div className="relative flex w-full justify-between gap-2 gap-y-4">
+        <div className="flex gap-4">
+          <Libelle
+            icon="lucide:anvil"
+            libelle="Nom comfomes"
+            color="#F59069"
+            number={NotConformTonnages.length}
+          />
+          <button
+            className="inline-flex  h-10 items-center whitespace-nowrap rounded-md bg-[#0e5c2f] p-2 text-sm text-firstColors shadow-sm shadow-slate-200 "
+            onClick={() => exportToExcel()}
+          >
+            <Icon
+              icon="material-symbols:download"
+              width="1.2em"
+              height="1.2em"
+              style={{ color: 'rgb(255, 255, 255)' }}
+              className="mr-2"
+            />
+            Export en csv
+          </button>
+          {!(MonthsYears === '-') ||
+          searchValue ||
+          update ||
+          portSP ||
+          portA ? (
+            <div className="inline-flex h-10  items-center gap-1 whitespace-nowrap rounded-md bg-[#2563eb] p-2 text-firstColors shadow-sm shadow-slate-200 ">
               <Icon
-                icon="lucide:calendar-days"
+                icon="charm:notes-cross"
                 width="1.2em"
                 height="1.2em"
-                style={{ color: '#0a0a0a' }}
                 className="mr-2"
               />
-            </label>
-            <div className="size-fit whitespace-nowrap rounded-sm border ">
-              <select
-                name="months"
-                id=""
-                className="border-none bg-firstColors bg-none"
-                // onChange={e => {
-                //   setFormValue({
-                //     ...formValue,
-                //     [e.target.name]: e.target.value,
-                //   });
-                // }}
-              >
-                {AllMonths.map((month, index) => (
-                  <option key={index} value={month.value}>
-                    {month.name}
-                  </option>
-                ))}
-              </select>
-              <select
-                name="years"
-                id=""
-                className="border-none bg-firstColors bg-none"
-                // onChange={e => {
-                //   setFormValue({
-                //     ...formValue,
-                //     [e.target.name]: e.target.value,
-                //   });
-                // }}
-              >
-                {Year.map((year, index) => (
-                  <option key={index} value={year.value}>
-                    {year.year}
-                  </option>
-                ))}
-              </select>
+              Quantite : {FinalData.length}
             </div>
-          </form>
+          ) : (
+            ''
+          )}
         </div>
-        <div className="inline-flex h-10 items-center gap-2 rounded-md p-2 shadow-sm shadow-slate-200 ">
-          <label htmlFor="">
-            <Icon icon="mdi:search" width="1.1em" height="1.1em" />
-          </label>
-          <input
-            type="number"
-            placeholder="IMO"
-            // value={searchValue}
-            className=" h-fit w-28 border-b pb-1 text-sm  font-medium outline-none"
-            // onChange={event => {
-            //   // setSearchValue(e.target.value);
-            // }}
-          />
+        <div className="static z-10  flex w-full justify-end ">
+          <button
+            className="inline-flex  h-10 items-center whitespace-nowrap rounded-md bg-[#191114] p-2 text-sm  font-semibold  text-firstColors shadow-sm shadow-slate-200 "
+            onClick={handleShowFilter}
+          >
+            <Icon
+              icon="gridicons:filter"
+              width="1.2em"
+              height="1.2em"
+              className="mr-2"
+            />
+            Filtre
+          </button>
+          {showFilter ? filterComponent() : ''}
         </div>
-        <button
-          className="inline-flex  h-10 items-center whitespace-nowrap rounded-md bg-[#0e5c2f] p-2 text-sm text-firstColors shadow-sm shadow-slate-200 "
-          onClick={() => exportToExcel()}
-        >
-          <Icon
-            icon="material-symbols:download"
-            width="1.2em"
-            height="1.2em"
-            style={{ color: 'rgb(255, 255, 255)' }}
-            className="mr-2"
-          />
-          Export en csv
-        </button>
       </div>
+
       <div className="relative size-full overflow-x-auto  pr-2">
         <Table data={FinalPagination} label="Non-comforme" />
       </div>

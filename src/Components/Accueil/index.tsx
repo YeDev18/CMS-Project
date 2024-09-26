@@ -58,7 +58,7 @@ const Accueil = () => {
               icon1="lucide:ship"
               icon2="mingcute:arrow-up-fill"
               name="Navires"
-              number={navire?.length}
+              number={navire?.length || 0}
               route="/navire"
             />
             <Component1
@@ -66,7 +66,7 @@ const Accueil = () => {
               icon1="lucide:contact"
               icon2="mingcute:arrow-up-fill"
               name="Consignataires"
-              number={consignataire?.length}
+              number={consignataire?.length || 0}
               route="/consignataire"
             />
           </div>

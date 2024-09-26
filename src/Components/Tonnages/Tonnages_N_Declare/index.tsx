@@ -1,104 +1,97 @@
-import { useServer } from '@/Context/ServerProvider';
+import useExportExcel from '@/Components/ui/export-excel';
+import useFilter from '@/Components/ui/FilterDeclarative';
+import usePagination from '@/Components/ui/pagination';
+import { useTonnesBoard } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
-import * as XLSX from 'xlsx';
-import { AllMonths, headerTable, Year } from '../../Data';
+import { useState } from 'react';
+import { headerTable } from '../../Data';
 import Libelle from '../../ui/Libelle';
 const T_NonDeclare = () => {
-  const server = useServer();
-  const tonnes = server?.tonnages;
-  const tonnesDC = server?.undeclaredTonnages;
-  const exportToExcel = () => {
-    const ws = XLSX.utils.json_to_sheet(tonnesDC);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, `Tonnages Non conforme.xlsx`);
+  const { undeclaredTonnages } = useTonnesBoard();
+  let UndeclaredTonnages = undeclaredTonnages;
+
+  const {
+    FinalData,
+    MonthsYears,
+    searchValue,
+    update,
+    portSP,
+    portA,
+    filterComponent,
+  } = useFilter(UndeclaredTonnages, 'TonnagesND');
+
+  const [showFilter, setShowFilter] = useState<boolean>(false);
+
+  const handleShowFilter = () => {
+    setShowFilter(!showFilter);
   };
-  console.log(tonnesDC);
+
+  const { exportToExcel } = useExportExcel(
+    UndeclaredTonnages,
+    'Tonnages Non Declare'
+  );
+
+  const { renderPaginationControls, endIndex, startIndex } =
+    usePagination(FinalData);
+  const FinalPagination = FinalData.slice(startIndex, endIndex);
+
   return (
     <div className="relative flex size-full flex-col gap-6 ">
-      <div className="flex w-full flex-wrap justify-start gap-2">
-        <Libelle
-          icon="lucide:anvil"
-          libelle="Non declarés"
-          color="#F0352B"
-          number={tonnes.length}
-        />
-        <div className="inline-flex h-10 w-fit items-center gap-4 rounded-md p-2 shadow-sm shadow-slate-200">
-          <form action="" className="flex items-center justify-center">
-            <label htmlFor="">
+      <div className="relative flex w-full justify-between gap-2 gap-y-4">
+        <div className="flex gap-4">
+          <Libelle
+            icon="lucide:anvil"
+            libelle="Non declarés"
+            color="#F0352B"
+            number={UndeclaredTonnages.length}
+          />
+          <button
+            className="inline-flex  h-10 items-center whitespace-nowrap rounded-md bg-[#0e5c2f] p-2 text-sm text-firstColors shadow-sm shadow-slate-200 "
+            onClick={() => exportToExcel()}
+          >
+            <Icon
+              icon="material-symbols:download"
+              width="1.2em"
+              height="1.2em"
+              style={{ color: 'rgb(255, 255, 255)' }}
+              className="mr-2"
+            />
+            Export en csv
+          </button>
+          {!(MonthsYears === '-') ||
+          searchValue ||
+          update ||
+          portSP ||
+          portA ? (
+            <div className="inline-flex h-10  items-center gap-1 whitespace-nowrap rounded-md bg-[#2563eb] p-2 text-firstColors shadow-sm shadow-slate-200 ">
               <Icon
-                icon="lucide:calendar-days"
+                icon="charm:notes-cross"
                 width="1.2em"
                 height="1.2em"
-                style={{ color: '#0a0a0a' }}
                 className="mr-2"
               />
-            </label>
-            <div className="size-fit whitespace-nowrap rounded-sm border ">
-              <select
-                name="months"
-                id=""
-                className="border-none bg-firstColors bg-none"
-                // onChange={e => {
-                //   setFormValue({
-                //     ...formValue,
-                //     [e.target.name]: e.target.value,
-                //   });
-                // }}
-              >
-                {AllMonths.map((month, index) => (
-                  <option key={index} value={month.value}>
-                    {month.name}
-                  </option>
-                ))}
-              </select>
-              <select
-                name="years"
-                id=""
-                className="border-none bg-firstColors bg-none"
-                // onChange={e => {
-                //   setFormValue({
-                //     ...formValue,
-                //     [e.target.name]: e.target.value,
-                //   });
-                // }}
-              >
-                {Year.map((year, index) => (
-                  <option key={index} value={year.value}>
-                    {year.year}
-                  </option>
-                ))}
-              </select>
+              Quantite : {FinalData.length}
             </div>
-          </form>
+          ) : (
+            ''
+          )}
         </div>
-        <div className="inline-flex h-10 items-center gap-2 rounded-md p-2 shadow-sm shadow-slate-200 ">
-          <label htmlFor="">
-            <Icon icon="mdi:search" width="1.1em" height="1.1em" />
-          </label>
-          <input
-            type="number"
-            placeholder="IMO"
-            // value={searchValue}
-            className=" h-fit w-28 border-b pb-1 text-sm  font-medium outline-none"
-            // onChange={(e: any) => {
-            //   // setSearchValue(e.target.value);
-            // }}
-          />
+
+        <div className="static z-10  flex w-full justify-end ">
+          <button
+            className="inline-flex  h-10 items-center whitespace-nowrap rounded-md bg-[#191114] p-2 text-sm  font-semibold  text-firstColors shadow-sm shadow-slate-200 "
+            onClick={handleShowFilter}
+          >
+            <Icon
+              icon="gridicons:filter"
+              width="1.2em"
+              height="1.2em"
+              className="mr-2"
+            />
+            Filtre
+          </button>
+          {showFilter ? filterComponent() : ''}
         </div>
-        <button
-          className="inline-flex  h-10 items-center whitespace-nowrap rounded-md bg-[#0e5c2f] p-2 text-sm text-firstColors shadow-sm shadow-slate-200 "
-          onClick={() => exportToExcel()}
-        >
-          <Icon
-            icon="material-symbols:download"
-            width="1.2em"
-            height="1.2em"
-            style={{ color: 'rgb(255, 255, 255)' }}
-            className="mr-2"
-          />
-          Export en csv
-        </button>
       </div>
       <div className="relative size-full overflow-x-auto  pr-2">
         <table className="w-full">
@@ -116,7 +109,7 @@ const T_NonDeclare = () => {
               })}
             </tr>
           </thead>
-          {/* {tonnesDC.map((val: any, index: number) => {
+          {FinalPagination.map((val: any, index: number) => {
             return (
               <tr
                 key={index}
@@ -126,32 +119,25 @@ const T_NonDeclare = () => {
                   {index + 1}
                 </td>
                 <td className="text-start  text-sm xl:text-sm headerSecond">
-                  {val.tonnagedt.nom_navire_dt_tonnages}
+                  {val.data_port.Nom_Navire_port}
                 </td>
                 <td className="text-start  text-sm xl:text-base headerSecond">
-                  {val.tonnagedt.imo_dt_tonnage}
+                  {val.data_port.Imo_Navire_port}
                 </td>
 
                 <td className="text-start lg:w-40 text-sm xl:text-base headerSecond">
-                  {val.tonnagedt.mouvement_dt_tonnage}
+                  {val.data_port.Mouvement_port}
                 </td>
 
                 <td className="text-start lg:w-28 xl:w-48 text-sm xl:text-base headerSecond ">
-                  {val.tonnagedt.mouvement_dtci === 'Arrivée'
-                    ? val.tonnagedt.eta_dt_tonnage
-                        .split('-')
-                        .reverse()
-                        .join('-')
-                    : val.tonnagedt.etd_dt_tonnage
-                        .split('-')
-                        .reverse()
-                        .join('-')}
+                  {val.data_port.Date_Mouvement_port}
                 </td>
               </tr>
             );
-          })} */}
+          })}
         </table>
       </div>
+      {renderPaginationControls()}
     </div>
   );
 };
