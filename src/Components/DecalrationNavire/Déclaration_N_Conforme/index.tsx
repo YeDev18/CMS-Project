@@ -1,6 +1,7 @@
 import url from '@/api';
 import useExportExcel from '@/Components/ui/export-excel';
-import { useServer } from '@/Context/ServerProvider';
+import { useUser } from '@/Context/AuthProvider';
+import { useDeclarationBoard, useServer } from '@/Context/ServerProvider';
 import { DataProps, DeclarationTypes } from '@/Types';
 import { Icon } from '@iconify/react';
 import { useMemo, useState } from 'react';
@@ -15,8 +16,11 @@ type ObservationProps = {
 
 const DeclaratioNConforme = () => {
   const server = useServer();
-  const notConform = useServer()?.notConform || [];
-  const user = useServer()?.user || [];
+  const { notConform } = useDeclarationBoard();
+  let NotConform = notConform;
+  const { user } = useUser();
+
+  const User = user;
   const csrfToken = server?.csrfToken;
   const overlay = useServer()?.overlay;
   const [formValue, setFormValue] = useState({
@@ -121,7 +125,7 @@ const DeclaratioNConforme = () => {
   };
 
   const Filter = useMemo(() => {
-    return notConform.filter((val: DeclarationTypes) =>
+    return NotConform.filter((val: DeclarationTypes) =>
       val.soumission_dtci.mouvement_dtci === 'Arrivée'
         ? val.soumission_dtci.eta_dtci.toString().slice(0, 7) === MonthsYears
         : val.soumission_dtci.etd_dtci.toString().slice(0, 7) === MonthsYears
@@ -360,7 +364,7 @@ const DeclaratioNConforme = () => {
                     <label htmlFor="" className="font-semibold text-gray-500">
                       Nom DTCI
                     </label>
-                    {user?.role === 'analyst' ? (
+                    {user.role === 'analyst' ? (
                       <input
                         type="text"
                         disabled

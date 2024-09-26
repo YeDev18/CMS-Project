@@ -106,6 +106,23 @@ export const headerTableTonnes = [
 
 export const ItemsPeriode = [
   {
+    year: '2023',
+    months: [
+      'Janvier',
+      'Fevrier',
+      'Mars',
+      'Avril',
+      'Mai',
+      'Juin',
+      'Juillet',
+      'Aout',
+      'Septembre',
+      'Octobre',
+      'Novembre',
+      'Decembre',
+    ],
+  },
+  {
     year: '2024',
     months: [
       'Janvier',
@@ -268,6 +285,10 @@ export const Year = [
   {
     value: '',
     year: 'Annee',
+  },
+  {
+    value: '2023',
+    year: '2023',
   },
   {
     value: '2024',

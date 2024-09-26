@@ -3,6 +3,13 @@ import { jwtDecode } from 'jwt-decode';
 import { FC, ReactNode, createContext, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useServer } from '../ServerProvider';
+interface Register {
+  email: string;
+  password: string;
+  name: string;
+  role: string;
+  token: string;
+}
 type Context = {
   token: string | null;
   name: string;
@@ -23,13 +30,7 @@ type Context = {
 type Props = {
   children: ReactNode;
 };
-interface Register {
-  email: string;
-  password: string;
-  name: string;
-  role: string;
-  token: string;
-}
+
 const AuthContext = createContext<Context | null>(null);
 
 export const Viva = () => {
@@ -177,4 +178,14 @@ export default AuthProvider;
 
 export const useAuth = () => {
   return useContext(AuthContext);
+};
+
+export const useUser = () => {
+  const { user } = useServer() ?? {
+    user: {},
+  };
+  if (!user) {
+    throw new Error('useServer must be used within a Provider');
+  }
+  return { user };
 };

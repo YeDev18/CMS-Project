@@ -1,6 +1,9 @@
+import { ConsigneeProps, DeclarationTypes, TonnesTypes } from '@/Types';
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
-const usePagination = (data: []) => {
+const usePagination = (
+  data: (DeclarationTypes | ConsigneeProps | TonnesTypes)[]
+) => {
   const [current, setCurrent] = useState(1);
   const itemsPerPage = 10;
   const startIndex = (current - 1) * itemsPerPage;
