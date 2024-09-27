@@ -13,6 +13,7 @@ const useFilter = (data: any, label: string) => {
   const [update, setUpdate] = useState<boolean>(false);
   const [portA, setPortA] = useState<boolean>(false);
   const [portSP, setPortSP] = useState<boolean>(false);
+  const [tags, setTags] = useState<boolean>(false);
   const handleUpdateFilter = () => {
     setUpdate(false);
     setPortA(false);
@@ -33,7 +34,10 @@ const useFilter = (data: any, label: string) => {
     setPortA(false);
     server?.toInitialize();
   };
-
+  const handleTagsCheck = () => {
+    setTags(!tags);
+    server?.toInitialize();
+  };
   const Filter = useMemo(() => {
     return data.filter((val: any) =>
       val?.soumission_dtci?.mouvement_dtci === 'Arrivée'
@@ -62,6 +66,10 @@ const useFilter = (data: any, label: string) => {
   }
 
   const dataFinalChecked = update
+    ? FinalData.filter((val: any) => val.observation)
+    : FinalData;
+
+  const dataTagsChecked = tags
     ? FinalData.filter((val: any) => val.observation)
     : FinalData;
 
@@ -200,7 +208,33 @@ const useFilter = (data: any, label: string) => {
             </div>
           </div>
         ) : (
-          <></>
+          <>
+            {label === 'NConforme' ? (
+              <div className="w-full ">
+                {' '}
+                <h3 className="mb-3 rounded-md bg-[#7B7B7B]/5 p-2 text-base font-normal">
+                  Tags
+                </h3>
+                <div className="flex h-fit w-full items-center justify-between rounded-sm border border-gray-700/10 p-2 ">
+                  <label
+                    htmlFor=""
+                    className="text-base font-normal text-[#000]/80"
+                  >
+                    Tags
+                  </label>
+                  <input
+                    type="checkbox"
+                    checked={tags}
+                    onChange={handleTagsCheck}
+                    placeholder=""
+                    className="h-4 w-8 rounded-sm border p-1 text-2xl font-medium outline-none"
+                  />
+                </div>
+              </div>
+            ) : (
+              ''
+            )}
+          </>
         )}
       </div>
     );
@@ -208,6 +242,7 @@ const useFilter = (data: any, label: string) => {
 
   return {
     dataFinalChecked,
+    dataTagsChecked,
     MonthsYears,
     searchValue,
     update,
