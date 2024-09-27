@@ -1,11 +1,11 @@
 import url from '@/api';
 import useExportExcel from '@/Components/ui/export-excel';
+import useFilter from '@/Components/ui/FilterDeclarative';
 import { useUser } from '@/Context/AuthProvider';
 import { useDeclarationBoard, useServer } from '@/Context/ServerProvider';
-import { DataProps, DeclarationTypes } from '@/Types';
+import { DeclarationTypes } from '@/Types';
 import { Icon } from '@iconify/react';
-import { useMemo, useState } from 'react';
-import { AllMonths, Year } from '../../Data';
+import { useState } from 'react';
 import Libelle from '../../ui/Libelle';
 import usePagination from '../../ui/pagination';
 import Table from '../table-compare';
@@ -20,15 +20,10 @@ const DeclaratioNConforme = () => {
   let NotConform = notConform;
   const { user } = useUser();
 
-  const User = user;
   const csrfToken = server?.csrfToken;
   const overlay = useServer()?.overlay;
-  const [formValue, setFormValue] = useState({
-    months: '',
-    years: '',
-  });
-  const [searchValue, setSearchValue] = useState<string>();
-  const [observation, setObservation] = useState<ObservationProps>({
+
+  const [observation, setObservation] = useState({
     observation: '',
   });
   const [tags, setTags] = useState<boolean>(false);
@@ -37,41 +32,33 @@ const DeclaratioNConforme = () => {
     boolean | number
   >(0);
 
-  const [portA, setPortA] = useState<boolean>(false);
-  const [portSP, setPortSP] = useState<boolean>(false);
+  const [showFilter, setShowFilter] = useState<boolean>(false);
+
+  const handleShowFilter = () => {
+    setShowFilter(!showFilter);
+  };
+
   const handleChangeCheck = () => {
     setTags(!tags);
     server?.toInitialize();
   };
 
-  const handleChangePortA = () => {
-    setPortA(!portA);
-    setPortSP(false);
-    server?.toInitialize();
-  };
-  const handleChangePortSP = () => {
-    setPortSP(!portSP);
-    setPortA(false);
-    server?.toInitialize();
-    server?.toInitialize();
-  };
-  const MonthsYears = formValue.years + '-' + formValue.months;
   const [data3, setData3] = useState({
     idInstance: '',
-    idSoumission: '',
+    idSoumission: 0,
     nonDTCI: '',
     imoDTCI: '',
     consignataireDTCI: '',
     mouvementDTCI: '',
     dateDTCI: '',
     nonTM: '',
-    imoTM: '',
+    imoTM: 0,
     consignataireTM: '',
     mouvementTM: '',
     dateTm: '',
     observation: '',
   });
-  const handleSubmit = (id: number, data: DataProps) => {
+  const handleSubmit = (id: number, data: ObservationProps) => {
     url
       .put(`api/declarationstatus/${id}/add_observation/`, data)
       .then(res => {
@@ -124,41 +111,19 @@ const DeclaratioNConforme = () => {
       });
   };
 
-  const Filter = useMemo(() => {
-    return NotConform.filter((val: DeclarationTypes) =>
-      val.soumission_dtci.mouvement_dtci === 'Arrivée'
-        ? val.soumission_dtci.eta_dtci.toString().slice(0, 7) === MonthsYears
-        : val.soumission_dtci.etd_dtci.toString().slice(0, 7) === MonthsYears
-    );
-  }, [MonthsYears]);
-  const Final = MonthsYears === '-' ? notConform : Filter;
-  const dataFinal = searchValue
-    ? Final.filter((val: DeclarationTypes) =>
-        val.soumission_dtci.imo_dtci.toString().includes(searchValue)
-      )
-    : Final;
+  const {
+    dataTagsChecked,
+    MonthsYears,
+    searchValue,
+    portSP,
+    portA,
+    filterComponent,
+  } = useFilter(NotConform, 'NConforme');
 
-  const dataFinalChecked = tags
-    ? dataFinal.filter((val: DeclarationTypes) => val.observation)
-    : dataFinal;
-
-  let FinalData = dataFinalChecked;
-  if (portA) {
-    FinalData = dataFinalChecked.filter(
-      (val: DeclarationTypes) => val.trafic_maritime.port_trafic === 'ABIDJAN'
-    );
-  } else if (portSP) {
-    FinalData = dataFinalChecked.filter(
-      (val: DeclarationTypes) => val.trafic_maritime.port_trafic === 'SAN PEDRO'
-    );
-  } else {
-    console.log('');
-  }
-
-  const { exportToExcel } = useExportExcel(FinalData, 'nom declare');
+  const { exportToExcel } = useExportExcel(dataTagsChecked, 'nom declare');
 
   const { renderPaginationControls, endIndex, startIndex } =
-    usePagination(FinalData);
+    usePagination(dataTagsChecked);
 
   const handleChange = (val: DeclarationTypes) => {
     server?.showOverlay();
@@ -182,146 +147,63 @@ const DeclaratioNConforme = () => {
       consignataireTM: val.trafic_maritime.consignataire_trafic,
       mouvementTM:
         val.trafic_maritime.mouvement_trafic === 'Arrivée' ? 'ETA' : 'ETD',
-      dateTM: val.trafic_maritime.date_trafic.split('-').reverse().join('-'),
+      dateTm: val.trafic_maritime.date_trafic.split('-').reverse().join('-'),
       observation: val.observation,
     });
   };
-  const FinalPagination = FinalData.slice(startIndex, endIndex);
+  const FinalPagination = dataTagsChecked.slice(startIndex, endIndex);
   return (
     <div className="relative flex size-full flex-col gap-6 ">
-      <div className="flex w-full flex-wrap justify-start gap-2">
-        <Libelle
-          icon="charm:notes-cross"
-          libelle="Non Conformes"
-          color="#F59069"
-          number={notConform.length}
-        />
-        <div className="inline-flex h-10 w-fit items-center gap-4 rounded-md p-2 shadow-sm shadow-slate-200">
-          <form action="" className="flex items-center justify-center">
-            <label htmlFor="">
+      <div className="relative flex w-full justify-between gap-2 gap-y-4">
+        <div className="flex gap-4">
+          <Libelle
+            icon="charm:notes-cross"
+            libelle="Non Conformes"
+            color="#F59069"
+            number={notConform.length}
+          />
+          <button
+            className="inline-flex  h-10 items-center whitespace-nowrap rounded-md bg-[#0e5c2f] p-2 text-sm text-firstColors shadow-sm shadow-slate-200 "
+            onClick={() => exportToExcel()}
+          >
+            <Icon
+              icon="material-symbols:download"
+              width="1.2em"
+              height="1.2em"
+              style={{ color: 'rgb(255, 255, 255)' }}
+              className="mr-2"
+            />
+            Export en csv
+          </button>
+          {!(MonthsYears === '-') || searchValue || tags || portA || portSP ? (
+            <div className="inline-flex h-10 items-center gap-1 rounded-md bg-[#F59069] p-2 text-firstColors shadow-sm shadow-slate-200  whitespace-nowrap">
               <Icon
-                icon="lucide:calendar-days"
+                icon="charm:notes-cross"
                 width="1.2em"
                 height="1.2em"
-                style={{ color: '#0a0a0a' }}
                 className="mr-2"
               />
-            </label>
-            <div className="size-fit whitespace-nowrap rounded-sm border ">
-              <select
-                name="months"
-                id=""
-                className="border-none bg-firstColors bg-none"
-                onChange={e => {
-                  setFormValue({
-                    ...formValue,
-                    [e.target.name]: e.target.value,
-                  });
-                }}
-              >
-                {AllMonths.map((month, index) => (
-                  <option key={index} value={month.value}>
-                    {month.name}
-                  </option>
-                ))}
-              </select>
-              {/* <span className="border border-borderColor h-4"></span> */}
-              <select
-                name="years"
-                id=""
-                className="border-none bg-firstColors bg-none"
-                onChange={e => {
-                  setFormValue({
-                    ...formValue,
-                    [e.target.name]: e.target.value,
-                  });
-                }}
-              >
-                {Year.map((year, index) => (
-                  <option key={index} value={year.value}>
-                    {year.year}
-                  </option>
-                ))}
-              </select>
+              Quantite : {dataTagsChecked.length}
             </div>
-          </form>
+          ) : (
+            ''
+          )}
         </div>
-        <div className="inline-flex h-10 items-center gap-2 rounded-md p-2 shadow-sm shadow-slate-200 ">
-          <label htmlFor="">
-            <Icon icon="mdi:search" width="1.1em" height="1.1em" />
-          </label>
-          <input
-            type="number"
-            placeholder="IMO"
-            className=" h-fit w-28 border-b pb-1 text-sm  font-medium outline-none"
-            onChange={event => {
-              setSearchValue(event.target.value);
-            }}
-          />
-          <span className="h-4 border"></span>
-          <div className="flex  h-fit items-center justify-center">
-            <label htmlFor="" className="text-sm font-semibold">
-              Tags
-            </label>
-            <input
-              type="checkbox"
-              checked={tags}
-              onChange={handleChangeCheck}
-              placeholder="IMO"
-              className="h-4 w-8 rounded-sm border p-1 text-2xl font-medium outline-none"
-            />
-          </div>
-          <div className="flex  h-fit items-center justify-center">
-            <label htmlFor="" className="text-sm font-semibold">
-              Port A
-            </label>
-            <input
-              type="checkbox"
-              checked={portA}
-              onChange={handleChangePortA}
-              placeholder="IMO"
-              className="h-4 w-8 rounded-sm border p-1 text-2xl font-medium outline-none"
-            />
-          </div>
-          <div className="flex  h-fit items-center justify-center">
-            <label htmlFor="" className="text-sm font-semibold">
-              Port SP
-            </label>
-            <input
-              type="checkbox"
-              checked={portSP}
-              onChange={handleChangePortSP}
-              placeholder="IMO"
-              className="h-4 w-8 rounded-sm border p-1 text-2xl font-medium outline-none"
-            />
-          </div>
-        </div>
-        <button
-          className="inline-flex  h-10 items-center whitespace-nowrap rounded-md bg-[#0e5c2f] p-2 text-sm text-firstColors shadow-sm shadow-slate-200 "
-          onClick={() => exportToExcel()}
-        >
-          <Icon
-            icon="material-symbols:download"
-            width="1.2em"
-            height="1.2em"
-            style={{ color: 'rgb(255, 255, 255)' }}
-            className="mr-2"
-          />
-          Export en csv
-        </button>
-        {!(MonthsYears === '-') || searchValue || tags || portA || portSP ? (
-          <div className="inline-flex h-10 items-center gap-1 rounded-md bg-[#F59069] p-2 text-firstColors shadow-sm shadow-slate-200 ">
+        <div className="static z-10  flex w-full justify-end ">
+          <button
+            className="inline-flex  h-10 items-center whitespace-nowrap rounded-md bg-[#191114] p-2 text-sm  font-semibold  text-firstColors shadow-sm shadow-slate-200 "
+            onClick={handleShowFilter}
+          >
             <Icon
-              icon="charm:notes-cross"
+              icon="gridicons:filter"
               width="1.2em"
               height="1.2em"
               className="mr-2"
             />
-            Quantite : {FinalData.length}
-          </div>
-        ) : (
-          ''
-        )}
+            Filtre
+          </button>
+          {showFilter ? filterComponent() : ''}
+        </div>
       </div>
       <div className="relative size-full  overflow-x-auto  pr-2">
         <Table
@@ -472,7 +354,7 @@ const DeclaratioNConforme = () => {
                       disabled
                       type="text"
                       className=" rounded-sm border border-red-500 bg-firstColors p-2 text-sm"
-                      value={data3.dateTM}
+                      value={data3.dateTm}
                     />
                   </div>
                 </form>
@@ -513,7 +395,7 @@ const DeclaratioNConforme = () => {
                   <button
                     className="flex  h-12 w-40 cursor-pointer items-center justify-center rounded-md bg-firstBlue font-semibold text-[#EEEEEC] transition delay-150 ease-in-out hover:scale-105 "
                     onClick={() => {
-                      handleSubmit(data3.idInstance, observation);
+                      handleSubmit(Number(data3.idInstance), observation);
                     }}
                   >
                     Observation
@@ -575,7 +457,7 @@ const DeclaratioNConforme = () => {
                       className="mt-4 flex  h-12 w-40 cursor-pointer items-center justify-center rounded-md bg-firstBlue font-semibold text-[#EEEEEC] transition delay-150 ease-in-out hover:scale-105 "
                       onClick={() =>
                         handleUpdateSubmit(
-                          data3.idSoumission,
+                          data3.idSoumission.toString(),
                           data3.nonDTCI,
                           data3.dateDTCI.split('-').reverse().join('-'),
                           data3.consignataireDTCI

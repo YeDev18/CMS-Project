@@ -182,7 +182,7 @@ export const useAuth = () => {
 
 export const useUser = () => {
   const { user } = useServer() ?? {
-    user: {},
+    user: { role: '' },
   };
   if (!user) {
     throw new Error('useServer must be used within a Provider');

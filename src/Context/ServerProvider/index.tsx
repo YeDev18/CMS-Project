@@ -18,7 +18,7 @@ import { useLocation } from 'react-router-dom';
 import { useAuth } from '../AuthProvider';
 
 type Context = {
-  user: [];
+  user;
   navire: BoardProps[];
   consignataire: ConsigneeProps[];
   undeclared: DeclarationTypes[];

@@ -1,8 +1,9 @@
 import url from '@/api';
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { FC, useState } from 'react';
+import { postTonnagesDt, postTonnagesPAA } from './upload';
 
 type Lib = {
   libelle: string;
@@ -34,7 +35,10 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   const csrfToken = getCookie('csrftoken');
   console.log(csrfToken);
 
-  const handleCompare = async () => {
+  let postTonnagesDTCI = postTonnagesDt(selectedFile1);
+  let postTonnagesPort = postTonnagesPAA(selectedFile2);
+
+ Y const handleCompare = async () => {
     server?.showLoading();
     await fetchDataDTCI();
     await fetchDataTrafic();
@@ -138,22 +142,6 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
       });
   };
 
-  const mutation = useMutation({
-    mutationFn: fetchTonnagesDtci,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['compare_consigno'] });
-      console.log('Bon ');
-    },
-  });
-
-  const mutation2 = useMutation({
-    mutationFn: fetchTonnagesPPA,
-    onSuccess: () => {
-      // queryClient.invalidateQueries({ queryKey: ['compare_consigno'] });
-      console.log('Bon ');
-    },
-  });
-
   ////DONNEES DECLARATION ////////////////////////////////////////////////
   const fetchDataDTCI = async () => {
     const formData = new FormData();
@@ -195,11 +183,6 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
         server?.showLoadingFinish();
       });
   };
-
-  // const { board_dtci, error, isLoading } = useQuery(
-  //   'board_dtci',
-  //   fetchDataDTCI
-  // );
 
   return (
     <div className=" flex-center absolute inset-y-0 z-30 w-full animate-fadIn-up ">
