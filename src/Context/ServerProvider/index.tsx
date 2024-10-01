@@ -24,10 +24,12 @@ type Context = {
   undeclared: DeclarationTypes[];
   notConform: DeclarationTypes[];
   conform: DeclarationTypes[];
+  controlBoard: DeclarationTypes[];
   conformTonnages: TonnesTypes[];
   notConformTonnages: TonnesTypes[];
   undeclaredTonnages: TonnesTypes[];
   tonnages: TonnesTypes[];
+  controlTonnages: TonnesTypes[];
   csrfToken: string | null;
   getCsrf: string | null;
   pathname: string;
@@ -83,6 +85,8 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const [conformTonnages, setConformTonnages] = useState<[]>([]);
   const [notConformTonnages, setNotConformTonnages] = useState<[]>([]);
   const [undeclaredTonnages, setUndeclaredTonnages] = useState<[]>([]);
+  const [controlTonnages, setControlTonnages] = useState<[]>([]);
+  const [controlBoard, setControlBoard] = useState<[]>([]);
   const [tonnages, setTonnages] = useState<[]>([]);
   const [initialize, setInitialize] = useState(false);
   const [userInitialize, setUserInitialize] = useState(false);
@@ -116,6 +120,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const get_declaration_board = async () => {
     const routes = [
       'api/non-declare',
+      '/api/compare-declaration-status',
       'api/declare-non-conforme',
       'api/declare-conforme',
     ];
@@ -123,10 +128,10 @@ const ServerProvider: FC<Props> = ({ children }) => {
     try {
       const responses = await Promise.all(routes.map(route => url.get(route)));
 
-      const [undeclared, declareNConforme, declareConforme] = responses.map(
-        response => response.data
-      );
+      const [undeclared, controlBoard, declareNConforme, declareConforme] =
+        responses.map(response => response.data);
       setConform(declareConforme);
+      setControlBoard(controlBoard);
       setUndeclared(undeclared);
       setNotConform(declareNConforme);
     } catch {
@@ -150,6 +155,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const get_tonnages_board = async () => {
     const routes = [
       'api/calcul-difference-tonnage/',
+      '/api/control-tonnage-status',
       'api/declare-conforme-tonnage',
       'api/declare-non-conforme-tonnage',
       'api/non-declare-tonnage',
@@ -158,11 +164,13 @@ const ServerProvider: FC<Props> = ({ children }) => {
       const responses = await Promise.all(routes.map(route => url.get(route)));
       const [
         tonnages,
+        controlTonnages,
         conformTonnages,
         notConformTonnages,
         undeclaredTonnages,
       ] = responses.map(response => response.data);
       setTonnages(tonnages);
+      setControlTonnages(controlTonnages);
       setConformTonnages(conformTonnages);
       setNotConformTonnages(notConformTonnages);
       setUndeclaredTonnages(undeclaredTonnages);
@@ -301,6 +309,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
         undeclared,
         notConform,
         conform,
+        controlTonnages,
         conformTonnages,
         notConformTonnages,
         undeclaredTonnages,

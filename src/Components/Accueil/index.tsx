@@ -4,17 +4,21 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Chart } from './Chart';
 import { Component1 } from './Component';
+import DataCount from './data.count';
 import SelectedFile from './SelectedFile';
+import TonnagesGraph from './TonnagesGraph';
 
 const Accueil = () => {
-  const navire = useServer()?.navire;
-  const consignataire = useServer()?.consignataire;
-  const conform = useServer()?.conform;
-  const notConform = useServer()?.notConform;
-  const undeclared = useServer()?.undeclared;
-  const conformTonnages = useServer()?.conformTonnages;
-  const notConformTonnages = useServer()?.notConformTonnages;
-  const undeclaredTonnages = useServer()?.undeclaredTonnages;
+  const {
+    navire,
+    consignataire,
+    conform,
+    notConform,
+    undeclared,
+    conformTonnages,
+    notConformTonnages,
+    undeclaredTonnages,
+  } = useServer() || {};
   const overlay = useServer()?.overlay;
   const server = useServer();
   const [lib, setLib] = useState('');
@@ -22,9 +26,6 @@ const Accueil = () => {
   const handleSelectedCompare = (lib: string) => {
     return <SelectedFile libelle={lib} onClick={() => server?.showOverlay()} />;
   };
-  // const handleSelectedTonnages = (lib: string) => {
-  //   return <SelectedFile libelle={lib} onClick={() => server?.showOverlay()} />;
-  // };
 
   function Days(date: Date, day: number) {
     const newDate = new Date(date);
@@ -100,29 +101,11 @@ const Accueil = () => {
                 <p className="text-base font-medium ">Comparaison Voyages</p>
               </div>
 
-              <div className="grid h-10 w-full grid-cols-3 place-items-center rounded-b-md bg-[#f7f7f8]">
-                <div className=" flex-center w-full gap-2 border-r-2 text-xl text-[#2563eb]">
-                  <Icon
-                    icon="lucide:circle-check-big"
-                    className="drop-shadow-sm"
-                  />
-                  <p className="font-medium  drop-shadow-sm">
-                    {conform?.length}
-                  </p>
-                </div>
-                <div className="flex-center w-full gap-2 border-r-2 text-xl text-[#f59069] ">
-                  <Icon icon="charm:notes-cross" className="drop-shadow-sm" />
-                  <p className="font-medium  drop-shadow-sm">
-                    {notConform?.length}
-                  </p>
-                </div>
-                <div className="flex-center w-full gap-2 text-xl  text-[#f0352b]">
-                  <Icon icon="ph:x-circle" className="drop-shadow-sm " />
-                  <p className="font-medium drop-shadow-sm">
-                    {undeclared?.length}
-                  </p>
-                </div>
-              </div>
+              <DataCount
+                conform={conform}
+                notConform={notConform}
+                undeclared={undeclared}
+              />
             </div>
 
             <div className="flex h-48 w-full  flex-col justify-between rounded-md bg-firstColors pt-4 shadow-sm shadow-shadowColors lg:w-1/2 ">
@@ -152,30 +135,11 @@ const Accueil = () => {
                 </button>
                 <p className="text-base font-medium ">Comparaison Tonnages</p>
               </div>
-
-              <div className="grid h-10 w-full grid-cols-3 place-items-center rounded-b-md bg-[#f7f7f8]">
-                <div className=" flex-center w-full gap-2 border-r-2 text-xl text-[#2563eb]">
-                  <Icon
-                    icon="lucide:circle-check-big"
-                    className="drop-shadow-sm"
-                  />
-                  <p className="font-medium  drop-shadow-sm">
-                    {conformTonnages?.length}
-                  </p>
-                </div>
-                <div className="flex-center w-full gap-2 border-r-2 text-xl text-[#f59069] ">
-                  <Icon icon="charm:notes-cross" className="drop-shadow-sm" />
-                  <p className="font-medium  drop-shadow-sm">
-                    {notConformTonnages?.length}
-                  </p>
-                </div>
-                <div className="flex-center w-full gap-2 text-xl  text-[#f0352b]">
-                  <Icon icon="ph:x-circle" className="drop-shadow-sm " />
-                  <p className="font-medium drop-shadow-sm">
-                    {undeclaredTonnages?.length}
-                  </p>
-                </div>
-              </div>
+              <DataCount
+                conform={conformTonnages}
+                notConform={notConformTonnages}
+                undeclared={undeclaredTonnages}
+              />
             </div>
           </div>
         </div>
@@ -185,29 +149,10 @@ const Accueil = () => {
             <Chart />
           </div>
           <div className="flex h-fit w-full flex-col items-start justify-start gap-6 rounded-md border p-4 lg:w-fit">
-            <h2 className="text-xl font-semibold">
-              Tonages des differents navires
-            </h2>
-            <div className=" flex w-full  flex-col justify-between gap-2">
-              <div className="flex flex-col gap-2">
-                <div className="h-8 w-80 rounded-md bg-black opacity-5"></div>
-                <div className="h-8 w-80 rounded-md bg-black opacity-5"></div>
-                <div className="h-8 w-80 rounded-md bg-black opacity-5"></div>
-                <div className="h-8 w-80 rounded-md bg-black opacity-5"></div>
-                <div className="h-8 w-80 rounded-md bg-black opacity-5"></div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <div className="h-8 w-80 rounded-md bg-black opacity-5"></div>
-                <div className="h-8 w-80 rounded-md bg-black opacity-5"></div>
-                <div className="h-8 w-80 rounded-md bg-black opacity-5"></div>
-                <div className="h-8 w-80 rounded-md bg-black opacity-5"></div>
-                <div className="h-8 w-80 rounded-md bg-black opacity-5"></div>
-              </div>
-            </div>
+            <TonnagesGraph />
           </div>
         </div>
       </div>
-
       {overlay ? handleSelectedCompare(lib) : ''}
     </div>
   );
