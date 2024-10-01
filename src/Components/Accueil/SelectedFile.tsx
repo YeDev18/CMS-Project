@@ -1,9 +1,14 @@
 import url from '@/api';
 import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
-import { useQueryClient } from '@tanstack/react-query';
-import { FC, useState } from 'react';
-import { postTonnagesDt, postTonnagesPAA } from './upload';
+import React, { FC, useState } from 'react';
+import {
+  PostBoardDt,
+  PostBoardPaa,
+  PostTonnageDt,
+  PostTonnagePaa,
+} from './PostData';
+import useMutateHook from './useMutateHook';
 
 type Lib = {
   libelle: string;
@@ -11,12 +16,16 @@ type Lib = {
 };
 
 const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
-  const queryClient = useQueryClient();
   const [selectedFile1, setSelectedFile1] = useState<any>(null);
   const [selectedFile2, setSelectedFile2] = useState<any>(null);
   const server = useServer();
-  const csrf = server?.csrfToken;
-  console.log(csrf);
+
+  const post_tonnages_dt = useMutateHook(PostTonnageDt());
+  const post_tonnages_paa = useMutateHook(PostTonnagePaa());
+
+  const post_board_dt = useMutateHook(PostBoardDt());
+  const post_board_paa = useMutateHook(PostBoardPaa());
+
   function getCookie(name: any) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -33,22 +42,15 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   }
 
   const csrfToken = getCookie('csrftoken');
-  console.log(csrfToken);
 
-  let postTonnagesDTCI = postTonnagesDt(selectedFile1);
-  let postTonnagesPort = postTonnagesPAA(selectedFile2);
-
- Y const handleCompare = async () => {
-    server?.showLoading();
-    await fetchDataDTCI();
-    await fetchDataTrafic();
-    await getData();
+  const handleTonnages = async () => {
+    post_tonnages_dt.mutate(selectedFile1);
+    post_tonnages_paa.mutate(selectedFile2);
   };
 
-  const handleTonnage = async () => {
-    await fetchTonnagesDtci();
-    await fetchTonnagesPPA();
-    await getTonnagesDtci();
+  const handleCompare = async () => {
+    post_board_dt.mutate(selectedFile1);
+    post_board_paa.mutate(selectedFile2);
   };
 
   const getData = async () => {
@@ -60,25 +62,7 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
         server?.showSuccess();
       })
       .catch(error => {
-        server.showSuccessError();
-      });
-
-    setTimeout(() => {
-      server?.toInitialize();
-      server?.showOverlay();
-    }, 4000);
-  };
-  const getTonnagesDtci = async () => {
-    await url
-      .get('/api/control-tonnage-status')
-      .then(res => res.data)
-      .then(data => {
-        server?.showLoadingFinish();
-        server?.showSuccess();
-        console.log(data);
-      })
-      .catch(error => {
-        server.showSuccessError();
+        server?.showSuccessError();
       });
 
     setTimeout(() => {
@@ -98,50 +82,6 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
     setSelectedFile2(file);
   };
 
-  ////DONNEES TONNAGES ////////////////////////////////////////////////
-
-  const fetchTonnagesDtci = async () => {
-    const formData = new FormData();
-    formData.append('file', selectedFile1);
-    const response = await url
-      .post('/api/upload_tonnageDT_file/', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'X-CSRFToken': csrfToken,
-        },
-        withCredentials: true,
-      })
-      .then(response => {
-        server?.showSuccess1();
-        server.showNotError1();
-      })
-      .catch(error => {
-        server.showError1();
-        server?.showLoadingFinish();
-      });
-  };
-
-  const fetchTonnagesPPA = async () => {
-    const formData = new FormData();
-    formData.append('file', selectedFile2);
-    const response = await url
-      .post('/api/upload_port_file/', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'X-CSRFToken': csrfToken,
-        },
-        withCredentials: true,
-      })
-      .then(response => {
-        server?.showSuccess2();
-        server.showNotError2();
-      })
-      .catch(error => {
-        server.showError2();
-        server?.showLoadingFinish();
-      });
-  };
-
   ////DONNEES DECLARATION ////////////////////////////////////////////////
   const fetchDataDTCI = async () => {
     const formData = new FormData();
@@ -156,10 +96,10 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
       })
       .then(response => {
         server?.showSuccess1();
-        server.showNotError1();
+        server?.showNotError1();
       })
       .catch(error => {
-        server.showError1();
+        server?.showError1();
         server?.showLoadingFinish();
       });
   };
@@ -335,7 +275,7 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
             </div>
           )}
 
-          {server.success1 === true &&
+          {server?.success1 === true &&
             server.success2 === true &&
             server.success === true && (
               <div
@@ -350,7 +290,7 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
                 />
               </div>
             )}
-          {server.error1 == true || server.error2 == true ? (
+          {server?.error1 == true || server?.error2 == true ? (
             <div
               className={`flex items-center justify-center gap-1 rounded-sm bg-[#750b0b] p-1 text-right font-semibold`}
             >
@@ -375,7 +315,7 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
           </button>
           <button
             className="h-12 w-40 cursor-pointer rounded-md bg-firstBlue font-semibold text-[#EEEEEC] transition delay-150 ease-in-out hover:scale-105 "
-            onClick={libelle === 'VOYAGES' ? handleCompare : handleTonnage}
+            onClick={libelle === 'VOYAGES' ? handleCompare : handleTonnages}
           >
             Comparez
           </button>
