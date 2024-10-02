@@ -1,6 +1,10 @@
 import url from '@/api';
 import { useServer } from '@/Context/ServerProvider';
 
+type ObservationProps = {
+  observation: string;
+};
+
 const useServerUpload = () => {
   const server = useServer();
   const postTonnagesDt = async (data: File) => {
@@ -50,7 +54,22 @@ const useServerUpload = () => {
       withCredentials: true,
     });
   };
-  return { postTonnagesDt, postBoardDt, postBoardPAA, postTonnagesPAA };
+
+  const putBoardNConforme = async (ide: number, data: ObservationProps) => {
+    url.put(`api/declarationstatus/${ide}/add_observation/`, data, {
+      headers: {
+        'X-CSRFToken': server?.csrfToken,
+      },
+      withCredentials: true,
+    });
+  };
+  return {
+    postTonnagesDt,
+    postBoardDt,
+    postBoardPAA,
+    postTonnagesPAA,
+    putBoardNConforme,
+  };
 };
 
 export default useServerUpload;

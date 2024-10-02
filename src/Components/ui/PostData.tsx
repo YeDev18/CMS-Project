@@ -13,6 +13,9 @@ export const PostTonnageDt = () => {
     onError: (error: TypeError) => {
       console.error('Erreur lors de post_tonnages_dt :', error);
     },
+    isLoading: () => {
+      console.log('dt en train pris DT');
+    },
   };
 };
 
@@ -54,6 +57,21 @@ export const PostBoardPaa = () => {
     mutationFn: postBoardPAA,
     onSuccess: () => {
       console.log('Todo ajoute post_decalaration_DT');
+      queryClient.invalidateQueries({ queryKey: ['board'] });
+    },
+    onError: (error: TypeError) => {
+      console.error('Erreur lors de post_decalaration_PAA :', error);
+    },
+  };
+};
+
+export const Update = () => {
+  const { putBoardNConforme } = useServerUpload();
+  const queryClient = useQueryClient();
+  return {
+    mutationFn: putBoardNConforme,
+    onSuccess: () => {
+      console.log('Modification post_decalaration_DT');
       queryClient.invalidateQueries({ queryKey: ['board'] });
     },
     onError: (error: TypeError) => {

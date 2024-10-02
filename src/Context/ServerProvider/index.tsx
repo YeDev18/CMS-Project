@@ -142,7 +142,9 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const { isFetching, isError } = useQuery({
     queryKey: ['board'],
     queryFn: get_declaration_board,
-    gcTime: 0,
+    gcTime: 1000,
+    staleTime: 3000,
+    refetchOnWindowFocus: true,
   });
   if (isFetching) {
     console.log('Loading...');
@@ -183,7 +185,9 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const { isFetching: fetchingTonnages, isError: errorTonnages } = useQuery({
     queryKey: ['tonnages'],
     queryFn: get_tonnages_board,
-    gcTime: 0,
+    gcTime: 1000,
+    staleTime: 3000,
+    refetchOnWindowFocus: true,
   });
   if (fetchingTonnages) {
     console.log('Loading Tonnes...');
@@ -210,7 +214,9 @@ const ServerProvider: FC<Props> = ({ children }) => {
     {
       queryKey: ['boar_consignor'],
       queryFn: get_board_consignor,
-      gcTime: 0,
+      gcTime: 1000,
+      staleTime: 3000,
+      refetchOnWindowFocus: true,
     }
   );
   if (boar_consignor) {

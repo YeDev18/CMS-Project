@@ -1,5 +1,3 @@
-import url from '@/api';
-import { useServer } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
 import React, { FC, useState } from 'react';
 import {
@@ -7,8 +5,8 @@ import {
   PostBoardPaa,
   PostTonnageDt,
   PostTonnagePaa,
-} from './PostData';
-import useMutateHook from './useMutateHook';
+} from '../ui/PostData';
+import useMutateHook from '../ui/useMutateHook';
 
 type Lib = {
   libelle: string;
@@ -18,7 +16,6 @@ type Lib = {
 const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   const [selectedFile1, setSelectedFile1] = useState<any>(null);
   const [selectedFile2, setSelectedFile2] = useState<any>(null);
-  const server = useServer();
 
   const post_tonnages_dt = useMutateHook(PostTonnageDt());
   const post_tonnages_paa = useMutateHook(PostTonnagePaa());
@@ -26,24 +23,7 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   const post_board_dt = useMutateHook(PostBoardDt());
   const post_board_paa = useMutateHook(PostBoardPaa());
 
-  function getCookie(name: any) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === name + '=') {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-  }
-
-  const csrfToken = getCookie('csrftoken');
-
-  const handleTonnages = async () => {
+  const handleTonnages = () => {
     post_tonnages_dt.mutate(selectedFile1);
     post_tonnages_paa.mutate(selectedFile2);
   };
@@ -51,24 +31,6 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
   const handleCompare = async () => {
     post_board_dt.mutate(selectedFile1);
     post_board_paa.mutate(selectedFile2);
-  };
-
-  const getData = async () => {
-    await url
-      .get('/api/compare-declaration-status')
-      .then(res => res.data)
-      .then(data => {
-        server?.showLoadingFinish();
-        server?.showSuccess();
-      })
-      .catch(error => {
-        server?.showSuccessError();
-      });
-
-    setTimeout(() => {
-      server?.toInitialize();
-      server?.showOverlay();
-    }, 4000);
   };
 
   const handleFileChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,48 +42,6 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setSelectedFile2(file);
-  };
-
-  ////DONNEES DECLARATION ////////////////////////////////////////////////
-  const fetchDataDTCI = async () => {
-    const formData = new FormData();
-    formData.append('file', selectedFile1);
-    const response = await url
-      .post('/api/upload_dtci_file', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'X-CSRFToken': csrfToken,
-        },
-        withCredentials: true,
-      })
-      .then(response => {
-        server?.showSuccess1();
-        server?.showNotError1();
-      })
-      .catch(error => {
-        server?.showError1();
-        server?.showLoadingFinish();
-      });
-  };
-  const fetchDataTrafic = async () => {
-    const formData = new FormData();
-    formData.append('file', selectedFile2);
-    const response = await url
-      .post('/api/upload_trafic_file/', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'X-CSRFToken': csrfToken,
-        },
-        withCredentials: true,
-      })
-      .then(response => {
-        server?.showSuccess2();
-        server?.showNotError2();
-      })
-      .catch(error => {
-        server?.showError2();
-        server?.showLoadingFinish();
-      });
   };
 
   return (
@@ -140,14 +60,14 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
         <p className="font-semibold text-neutral-900/60">
           Televersez les fichiers Excel{' '}
         </p>
-        <div className="m-3 flex h-48 w-full items-center justify-evenly rounded border-2 border-dashed border-zinc-200 ">
+        <div className="m-3 flex h-40 w-full items-center justify-evenly rounded border-2 border-dashed border-zinc-200 ">
           <div className="flex h-3/4  w-32 flex-col items-center rounded bg-firstBlue p-1 shadow">
             <label
               htmlFor="fileDT"
               className="flex-start cursor-pointer gap-1 text-sm font-medium text-[#EEEEEC]"
             >
               {' '}
-              <Icon icon="solar:download-bold" width="4rem" height="4rem" />
+              <Icon icon="solar:download-bold" width="3rem" height="3rem" />
             </label>
             <input
               className="hidden"
@@ -156,8 +76,8 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
               id="fileDT"
               onChange={handleFileChange1}
             />
-            <p className="font-semibold text-[#EEEEEC]">DTCI</p>
-            <p className=" text-center text-sm text-[#EEEEEC]">
+            <p className="font-semibold text-sm text-[#EEEEEC]">DTCI</p>
+            <p className=" text-center text-xs text-[#EEEEEC]">
               Televersez fichier en .xlsx
             </p>
           </div>
@@ -167,7 +87,7 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
               className="flex-start cursor-pointer gap-1 text-sm font-medium text-[#EEEEEC]"
             >
               {' '}
-              <Icon icon="solar:download-bold" width="4rem" height="4rem" />
+              <Icon icon="solar:download-bold" width="3rem" height="3rem" />
             </label>
             <input
               className="hidden"
@@ -177,16 +97,17 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
               onChange={handleFileChange2}
             />
             {libelle === 'VOYAGES' ? (
-              <p className="font-semibold text-[#EEEEEC]">TM</p>
+              <p className="font-semibold text-sm text-[#EEEEEC]">TM</p>
             ) : (
-              <p className="font-semibold text-[#EEEEEC]">PAA</p>
+              <p className="font-semibold text-sm text-[#EEEEEC]">PAA</p>
             )}
-            <p className=" text-center text-sm text-[#EEEEEC]">
+            <p className=" text-center text-xs text-[#EEEEEC]">
               {' '}
               Televersez fichier en .xlsx
             </p>
           </div>
         </div>
+
         <div className=" flex-column relative flex h-40 w-full flex-col items-center justify-center gap-4 rounded-sm bg-slate-200/20">
           {!(selectedFile1 || selectedFile2) ? (
             <p className=" text-base font-normal text-slate-400">
@@ -260,51 +181,126 @@ const SelectedFile: FC<Lib> = ({ libelle, onClick }) => {
             </>
           )}
         </div>
-        <div className=" flex h-10  w-full flex-col justify-between py-3 text-black">
-          {server?.loading === true && (
-            <div
-              className={`flex items-center justify-center gap-1 rounded-sm bg-[#009fe3] px-2 py-1 font-semibold`}
-            >
-              <Icon
-                icon="eos-icons:loading"
-                className="text-[#ffffff] "
-                width="1.2em"
-                height="1.2em"
-              />
-              <p className="text-sm text-[#ffffff]">Chargement</p>
+        <div className="flex h-24 flex-col w-full justify-between p-2 gap-4 text-black  relative">
+          {(post_tonnages_dt.isError ||
+            post_tonnages_paa.isError ||
+            post_board_paa.isError ||
+            post_board_dt.isError) && (
+            <div className="flex justify-center items-center gap-2">
+              <Icon icon="emojione-v1:warning" />
+              <p className="text-sm">
+                Verifier l'erreur et televeser les deux fichiers
+              </p>
             </div>
           )}
-
-          {server?.success1 === true &&
-            server.success2 === true &&
-            server.success === true && (
-              <div
-                className={`flex items-center justify-center gap-1 rounded-sm  bg-[#0e5c2f] px-2 py-1 font-semibold`}
-              >
-                <p className="text-sm text-[#ffffff]">Reussite</p>
-                <Icon
-                  icon="gg:check-o"
-                  width="1.1em"
-                  height="1.1em"
-                  className="text-[#ffffff]"
-                />
+          <div className="w-full flex gap-4">
+            {(post_tonnages_dt.isPending || post_board_dt.isPending) && (
+              <div className="w-1/2 relative">
+                <div
+                  className={`flex items-center justify-center gap-1 rounded-sm bg-[#009fe3] px-2 py-1 font-semibold`}
+                >
+                  <Icon
+                    icon="eos-icons:loading"
+                    className="text-[#ffffff] "
+                    width="1.2em"
+                    height="1.2em"
+                  />
+                  <p className="text-sm text-[#ffffff]">Chargement</p>
+                </div>
               </div>
             )}
-          {server?.error1 == true || server?.error2 == true ? (
-            <div
-              className={`flex items-center justify-center gap-1 rounded-sm bg-[#750b0b] p-1 text-right font-semibold`}
-            >
-              <p className="text-sm text-[#ffffff]">Echec</p>
-              <Icon
-                icon="carbon:close-outline"
-                width="1.2em"
-                height="1.2em"
-                className="text-[#ffffff]"
-              />
+            {(post_tonnages_paa.isPending || post_board_paa.isPending) && (
+              <div className="w-1/2 relative">
+                <div
+                  className={`flex items-center justify-center gap-1 rounded-sm bg-[#009fe3] px-2 py-1 font-semibold`}
+                >
+                  <Icon
+                    icon="eos-icons:loading"
+                    className="text-[#ffffff] "
+                    width="1.2em"
+                    height="1.2em"
+                  />
+                  <p className="text-sm text-[#ffffff]">Chargement</p>
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="w-full flex gap-4">
+            <div className="w-1/2 relative">
+              {post_tonnages_dt.isSuccess || post_board_dt.isSuccess ? (
+                <div
+                  className={`flex  py-2 items-center justify-center gap-1 rounded-sm w-full bg-[#0e5c2f] px-2 font-semibold`}
+                >
+                  <p className="text-sm text-[#ffffff]"> DTCI : Reussite</p>
+                  <Icon
+                    icon="gg:check-o"
+                    width="1.1em"
+                    height="1.1em"
+                    className="text-[#ffffff]"
+                  />
+                </div>
+              ) : (
+                <>
+                  {' '}
+                  {post_tonnages_dt.isError || post_board_dt.isError ? (
+                    <div
+                      className={`flex items-center  justify-center gap-1 w-full rounded-sm bg-[#750b0b] py-2  text-right font-semibold`}
+                    >
+                      <p className="text-sm text-[#ffffff]"> DTCI : Echec</p>
+                      <Icon
+                        icon="carbon:close-outline"
+                        width="1.2em"
+                        height="1.2em"
+                        className="text-[#ffffff]"
+                      />
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                </>
+              )}
             </div>
-          ) : (
-            ' '
-          )}
+
+            <div className="w-1/2 relative">
+              {post_tonnages_paa.isSuccess || post_board_paa.isSuccess ? (
+                <div
+                  className={`flex items-center justify-center gap-1 rounded-sm w-full  bg-[#0e5c2f] px-2 py-2  font-semibold`}
+                >
+                  <p className="text-sm text-[#ffffff]">
+                    {' '}
+                    {libelle === 'VOYAGES' ? 'TM' : 'PAA'} : Reussite
+                  </p>
+                  <Icon
+                    icon="gg:check-o"
+                    width="1.1em"
+                    height="1.1em"
+                    className="text-[#ffffff]"
+                  />
+                </div>
+              ) : (
+                <>
+                  {post_tonnages_paa.isError || post_board_paa.isError ? (
+                    <div
+                      className={`flex items-center justify-center gap-1 w-full rounded-sm bg-[#750b0b] py-2  text-right font-semibold`}
+                    >
+                      <p className="text-sm text-[#ffffff]">
+                        {' '}
+                        {libelle === 'VOYAGES' ? 'TM' : 'PAA'} : Echec
+                      </p>
+                      <Icon
+                        icon="carbon:close-outline"
+                        width="1.2em"
+                        height="1.2em"
+                        className="text-[#ffffff]"
+                      />
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                </>
+              )}
+            </div>
+          </div>
         </div>
         <div className="flex w-full justify-between gap-4 py-4">
           <button
