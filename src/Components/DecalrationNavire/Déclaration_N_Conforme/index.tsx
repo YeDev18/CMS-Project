@@ -1,6 +1,8 @@
 import url from '@/api';
 import useExportExcel from '@/Components/ui/export-excel';
 import useFilter from '@/Components/ui/FilterDeclarative';
+import useServerUpload from '@/Components/ui/upload';
+import useMutateHook from '@/Components/ui/useMutateHook';
 import { useUser } from '@/Context/AuthProvider';
 import { useDeclarationBoard, useServer } from '@/Context/ServerProvider';
 import { DeclarationTypes } from '@/Types';
@@ -9,6 +11,7 @@ import { useState } from 'react';
 import Libelle from '../../ui/Libelle';
 import usePagination from '../../ui/pagination';
 import Table from '../table-compare';
+import Update from '../Update';
 
 type ObservationProps = {
   observation: string;
@@ -19,8 +22,6 @@ const DeclaratioNConforme = () => {
   const { notConform } = useDeclarationBoard();
   let NotConform = notConform;
   const { user } = useUser();
-
-  const csrfToken = server?.csrfToken;
   const overlay = useServer()?.overlay;
 
   const [observation, setObservation] = useState({
@@ -31,6 +32,21 @@ const DeclaratioNConforme = () => {
   const [notificationUpdate, setNotificationUpdate] = useState<
     boolean | number
   >(0);
+  function getCookie(name: string) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + '=') {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+  const csrfToken = getCookie('csrftoken');
 
   const [showFilter, setShowFilter] = useState<boolean>(false);
 
@@ -58,9 +74,21 @@ const DeclaratioNConforme = () => {
     dateTm: '',
     observation: '',
   });
+  const { putBoardNConforme } = useServerUpload();
+
+  // const update = useMutateHook(
+  //   putBoardNConforme(Number(data3.idInstance), observation)
+  // );
+  let id = Number(data3.idInstance);
+
+  const update = useMutateHook(Update());
   const handleSubmit = (id: number, data: ObservationProps) => {
     url
-      .put(`api/declarationstatus/${id}/add_observation/`, data)
+      .put(`/api/declarationstatus/${id}/add_observation/`, data, {
+        headers: {
+          'X-CSRFToken': server?.csrfToken,
+        },
+      })
       .then(res => {
         console.log(res);
         server?.toInitialize();
@@ -88,7 +116,7 @@ const DeclaratioNConforme = () => {
         },
         {
           headers: {
-            'X-CSRFToken': csrfToken,
+            'X-CSRFToken': server?.csrfToken,
           },
         }
       )
@@ -396,6 +424,7 @@ const DeclaratioNConforme = () => {
                     className="flex  h-12 w-40 cursor-pointer items-center justify-center rounded-md bg-firstBlue font-semibold text-[#EEEEEC] transition delay-150 ease-in-out hover:scale-105 "
                     onClick={() => {
                       handleSubmit(Number(data3.idInstance), observation);
+                      // update.mutate(observation);
                     }}
                   >
                     Observation
