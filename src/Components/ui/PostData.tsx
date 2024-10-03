@@ -65,7 +65,7 @@ export const PostBoardPaa = () => {
   };
 };
 
-export const Update = () => {
+export const UpdateObservation = () => {
   const { putBoardNConforme } = useServerUpload();
   const queryClient = useQueryClient();
   return {
@@ -75,7 +75,7 @@ export const Update = () => {
       queryClient.invalidateQueries({ queryKey: ['board'] });
     },
     onError: (error: TypeError) => {
-      console.error('Erreur lors de post_decalaration_PAA :', error);
+      console.error('Erreur lors de modification dtci :', error);
     },
   };
 };

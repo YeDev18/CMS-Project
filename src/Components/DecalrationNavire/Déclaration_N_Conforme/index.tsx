@@ -1,23 +1,23 @@
-import url from '@/api';
-import useExportExcel from '@/Components/ui/export-excel';
 import useFilter from '@/Components/ui/FilterDeclarative';
-import useServerUpload from '@/Components/ui/upload';
+import useExportExcel from '@/Components/ui/export-excel';
 import useMutateHook from '@/Components/ui/useMutateHook';
 import { useUser } from '@/Context/AuthProvider';
 import { useDeclarationBoard, useServer } from '@/Context/ServerProvider';
 import { DeclarationTypes } from '@/Types';
+import url from '@/api';
 import { Icon } from '@iconify/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import Libelle from '../../ui/Libelle';
 import usePagination from '../../ui/pagination';
 import Table from '../table-compare';
-import Update from '../Update';
 
 type ObservationProps = {
   observation: string;
 };
 
 const DeclaratioNConforme = () => {
+  const queryClient = useQueryClient();
   const server = useServer();
   const { notConform } = useDeclarationBoard();
   let NotConform = notConform;
@@ -27,11 +27,6 @@ const DeclaratioNConforme = () => {
   const [observation, setObservation] = useState({
     observation: '',
   });
-  const [tags, setTags] = useState<boolean>(false);
-  const [notificationTags, setNotificationTags] = useState<boolean>(false);
-  const [notificationUpdate, setNotificationUpdate] = useState<
-    boolean | number
-  >(0);
   function getCookie(name: string) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -54,11 +49,6 @@ const DeclaratioNConforme = () => {
     setShowFilter(!showFilter);
   };
 
-  const handleChangeCheck = () => {
-    setTags(!tags);
-    server?.toInitialize();
-  };
-
   const [data3, setData3] = useState({
     idInstance: '',
     idSoumission: 0,
@@ -74,69 +64,69 @@ const DeclaratioNConforme = () => {
     dateTm: '',
     observation: '',
   });
-  const { putBoardNConforme } = useServerUpload();
 
-  // const update = useMutateHook(
-  //   putBoardNConforme(Number(data3.idInstance), observation)
-  // );
-  let id = Number(data3.idInstance);
-
-  const update = useMutateHook(Update());
-  const handleSubmit = (id: number, data: ObservationProps) => {
-    url
-      .put(`/api/declarationstatus/${id}/add_observation/`, data, {
+  const ADD_OB = (data: ObservationProps) => {
+    url.put(
+      `/api/declarationstatus/${Number(data3.idInstance)}/add_observation/`,
+      JSON.stringify(data),
+      {
         headers: {
-          'X-CSRFToken': server?.csrfToken,
+          'X-CSRFToken': csrfToken,
+          'Content-Type': 'application/json',
         },
-      })
-      .then(res => {
-        console.log(res);
-        server?.toInitialize();
-        setNotificationTags(true);
-        setTimeout(() => {
-          setNotificationTags(false);
-          server?.showOverlay();
-        }, 2000);
-      })
-      .catch(error => console.log(error));
+        withCredentials: true,
+      }
+    );
   };
-  const handleUpdateSubmit = (
-    id: string,
+  const ADD_BOARD = (
     nom_navire_dtci: string,
     date_mouvement: string,
     consignataire_dtci: string
   ) => {
-    url
-      .put(
-        `api/update-soumission-dtci-and-status/${id}/`,
-        {
-          nom_navire_dtci,
-          date_mouvement,
-          consignataire_dtci,
+    url.put(
+      `api/update-soumission-dtci-and-status/${Number(data3.idSoumission)}/`,
+      {
+        nom_navire_dtci,
+        date_mouvement,
+        consignataire_dtci,
+      },
+      {
+        headers: {
+          'X-CSRFToken': csrfToken,
+          'Content-Type': 'application/json', // Ajout du bon en-tête
         },
-        {
-          headers: {
-            'X-CSRFToken': server?.csrfToken,
-          },
-        }
-      )
-      .then(res => {
-        setNotificationUpdate(true);
-        console.log(res);
-        setTimeout(() => {
-          server?.showOverlay();
-          setNotificationUpdate(0);
-        }, 2000);
+        withCredentials: true,
+      }
+    );
+  };
 
-        server?.toInitialize();
-      })
-      .catch(error => {
-        setNotificationUpdate(false);
-        setTimeout(() => {
-          setNotificationUpdate(0);
-        }, 2000);
-        console.log(error);
-      });
+  const addObservation = useMutateHook({
+    mutationFn: ADD_OB,
+    onSuccess: () => {
+      console.log('Ajoute');
+      queryClient.invalidateQueries({ queryKey: ['control_board'] });
+    },
+    onError: (error: TypeError) => {
+      console.error('Erreur lors de modification observation :', error);
+    },
+  });
+
+  const addUdapte = useMutateHook({
+    mutationFn: ADD_BOARD,
+    onSuccess: () => {
+      console.log('Ajoute');
+      queryClient.invalidateQueries({ queryKey: ['control_board'] });
+    },
+    onError: (error: TypeError) => {
+      console.error('Erreur lors de modification observation :', error);
+    },
+  });
+
+  const Observation = (data: any) => {
+    return addObservation.mutate(data);
+  };
+  const BoardObservation = (nom_navire_dtci: any, date_mouvement: any) => {
+    return addUdapte.mutate(nom_navire_dtci, date_mouvement);
   };
 
   const {
@@ -146,6 +136,7 @@ const DeclaratioNConforme = () => {
     portSP,
     portA,
     filterComponent,
+    tags,
   } = useFilter(NotConform, 'NConforme');
 
   const { exportToExcel } = useExportExcel(dataTagsChecked, 'nom declare');
@@ -155,7 +146,6 @@ const DeclaratioNConforme = () => {
 
   const handleChange = (val: DeclarationTypes) => {
     server?.showOverlay();
-    // !data3.observation && AddUpdate();
     setData3({
       ...data3,
 
@@ -412,9 +402,15 @@ const DeclaratioNConforme = () => {
                     >
                       <Icon
                         icon="lets-icons:check-fill"
-                        className={`${notificationTags && 'text-[#0e5c2f]'}`}
+                        className={`${
+                          addObservation.isSuccess && 'text-[#0e5c2f]'
+                        }`}
                       />
-                      <p className={`${notificationTags && 'text-[#0e5c2f]'}`}>
+                      <p
+                        className={`${
+                          addObservation.isSuccess && 'text-[#0e5c2f]'
+                        }`}
+                      >
                         Observation Accepté
                       </p>
                     </div>
@@ -423,8 +419,7 @@ const DeclaratioNConforme = () => {
                   <button
                     className="flex  h-12 w-40 cursor-pointer items-center justify-center rounded-md bg-firstBlue font-semibold text-[#EEEEEC] transition delay-150 ease-in-out hover:scale-105 "
                     onClick={() => {
-                      handleSubmit(Number(data3.idInstance), observation);
-                      // update.mutate(observation);
+                      Observation(observation);
                     }}
                   >
                     Observation
@@ -452,12 +447,12 @@ const DeclaratioNConforme = () => {
                           <Icon
                             icon="lets-icons:check-fill"
                             className={`${
-                              notificationUpdate && 'text-[#0e5c2f]'
+                              addUdapte.isSuccess && 'text-[#0e5c2f]'
                             }`}
                           />
                           <p
                             className={`${
-                              notificationUpdate && 'text-[#0e5c2f]'
+                              addUdapte.isSuccess && 'text-[#0e5c2f]'
                             }`}
                           >
                             Modification reussie
@@ -467,12 +462,12 @@ const DeclaratioNConforme = () => {
                           <Icon
                             icon="lets-icons:check-fill"
                             className={`${
-                              notificationUpdate === false && 'text-[#6E2920]'
+                              addUdapte.isError && 'text-[#6E2920]'
                             }`}
                           />
                           <p
                             className={`${
-                              notificationUpdate === false && 'text-[#6E2920]'
+                              addUdapte.isError && 'text-[#6E2920]'
                             }`}
                           >
                             Modification echoue
@@ -482,14 +477,11 @@ const DeclaratioNConforme = () => {
                     </div>
 
                     <button
-                      // to={`/update/${data3.idInstance}`}
                       className="mt-4 flex  h-12 w-40 cursor-pointer items-center justify-center rounded-md bg-firstBlue font-semibold text-[#EEEEEC] transition delay-150 ease-in-out hover:scale-105 "
                       onClick={() =>
-                        handleUpdateSubmit(
-                          data3.idSoumission.toString(),
+                        BoardObservation(
                           data3.nonDTCI,
-                          data3.dateDTCI.split('-').reverse().join('-'),
-                          data3.consignataireDTCI
+                          data3.dateDTCI.split('-').reverse().join('-')
                         )
                       }
                     >

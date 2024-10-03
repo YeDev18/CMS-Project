@@ -89,12 +89,17 @@ const Table = ({ data, label, onClick }: any) => {
                         <>
                           {label === 'Non-conform' ? (
                             <>
-                              {' '}
-                              <Icon
-                                icon="mingcute:more-2-fill"
-                                width="20"
-                                height="20"
-                              />
+                              {val.observation ? (
+                                <button className=" bg-[#f59069] text-white p-2 text-sm font-semibold rounded-md shadow-sm">
+                                  Mettre a jour
+                                </button>
+                              ) : (
+                                <Icon
+                                  icon="mingcute:more-2-fill"
+                                  width="20"
+                                  height="20"
+                                />
+                              )}
                             </>
                           ) : (
                             <></>

@@ -2,7 +2,9 @@ import url from '@/api';
 import { useServer } from '@/Context/ServerProvider';
 
 type ObservationProps = {
-  observation: string;
+  observation: {
+    observation: string;
+  };
 };
 
 const useServerUpload = () => {
@@ -55,8 +57,8 @@ const useServerUpload = () => {
     });
   };
 
-  const putBoardNConforme = async (ide: number, data: ObservationProps) => {
-    url.put(`api/declarationstatus/${ide}/add_observation/`, data, {
+  const putBoardNConforme = (id: number, data: ObservationProps) => {
+    url.put(`/api/declarationstatus/${id}/add_observation/`, data, {
       headers: {
         'X-CSRFToken': server?.csrfToken,
       },
