@@ -7,10 +7,10 @@ import Sidebar from '../Components/Aside/Sidebar';
 import NavBar from '../Components/NavBar';
 
 const Home = () => {
-  const overlay = useServer().overlay;
   const server = useServer();
-  const me = useServer().user;
-  const toogle = server.responsive;
+  const overlay = server?.overlay;
+  const me = server?.user;
+  const toogle = server?.responsive;
   const auth = useAuth();
   return (
     <>
@@ -42,7 +42,7 @@ const Home = () => {
           <NavBar />
           <div className=" relative flex size-full">
             <Outlet />
-            {server.setting && (
+            {server?.setting && (
               <div className="fixed  bottom-10 left-[14vw] flex h-fit w-64 flex-col items-center justify-start gap-2 rounded bg-firstColors shadow">
                 <div className="white-nowrap  w-full border-b px-3 py-2 text-left">
                   <h2 className="font-semibold">{me.name}</h2>
@@ -50,13 +50,13 @@ const Home = () => {
                 </div>
                 <button
                   className="white-nowrap block w-full  border-b px-3 pb-3 pt-1 text-left align-middle font-medium"
-                  onClick={() => (auth?.logout(), server.showSettingFinish())}
+                  onClick={() => (auth?.logout(), server?.showSettingFinish())}
                 >
                   Deconnexion
                 </button>
                 <button
                   className="absolute right-2 top-3"
-                  onClick={() => server.showSettingFinish()}
+                  onClick={() => server?.showSettingFinish()}
                 >
                   <Icon icon="mingcute:close-fill" className="opacity-80" />
                 </button>

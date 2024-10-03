@@ -51,6 +51,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
   const navigate = useNavigate();
   function getCookie(name: string) {
     let cookieValue = null;
+    password;
     if (document.cookie && document.cookie !== '') {
       const cookies = document.cookie.split(';');
       for (let i = 0; i < cookies.length; i++) {

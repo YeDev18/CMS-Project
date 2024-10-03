@@ -21,10 +21,10 @@ const useFilter = (data: any, label: string) => {
   };
   const [correct, setCorrect] = useState<boolean>(false);
   const [incorrect, setIncorrect] = useState<boolean>(false);
-  const handleChangeCheck = () => {
-    setUpdate(!update);
-    server?.toInitialize();
-  };
+  // const handleChangeCheck = () => {
+  //   setUpdate(!update);
+  //   server?.toInitialize();
+  // };
   const handleChangePortA = () => {
     setPortA(!portA);
     setPortSP(false);
