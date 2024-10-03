@@ -19,6 +19,7 @@ const useFilter = (data: any, label: string) => {
     setPortA(false);
     setPortSP(false);
     setFormValue({ ...formValue, months: '', years: '' });
+    setTags(false);
   };
   const handleChangeCheck = () => {
     setUpdate(!update);
@@ -250,6 +251,7 @@ const useFilter = (data: any, label: string) => {
     portA,
     FinalData,
     filterComponent,
+    tags,
   };
 };
 

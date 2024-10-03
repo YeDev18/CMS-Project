@@ -5,7 +5,7 @@ import {
   DeclarationTypes,
   TonnesTypes,
 } from '@/Types';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createContext,
   FC,
@@ -75,6 +75,7 @@ const SeverContext = createContext<Context | null>(null);
 const ServerProvider: FC<Props> = ({ children }) => {
   const token = useAuth()?.token;
   const { pathname } = useLocation();
+  const queryClient = useQueryClient();
 
   const [user, setUser] = useState<[]>([]);
   const [navire, setNavire] = useState<[]>([]);
@@ -120,7 +121,6 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const get_declaration_board = async () => {
     const routes = [
       'api/non-declare',
-      '/api/compare-declaration-status',
       'api/declare-non-conforme',
       'api/declare-conforme',
     ];
@@ -128,10 +128,10 @@ const ServerProvider: FC<Props> = ({ children }) => {
     try {
       const responses = await Promise.all(routes.map(route => url.get(route)));
 
-      const [undeclared, controlBoard, declareNConforme, declareConforme] =
-        responses.map(response => response.data);
+      const [undeclared, declareNConforme, declareConforme] = responses.map(
+        response => response.data
+      );
       setConform(declareConforme);
-      setControlBoard(controlBoard);
       setUndeclared(undeclared);
       setNotConform(declareNConforme);
     } catch {
@@ -139,19 +139,54 @@ const ServerProvider: FC<Props> = ({ children }) => {
     }
     return routes;
   };
-  const { isFetching, isError } = useQuery({
+
+  const get_control_board = async () => {
+    url
+      .get('/api/compare-declaration-status')
+      .then(response => response.data)
+      .then(data => setControlBoard(data))
+      .catch(error => console.log('Eurreur de reponse :', error));
+  };
+
+  const { isFetching, isSuccess, isError } = useQuery({
     queryKey: ['board'],
     queryFn: get_declaration_board,
-    gcTime: 1000,
-    staleTime: 3000,
-    refetchOnWindowFocus: true,
+
+    gcTime: 500,
+    staleTime: 1500,
+    // refetchOnWindowFocus: true,
   });
+  if (isSuccess) {
+    // queryClient.invalidateQueries({ queryKey: ['tonnages'] });
+  }
   if (isFetching) {
     console.log('Loading...');
   } else if (isError) {
     // console.error('Error fetching data');
   } else {
     console.log('Data fetched successfully');
+  }
+
+  const {
+    isFetching: BoardFetch,
+    isSuccess: BoardSuccess,
+    isError: BoardError,
+  } = useQuery({
+    queryKey: ['control_board'],
+    queryFn: get_control_board,
+    gcTime: 500,
+    staleTime: 1500,
+  });
+
+  if (BoardFetch) {
+    console.log('Controle telechargement');
+  }
+  if (BoardSuccess) {
+    console.log('Controle Success');
+    queryClient.invalidateQueries({ queryKey: ['board'] });
+  }
+  if (BoardError) {
+    console.log('Controle Error');
   }
 
   const get_tonnages_board = async () => {
