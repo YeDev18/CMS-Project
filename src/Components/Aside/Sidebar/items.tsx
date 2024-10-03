@@ -7,8 +7,8 @@ import { MenuItems } from '../../Data';
 const ItemsNav = () => {
   const active = useRef<HTMLButtonElement>(null);
   const [activeIndex, setActiveIndex] = useState<number>();
-  const { pathname } = useServer();
   const server = useServer();
+  const pathname = server?.pathname;
 
   const handleConsole = (index: number) => {
     setActiveIndex(prevIndex => (prevIndex === index ? prevIndex : index));
@@ -31,7 +31,7 @@ const ItemsNav = () => {
                 <Link
                   to={item.route}
                   className="flex w-full items-center gap-2 p-2 text-start text-sm xl:text-base"
-                  onClick={() => server.showResponsive()}
+                  onClick={() => server?.showResponsive()}
                 >
                   <Icon icon={item.icon} className="size-6" />
 
@@ -70,7 +70,7 @@ const ItemsNav = () => {
                           <Link
                             to={good.route}
                             className="flex w-full items-center gap-2 text-start text-sm xl:text-base"
-                            onClick={() => server.showResponsive()}
+                            onClick={() => server?.showResponsive()}
                           >
                             <Icon icon={good.icon} className="size-4" />
                             {good.lib}
@@ -87,7 +87,7 @@ const ItemsNav = () => {
       <div className="flex justify-end">
         <button
           className="text-grayBlack"
-          onClick={() => (server.showSetting(), server?.showUserInitialize())}
+          onClick={() => (server?.showSetting(), server?.showUserInitialize())}
         >
           <Icon
             icon="fluent:more-vertical-16-filled"

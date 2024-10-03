@@ -6,7 +6,7 @@ const NavBar = () => {
     <div className="flex h-16 w-[full] items-center justify-start gap-4 rounded-sm bg-firstColors p-3 shadow shadow-shadowColors">
       <button
         className="cursor-pointer"
-        onClick={() => server.showResponsive()}
+        onClick={() => server?.showResponsive()}
       >
         <Icon icon="clarity:menu-line" className="flex lg:hidden" />
       </button>
