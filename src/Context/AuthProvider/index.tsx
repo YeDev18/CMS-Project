@@ -3,13 +3,7 @@ import { jwtDecode } from 'jwt-decode';
 import { FC, ReactNode, createContext, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useServer } from '../ServerProvider';
-interface Register {
-  email: string;
-  password: string;
-  name: string;
-  role: string;
-  token: string;
-}
+
 type Context = {
   token: string | null;
   name: string;
@@ -19,12 +13,12 @@ type Context = {
   success: boolean;
   error: boolean;
   RegisterAction: (
-    name: Register,
-    email: Register,
-    password: Register,
-    role: Register
+    name: string,
+    email: string,
+    password: string,
+    role: string
   ) => Promise<void>;
-  LoginAction: (email: Register, password: Register) => Promise<void>;
+  LoginAction: (email: string, password: string) => Promise<void>;
   logout: () => void;
 };
 type Props = {
@@ -39,8 +33,8 @@ export const Viva = () => {
 };
 
 const AuthProvider: FC<Props> = ({ children }) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [name, setName] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('');
   const [error, setError] = useState(false);
@@ -68,10 +62,10 @@ const AuthProvider: FC<Props> = ({ children }) => {
   const csrfToken = getCookie('csrftoken');
 
   const RegisterAction = async (
-    name: Register,
-    email: Register,
-    password: Register,
-    role: Register
+    name: string,
+    email: string,
+    password: string,
+    role: string
   ) => {
     try {
       const response = await url.post(
@@ -99,7 +93,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
     }
   };
 
-  const LoginAction = async (email: Register, password: Register) => {
+  const LoginAction = async (email: string, password: string) => {
     try {
       const response = await url.post(
         '/api/login',
