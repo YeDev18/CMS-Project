@@ -18,7 +18,7 @@ import { useLocation } from 'react-router-dom';
 import { useAuth } from '../AuthProvider';
 
 type Context = {
-  user;
+  user: any;
   navire: BoardProps[];
   consignataire: ConsigneeProps[];
   undeclared: DeclarationTypes[];
@@ -31,12 +31,9 @@ type Context = {
   tonnages: TonnesTypes[];
   controlTonnages: TonnesTypes[];
   csrfToken: string | null;
-  getCsrf: string | null;
   pathname: string;
-  initialize: boolean;
   overlay: boolean;
   userInitialize: boolean;
-  error: boolean;
   success1: boolean;
   success2: boolean;
   error1: boolean;
@@ -89,7 +86,6 @@ const ServerProvider: FC<Props> = ({ children }) => {
   const [controlTonnages, setControlTonnages] = useState<[]>([]);
   const [controlBoard, setControlBoard] = useState<[]>([]);
   const [tonnages, setTonnages] = useState<[]>([]);
-  const [initialize, setInitialize] = useState(false);
   const [userInitialize, setUserInitialize] = useState(false);
   const [overlay, setOverlay] = useState(false);
   const [error1, setError1] = useState<boolean>(false);
@@ -347,6 +343,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
         user,
         navire,
         consignataire,
+        controlBoard,
         undeclared,
         notConform,
         conform,
@@ -364,7 +361,6 @@ const ServerProvider: FC<Props> = ({ children }) => {
         error1,
         error2,
         setting,
-        initialize,
         userInitialize,
         responsive,
         showOverlay,
