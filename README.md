@@ -6,8 +6,8 @@ backend
 
 frontend
 
--React/ TypeScript
--Tailwind CSS
+- React/ TypeScript
+- Tailwind CSS
 
 # React + TypeScript + Vite
 
