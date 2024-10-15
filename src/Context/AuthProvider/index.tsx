@@ -104,6 +104,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
         {
           headers: {
             'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
           },
         }
       );
