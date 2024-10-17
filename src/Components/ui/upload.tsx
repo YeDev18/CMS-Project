@@ -1,21 +1,32 @@
 import url from '@/api';
-import { useServer } from '@/Context/ServerProvider';
 
 type ObservationProps = {
   observation: {
     observation: string;
   };
 };
+const getCsrf = async () => {
+  try {
+    const response = await url.get('/api/get-csrf-token/');
+    const valueToken = response.data.csrfToken;
+
+    return valueToken;
+  } catch (error) {
+    console.error('Erreur lors de la recuperation du crsf : ', error);
+    throw error;
+  }
+};
 
 const useServerUpload = () => {
-  const server = useServer();
   const postTonnagesDt = async (data: File) => {
     const formData = new FormData();
+    const crsfToken = await getCsrf();
+
     formData.append('file', data);
     await url.post('/api/upload_tonnageDT_file/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        'X-CSRFToken': server?.csrfToken,
+        'X-CSRFToken': crsfToken,
       },
       withCredentials: true,
     });
@@ -23,11 +34,12 @@ const useServerUpload = () => {
 
   const postTonnagesPAA = async (data: File) => {
     const formData = new FormData();
+    const crsfToken = await getCsrf();
     formData.append('file', data);
     await url.post('/api/upload_port_file/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        'X-CSRFToken': server?.csrfToken,
+        'X-CSRFToken': crsfToken,
       },
       withCredentials: true,
     });
@@ -35,11 +47,12 @@ const useServerUpload = () => {
 
   const postBoardDt = async (data: File) => {
     const formData = new FormData();
+    const crsfToken = await getCsrf();
     formData.append('file', data);
     await url.post('/api/upload_dtci_file', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        'X-CSRFToken': server?.csrfToken,
+        'X-CSRFToken': crsfToken,
       },
       withCredentials: true,
     });
@@ -47,20 +60,22 @@ const useServerUpload = () => {
 
   const postBoardPAA = async (data: File) => {
     const formData = new FormData();
+    const crsfToken = await getCsrf();
     formData.append('file', data);
     await url.post('/api/upload_trafic_file/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        'X-CSRFToken': server?.csrfToken,
+        'X-CSRFToken': crsfToken,
       },
       withCredentials: true,
     });
   };
 
-  const putBoardNConforme = (id: number, data: ObservationProps) => {
+  const putBoardNConforme = async (id: number, data: ObservationProps) => {
+    const crsfToken = await getCsrf();
     url.put(`/api/declarationstatus/${id}/add_observation/`, data, {
       headers: {
-        'X-CSRFToken': server?.csrfToken,
+        'X-CSRFToken': crsfToken,
       },
       withCredentials: true,
     });

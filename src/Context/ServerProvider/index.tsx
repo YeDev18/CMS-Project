@@ -43,6 +43,7 @@ type Context = {
   notification: boolean | 0;
   setting: boolean;
   responsive: boolean;
+  getCsrf: () => void;
   showOverlay: () => void;
   toInitialize: () => void;
   showUserInitialize: () => void;
@@ -113,6 +114,17 @@ const ServerProvider: FC<Props> = ({ children }) => {
     return cookieValue;
   }
   const csrfToken = getCookie('csrftoken');
+
+  const getCsrf = async () => {
+    try {
+      const response = await url.get('/api/get-csrf-token/');
+      const valueToken = response.data.csrfToken;
+      return valueToken;
+    } catch (error) {
+      console.error('Erreur lors de la recuperation du crsf : ', error);
+      throw error;
+    }
+  };
 
   const get_declaration_board = async () => {
     const routes = [
@@ -384,6 +396,7 @@ const ServerProvider: FC<Props> = ({ children }) => {
         showSuccess2,
         showNotSuccess2,
         showResponsive,
+        getCsrf,
         pathname,
       }}
     >

@@ -27,21 +27,33 @@ const DeclaratioNConforme = () => {
   const [observation, setObservation] = useState({
     observation: '',
   });
-  function getCookie(name: string) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === name + '=') {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
+  // function getCookie(name: string) {
+  //   let cookieValue = null;
+  //   if (document.cookie && document.cookie !== '') {
+  //     const cookies = document.cookie.split(';');
+  //     for (let i = 0; i < cookies.length; i++) {
+  //       const cookie = cookies[i].trim();
+  //       if (cookie.substring(0, name.length + 1) === name + '=') {
+  //         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+  //         break;
+  //       }
+  //     }
+  //   }
+  //   return cookieValue;
+  // }
+  // const csrfToken = getCookie('csrftoken');
+
+  const getCsrf = async () => {
+    try {
+      const response = await url.get('/api/get-csrf-token/');
+      const valueToken = response.data.csrfToken;
+
+      return valueToken;
+    } catch (error) {
+      console.error('Erreur lors de la recuperation du crsf : ', error);
+      throw error;
     }
-    return cookieValue;
-  }
-  const csrfToken = getCookie('csrftoken');
+  };
 
   const [showFilter, setShowFilter] = useState<boolean>(false);
 
@@ -65,24 +77,26 @@ const DeclaratioNConforme = () => {
     observation: '',
   });
 
-  const ADD_OB = (data: ObservationProps) => {
+  const ADD_OB = async (data: ObservationProps) => {
+    const crsfToken = await getCsrf();
     url.put(
       `/api/declarationstatus/${Number(data3.idInstance)}/add_observation/`,
       JSON.stringify(data),
       {
         headers: {
-          'X-CSRFToken': csrfToken,
+          'X-CSRFToken': crsfToken,
           'Content-Type': 'application/json',
         },
         withCredentials: true,
       }
     );
   };
-  const ADD_BOARD = (
+  const ADD_BOARD = async (
     nom_navire_dtci: string,
     date_mouvement: string,
     consignataire_dtci: string
   ) => {
+    const crsfToken = await getCsrf();
     url.put(
       `api/update-soumission-dtci-and-status/${Number(data3.idSoumission)}/`,
       {
@@ -92,7 +106,7 @@ const DeclaratioNConforme = () => {
       },
       {
         headers: {
-          'X-CSRFToken': csrfToken,
+          'X-CSRFToken': crsfToken,
           'Content-Type': 'application/json', // Ajout du bon en-tête
         },
         withCredentials: true,
