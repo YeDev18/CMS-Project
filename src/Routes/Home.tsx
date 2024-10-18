@@ -38,12 +38,15 @@ const Home = () => {
           <Sidebar />
         </div>
 
-        <div className="relative flex h-[98vh] w-full flex-col gap-4 lg:left-[16vw] lg:w-[83vw]">
+        <div
+          className="relative flex h-[98vh] w-full flex-col gap-4 lg:left-[16vw] lg:w-[83vw]"
+          onClick={() => server?.showSettingFinish()}
+        >
           <NavBar />
           <div className=" relative flex size-full">
             <Outlet />
             {server?.setting && (
-              <div className="fixed  bottom-10 left-[14vw] flex h-fit w-64 flex-col items-center justify-start gap-2 rounded bg-firstColors shadow">
+              <div className="fixed z-40  bottom-10 left-[14vw] flex h-fit w-64 flex-col items-center justify-start gap-2 rounded bg-firstColors shadow">
                 <div className="white-nowrap  w-full border-b px-3 py-2 text-left">
                   <h2 className="font-semibold">{me.name}</h2>
                   <p className="text-sm opacity-80">{me.role}</p>

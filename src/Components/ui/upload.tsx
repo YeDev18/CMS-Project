@@ -20,13 +20,14 @@ const getCsrf = async () => {
 const useServerUpload = () => {
   const postTonnagesDt = async (data: File) => {
     const formData = new FormData();
-    const crsfToken = await getCsrf();
+    const csrfToken = await getCsrf();
 
     formData.append('file', data);
     await url.post('/api/upload_tonnageDT_file/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        'X-CSRFToken': crsfToken,
+        Referer: 'https://cmscontrole.com/app/',
+        'X-CSRFToken': csrfToken,
       },
       withCredentials: true,
     });
@@ -34,12 +35,13 @@ const useServerUpload = () => {
 
   const postTonnagesPAA = async (data: File) => {
     const formData = new FormData();
-    const crsfToken = await getCsrf();
+    const csrfToken = await getCsrf();
     formData.append('file', data);
     await url.post('/api/upload_port_file/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        'X-CSRFToken': crsfToken,
+        Referer: 'https://cmscontrole.com/app/',
+        'X-CSRFToken': csrfToken,
       },
       withCredentials: true,
     });
@@ -47,12 +49,13 @@ const useServerUpload = () => {
 
   const postBoardDt = async (data: File) => {
     const formData = new FormData();
-    const crsfToken = await getCsrf();
+    const csrfToken = await getCsrf();
     formData.append('file', data);
     await url.post('/api/upload_dtci_file', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        'X-CSRFToken': crsfToken,
+        Referer: 'https://cmscontrole.com/app',
+        'X-CSRFToken': csrfToken,
       },
       withCredentials: true,
     });
@@ -60,22 +63,24 @@ const useServerUpload = () => {
 
   const postBoardPAA = async (data: File) => {
     const formData = new FormData();
-    const crsfToken = await getCsrf();
+    const csrfToken = await getCsrf();
     formData.append('file', data);
     await url.post('/api/upload_trafic_file/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
-        'X-CSRFToken': crsfToken,
+        Referer: 'https://cmscontrole.com/app',
+        'X-CSRFToken': csrfToken,
       },
       withCredentials: true,
     });
   };
 
   const putBoardNConforme = async (id: number, data: ObservationProps) => {
-    const crsfToken = await getCsrf();
+    const csrfToken = await getCsrf();
     url.put(`/api/declarationstatus/${id}/add_observation/`, data, {
       headers: {
-        'X-CSRFToken': crsfToken,
+        Referer: 'https://cmscontrole.com/app',
+        'X-CSRFToken': csrfToken,
       },
       withCredentials: true,
     });

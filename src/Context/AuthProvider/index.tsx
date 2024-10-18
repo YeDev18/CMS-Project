@@ -139,6 +139,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
           headers: {
             'X-CSRFToken': csrfToken,
           },
+          withCredentials: true,
         }
       );
       navigate('/');

@@ -84,6 +84,7 @@ const DeclaratioNConforme = () => {
       JSON.stringify(data),
       {
         headers: {
+          Referer: 'https://cmscontrole.com/app',
           'X-CSRFToken': crsfToken,
           'Content-Type': 'application/json',
         },
@@ -106,6 +107,7 @@ const DeclaratioNConforme = () => {
       },
       {
         headers: {
+          Referer: 'https://cmscontrole.com/app',
           'X-CSRFToken': crsfToken,
           'Content-Type': 'application/json', // Ajout du bon en-tête
         },
