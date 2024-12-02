@@ -78,10 +78,35 @@ const DeclarationConforme = () => {
     filterComponent,
   } = useFilter(Conform, 'Conforme');
 
-  const { exportToExcel } = useExportExcel(dataFinalChecked, 'Conforme');
+  // const { exportToExcel } = useExportExcel(dataFinalChecked, 'Conforme');
 
   const { renderPaginationControls, startIndex, endIndex } =
     usePagination(dataFinalChecked);
+
+  const modifiedData = dataFinalChecked.map((item: any, index: number) => ({
+    Id: index,
+    DateDeclaration: item?.soumission_dtci.date_declaration_dtci
+      .split('-')
+      .reverse()
+      .join('-'),
+    Port: item?.soumission_dtci.port_dtci,
+    Imo: item?.soumission_dtci?.imo_dtci,
+    Navire: item?.soumission_dtci?.nom_navire_dtci,
+    Mrn: item?.soumission_dtci?.mrn_dtci,
+    Consignataire: item?.soumission_dtci?.consignataire_dtci,
+    Tonnage: item?.soumission_dtci?.tonnage_facture_dtci,
+    Numero_de_Voyage: item?.soumission_dtci?.numero_voyage_dtci,
+    Mouvement:
+      item?.soumission_dtci?.mouvement_dtci === 'Arrivée'
+        ? 'Arrivée'
+        : 'Depart',
+    Date:
+      item?.soumission_dtci?.mouvement_dtci === 'Arrivée'
+        ? item?.soumission_dtci?.eta_dtci.split('-').reverse().join('-')
+        : item?.soumission_dtci?.etd_dtci.split('-').reverse().join('-'),
+  }));
+
+  const { exportToExcel } = useExportExcel(modifiedData, 'Conforme');
 
   const FinalPagination = dataFinalChecked.slice(startIndex, endIndex);
 
