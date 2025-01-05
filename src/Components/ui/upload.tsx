@@ -20,14 +20,14 @@ const getCsrf = async () => {
 const useServerUpload = () => {
   const postTonnagesDt = async (data: File) => {
     const formData = new FormData();
-    const csrfToken = await getCsrf();
+    // const csrfToken = await getCsrf();
 
     formData.append('file', data);
     await url.post('/api/upload_tonnageDT_file/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         Referer: 'https://cmscontrole.com/app/',
-        'X-CSRFToken': csrfToken,
+        // 'X-CSRFToken': csrfToken,
       },
       withCredentials: true,
     });
@@ -35,13 +35,13 @@ const useServerUpload = () => {
 
   const postTonnagesPAA = async (data: File) => {
     const formData = new FormData();
-    const csrfToken = await getCsrf();
+    // const csrfToken = await getCsrf();
     formData.append('file', data);
     await url.post('/api/upload_port_file/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         Referer: 'https://cmscontrole.com/app/',
-        'X-CSRFToken': csrfToken,
+        // 'X-CSRFToken': csrfToken,
       },
       withCredentials: true,
     });
