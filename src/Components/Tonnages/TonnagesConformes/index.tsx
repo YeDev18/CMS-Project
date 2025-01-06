@@ -1,3 +1,4 @@
+import useExportExcel from '@/Components/ui/export-excel';
 import useFilter from '@/Components/ui/FilterTonnage';
 import { useTonnesBoard } from '@/Context/ServerProvider';
 import { Icon } from '@iconify/react';
@@ -5,6 +6,7 @@ import { useState } from 'react';
 import Libelle from '../../ui/Libelle.tsx';
 import usePagination from '../../ui/pagination.tsx';
 import Table from '../table-tonnages.tsx';
+
 const T_Conforme = () => {
   const { tonnages } = useTonnesBoard();
   let ConformTonnages = tonnages;
@@ -30,7 +32,25 @@ const T_Conforme = () => {
 
   const { renderPaginationControls, startIndex, endIndex } =
     usePagination(dataFinalChecked);
+
+  const modifedData = dataFinalChecked.map((item: any, index: number) => ({
+    id: index,
+    Non: item.tonnage_dt.nom_navire_dt_tonnage,
+    Imo: item.tonnage_dt.imo_dt_tonnage,
+    Date:
+      item.tonnage_dt.mouvement_dt_tonnage === 'Départ'
+        ? item.tonnage_dt.etd_dt_tonnage.split('-').reverse().join('-')
+        : item.tonnage_dt.eta_dt_tonnage.split('-').reverse().join('-'),
+    TonnagesDTCI: item.tonnage_facture_dt_tonnage,
+    TonnagesPort: item.tonnage_trafic_national_port,
+    Ecart: item.difference_tonnage,
+    Staut: item.statut,
+  }));
+
+  const { exportToExcel } = useExportExcel(modifedData, 'Conforme');
+
   const FinalPagination = dataFinalChecked.slice(startIndex, endIndex);
+  console.log(FinalPagination);
   return (
     <div className="flex size-full  flex-col gap-6 ">
       <div className="relative flex w-full justify-between gap-2 gap-y-4">
@@ -43,7 +63,7 @@ const T_Conforme = () => {
           />
           <button
             className="inline-flex  h-10 items-center whitespace-nowrap rounded-md bg-[#0e5c2f] p-2 text-sm text-firstColors shadow-sm shadow-slate-200 "
-            // onClick={() => exportToExcel()}
+            onClick={() => exportToExcel()}
           >
             <Icon
               icon="material-symbols:download"

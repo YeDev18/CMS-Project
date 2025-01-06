@@ -27,10 +27,29 @@ const T_NonConforme = () => {
     setShowFilter(!showFilter);
   };
 
-  const { exportToExcel } = useExportExcel(FinalData, 'Tonnages Non conforme');
-
   const { renderPaginationControls, endIndex, startIndex } =
     usePagination(FinalData);
+
+  const modifedData = FinalData.map((item: any, index: number) => ({
+    id: index,
+    Non: item.tonnage_dt.nom_navire_dt_tonnage,
+    Imo: item.tonnage_dt.imo_dt_tonnage,
+    Date:
+      item.tonnage_dt.mouvement_dt_tonnage === 'Départ'
+        ? item.tonnage_dt.etd_dt_tonnage.split('-').reverse().join('-')
+        : item.tonnage_dt.eta_dt_tonnage.split('-').reverse().join('-'),
+    TonnagesDTCI: item.tonnage_facture_dt_tonnage,
+    TonnagesPort: item.tonnage_trafic_national_port,
+    Ecart: item.difference_tonnage,
+    Staut: item.statut,
+  }));
+  console.log(FinalData);
+
+  const { exportToExcel } = useExportExcel(
+    modifedData,
+    'Tonnages Non conforme'
+  );
+
   const FinalPagination = FinalData.slice(startIndex, endIndex);
   return (
     <div className="relative flex size-full flex-col gap-6 ">
